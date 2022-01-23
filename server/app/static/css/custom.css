@@ -1,0 +1,29 @@
+.navbar-nav > li{
+  margin-left: 20px;
+  margin-right:10px;
+  font-size: 18px;
+}
+
+.center {
+text-align: center;
+}
+
+.upload-input-group {
+    margin-bottom: 10px;
+}
+.input-group>.custom-select:not(:last-child) {
+  height: 45px;
+}
+.input-group>.form-control:not(:last-child) {
+  height: 45px;
+}
+
+.btn-upload {
+    padding: 10px 20px;
+    margin-left: 10px;
+}
+.btn-success:not(:disabled):not(.disabled).active, .btn-success:not(:disabled):not(.disabled):active, .show>.btn-success.dropdown-toggle {
+    color: #fff;
+    background-color: #0062cc;
+    border-color: #1c7430;
+}
