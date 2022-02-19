@@ -1,18 +1,19 @@
+import re
 from analyzer.core.js_extraction_patterns import JsExtractionPatterns
 from analyzer.abstracts.feature import Feature
-import re
 
+class FuncEncodeCount(Feature):
 
-class CharCommaCount(Feature):
-
-	_index_no: int = 27
-	_name: str = "char_comma_count"
+	_index_no: int = 7
+	_name: str = "func_encode_count"
 	_var_type: type = int
 
-	PATTERN = ","
+	_description = "Encode function count from btoa()"
+
+	PATTERN = ""
 
 	def _evaluate(self, js_buffer):
-		return js_buffer.count(self.PATTERN)
+		return js_buffer.count("btoa(")
 
 	def extract(self, js_buffer):
 		return self._evaluate(js_buffer)
@@ -28,4 +29,3 @@ class CharCommaCount(Feature):
 	@property
 	def var_type(self):
 		return self._var_type
-

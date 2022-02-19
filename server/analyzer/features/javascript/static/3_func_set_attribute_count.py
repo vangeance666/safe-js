@@ -1,16 +1,15 @@
-
-from dataclasses import dataclass
+from analyzer.core.js_extraction_patterns import JsExtractionPatterns
 from analyzer.abstracts.feature import Feature
 import re
 
 
-class FuncFuncSetAttributeCount(Feature):
+class FuncSetAttributeCount(Feature):
 
 	_index_no: int = 3
-	_name: str = "func_func_set_attribute_count"
+	_name: str = "func_set_attribute_count"
 	_var_type: type = int
 
-	PATTERN = ""
+	PATTERN = JsExtractionPatterns.var_function("setAttribute")
 
 	def _evaluate(self, js_buffer):
 		return len(re.findall(self.PATTERN, js_buffer))

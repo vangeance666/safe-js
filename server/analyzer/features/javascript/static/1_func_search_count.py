@@ -1,6 +1,7 @@
-from dataclasses import dataclass
+from analyzer.core.js_extraction_patterns import JsExtractionPatterns
 from analyzer.abstracts.feature import Feature
 import re
+
 
 
 class FuncSearchCount(Feature):
@@ -9,7 +10,7 @@ class FuncSearchCount(Feature):
 	_name: str = "search_function_count"
 	_var_type: type = int
 
-	PATTERN = r".{1,}search\(.+\)"
+	PATTERN = JsExtractionPatterns.var_function("search")
 
 	def _evaluate(self, js_buffer):
 		return len(re.findall(self.PATTERN, js_buffer))

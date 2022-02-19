@@ -1,5 +1,4 @@
-
-from dataclasses import dataclass
+from analyzer.core.js_extraction_patterns import JsExtractionPatterns
 from analyzer.abstracts.feature import Feature
 import re
 
@@ -10,7 +9,7 @@ class EventOnloadCount(Feature):
 	_name: str = "event_onload_count"
 	_var_type: type = int
 
-	PATTERN = ""
+	PATTERN = JsExtractionPatterns.event("onload", "load")
 
 	def _evaluate(self, js_buffer):
 		return len(re.findall(self.PATTERN, js_buffer))

@@ -1,5 +1,4 @@
-
-from dataclasses import dataclass
+from analyzer.core.js_extraction_patterns import JsExtractionPatterns
 from analyzer.abstracts.feature import Feature
 import re
 
@@ -10,8 +9,8 @@ class PagePhpFilesCount(Feature):
 	_name: str = "page_php_files_count"
 	_var_type: type = int
 
-	PATTERN = ""
-
+	PATTERN =  JsExtractionPatterns.files("php")
+	
 	def _evaluate(self, js_buffer):
 		return len(re.findall(self.PATTERN, js_buffer))
 

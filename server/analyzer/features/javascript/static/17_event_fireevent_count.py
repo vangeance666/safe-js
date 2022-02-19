@@ -1,5 +1,4 @@
-
-from dataclasses import dataclass
+from analyzer.core.js_extraction_patterns import JsExtractionPatterns
 from analyzer.abstracts.feature import Feature
 import re
 
@@ -10,7 +9,8 @@ class EventFireeventCount(Feature):
 	_name: str = "event_fireevent_count"
 	_var_type: type = int
 
-	PATTERN = ""
+	# https://www.vbsedit.com/html/ce2dd21d-bfe5-4987-a313-d1284de606fd.asp
+	PATTERN = JsExtractionPatterns.normal_function("fireEvent")
 
 	def _evaluate(self, js_buffer):
 		return len(re.findall(self.PATTERN, js_buffer))
@@ -29,4 +29,3 @@ class EventFireeventCount(Feature):
 	@property
 	def var_type(self):
 		return self._var_type
-

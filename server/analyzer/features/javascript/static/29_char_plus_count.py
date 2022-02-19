@@ -1,5 +1,4 @@
-
-from dataclasses import dataclass
+from analyzer.core.js_extraction_patterns import JsExtractionPatterns
 from analyzer.abstracts.feature import Feature
 import re
 
@@ -10,10 +9,10 @@ class CharPlusCount(Feature):
 	_name: str = "char_plus_count"
 	_var_type: type = int
 
-	PATTERN = ""
+	PATTERN = "+"
 
 	def _evaluate(self, js_buffer):
-		return len(re.findall(self.PATTERN, js_buffer))
+		return js_buffer.count(self.PATTERN)
 
 	def extract(self, js_buffer):
 		return self._evaluate(js_buffer)

@@ -1,5 +1,4 @@
-
-from dataclasses import dataclass
+from analyzer.core.js_extraction_patterns import JsExtractionPatterns
 from analyzer.abstracts.feature import Feature
 import re
 
@@ -10,7 +9,8 @@ class EventDispatcheventCount(Feature):
 	_name: str = "event_dispatchevent_count"
 	_var_type: type = int
 
-	PATTERN = ""
+	# https://developer.mozilla.org/en-US/docs/Web/Events/Creating_and_triggering_events
+	PATTERN = JsExtractionPatterns.event("dispatchEvent", "build")
 
 	def _evaluate(self, js_buffer):
 		return len(re.findall(self.PATTERN, js_buffer))

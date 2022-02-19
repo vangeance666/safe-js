@@ -1,8 +1,6 @@
-
-from dataclasses import dataclass
-from analyzer.abstracts.feature import Feature
 import re
-
+from analyzer.core.js_extraction_patterns import JsExtractionPatterns
+from analyzer.abstracts.feature import Feature
 
 class FuncDecodeCount(Feature):
 
@@ -10,10 +8,12 @@ class FuncDecodeCount(Feature):
 	_name: str = "func_decode_count"
 	_var_type: type = int
 
+	_description = "Detect decode function count from atob()"
+
 	PATTERN = ""
 
 	def _evaluate(self, js_buffer):
-		return len(re.findall(self.PATTERN, js_buffer))
+		return js_buffer.count("atob(")
 
 	def extract(self, js_buffer):
 		return self._evaluate(js_buffer)
@@ -29,4 +29,3 @@ class FuncDecodeCount(Feature):
 	@property
 	def var_type(self):
 		return self._var_type
-
