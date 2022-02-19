@@ -1,4 +1,4 @@
-# from app import create_app
+from app import create_app
 
 # def main():
 # 	my_app = create_app()
