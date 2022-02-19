@@ -16,6 +16,6 @@ class Feature(ABC):
 		pass
 
 	@abstractmethod
-	def evaluate(self, js_buffer):
+	def _evaluate(self, js_buffer):
 		pass
 
