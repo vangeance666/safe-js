@@ -2,6 +2,7 @@ import os
 import importlib
 import inspect
 import pkgutil
+import math
 
 def enumerate(dirpath, module_prefix, namespace, class_,
                       attributes={}, as_dict=False):
@@ -48,22 +49,33 @@ def read_in_chunks(file_object, chunk_size=1024):
         yield data
 
 def get_file_buffer(file_path):
-
     with open(file_path, 'r') as f:
         return f.read()
-    
-    # with open(file_path, 'r') as f:
-    #     for piece in read_in_chunks(f):
-    #         yield piece
 
-import re
+def entropy(string):
+    "Calculates the Shannon entropy of a string"
 
-PATTERN = r".+search\(.+\)"
+    # get probability of chars in string
+    prob = [ float(string.count(c)) / len(string) for c in dict.fromkeys(list(string)) ]
 
-file_data = get_file_buffer("C:\\Users\\User\\Desktop\\testfind.txt")
+    # calculate the entropy
+    entropy = - sum([ p * math.log(p) / math.log(2.0) for p in prob ])
+
+    return entropy
 
 
-res = re.findall(PATTERN, file_data)
-for x in res:
-    print(x)
-print("res: ", res)
+print(entropy("hello"))
+
+
+
+# import re
+
+# PATTERN = r".+search\(.+\)"
+
+# file_data = get_file_buffer("C:\\Users\\User\\Desktop\\testfind.txt")
+
+
+# res = re.findall(PATTERN, file_data)
+# for x in res:
+#     print(x)
+# print("res: ", res)
