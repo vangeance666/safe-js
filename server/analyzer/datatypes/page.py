@@ -1,7 +1,9 @@
-from typing import List
-from dataclasses import dataclass
-from analyzer.datatypes.jsfile import JsFile
+from typing import List, Optional
+from dataclasses import dataclass, field
+from analyzer.datatypes.js_file import JsFile
 
+@dataclass(order=True)
 class Page:
-	url: str
-	js_files: List[JsFile]
+	url: str = field(default="")
+	internal_js_files: List[JsFile] = field(default_factory=list)
+	external_js_files: List[JsFile] = field(default_factory=list)
