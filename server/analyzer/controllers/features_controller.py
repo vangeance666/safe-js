@@ -2,9 +2,12 @@ import sys
 from analyzer.core.utils import get_file_buffer
 from analyzer.features.javascript.static import features
 
+import esprima
 
 TEST = """
 
+
+let youmother = "1";
 
 function alfyplessap() {
 	return undefined;
@@ -486,6 +489,12 @@ if (typeof ifopracxa == 'undefined') {
 }
 
 """
+
+
+print(dir(esprima))
+
+
+
 class FeaturesController:
 	
 	def __init__(self):
@@ -506,4 +515,6 @@ class FeaturesController:
 			ret[x_obj.name] = x_obj.extract(js_buffer)
 
 		return ret
+
+
 

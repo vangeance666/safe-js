@@ -22,7 +22,7 @@ class FileEntropyValue(Feature):
 
 	@property
 	def name(self):
-		return self._name	
+		return self._name
 
 	@property
 	def var_type(self):
