@@ -2,27 +2,23 @@ from analyzer.core.js_extraction_patterns import JsExtractionPatterns
 from analyzer.abstracts.feature import Feature
 from analyzer.config import JS_RESERVED_WORDS_PATH
 import re
+import esprima
 
 
-class KnownWordsCount(Feature):
 
-	_index_no: int = 21
-	_name: str = "known_words_count"
+
+class VariablesCount(Feature):
+
+	_index_no: int = 38
+	_name: str = "variables_count"
 	_var_type: type = int
-
-	PATTERN = ""
+	_description = "count number of variables witin js file"
 
 	def __init__(self):
 		self.reserved_words = self.load_reserved_words()
 
 	def _evaluate(self, js_buffer):
-		buf = js_buffer
-		
-		for word in self.reserved_words:
-			buf = buf.replace(word, "")
-
-		print("buf: ", buf)
-		# After replace then detect how many used english words	
+		return sum(1 for x in esprima.tokenize(js_buffer) if x.type == "Identifier")
 
 	def extract(self, js_buffer):
 		return self._evaluate(js_buffer)
