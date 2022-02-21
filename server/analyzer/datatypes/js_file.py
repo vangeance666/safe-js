@@ -8,8 +8,8 @@ class JsFile:
 	src: str = ""
 	content: str = ""
 
-	static_features: List[Feature] = field(default_factory=list)
-	dynamic_features: List[Feature] = field(default_factory=list)
+	static_features: dict = field(default_factory=dict)
+	dynamic_features: dict = field(default_factory=dict)
 
 	# @classmethod	
 	# def parse_element(cls, bs_element):

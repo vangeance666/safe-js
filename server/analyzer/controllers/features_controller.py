@@ -1,6 +1,9 @@
 import sys
+from typing import List
 from analyzer.core.utils import get_file_buffer
+from analyzer.extractors.page_parser import PageParser
 from analyzer.features.javascript.static import features
+from analyzer.datatypes.page import Page
 
 import esprima
 
@@ -14,7 +17,9 @@ function alfyplessap() {
 }
 var myltuc = "ugjizyffy";
 
-myltuc.onerror = function(
+myltuc.onerror = function({
+	
+})
 var test = myltyuc.search('jo');
 var lekazyzfi = 'lycraninj';
 var edeb = WScript;
@@ -489,32 +494,64 @@ if (typeof ifopracxa == 'undefined') {
 }
 
 """
-
-
-print(dir(esprima))
-
-
+# print(dir(esprima))
 
 class FeaturesController:
 	
 	def __init__(self):
+		self._page_parser = PageParser()
 		self._features = features
 
-	def get_static_features(self, js_path=None) -> dict:
+		self.sequence = {}
+
+
+	def _extract_static_features(self, js_content) -> dict:
+
 		ret = {}
 
-		js_buffer = TEST#self._get_js_buffer(js_path)
+		# js_buffer = js_content
+		# TEST
+		#self._get_js_buffer(js_path)
 
-		if not js_buffer:
+		if not js_content:
 			return ret
 
 		for x in self._features:
-			print("x: ", x)
+			# print("x: ", x)
+			print("Currently extracting: ", x)
 
 			x_obj = self._features[x]()
-			ret[x_obj.name] = x_obj.extract(js_buffer)
+			ret[x_obj.name] = x_obj.extract(js_content)
 
 		return ret
+
+	def _extract_dynamic_features(self):
+		# TODO
+		pass
+
+	def extract_urls_features(self, urls: list) -> List[Page]:	
+		"""	Flow 
+		1. Takes in a list of URL then,
+		2. Extract all contents followed 
+		3. Extract Static & Dynamic features for all the JS files within the page.
+
+		
+		Args:
+		    urls (list): Description
+		"""
+		pages = [self._page_parser.get_page_details(url=url) for url in urls]
+
+		for page in pages:
+			for x in page.external_js_files:
+				print("JS_file src", x.src)
+				if (x.src == "https://developer.mozilla.org//static/js/4.a756dea3.chunk.js"):
+					print("Doing extract")
+					# print(x.content)
+					x.static_features = self._extract_static_features(x.content)
+				# print(dir(x))
+
+
+
 
 
 
