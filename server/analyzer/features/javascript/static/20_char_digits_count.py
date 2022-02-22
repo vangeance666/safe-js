@@ -1,3 +1,4 @@
+from analyzer.datatypes.js_file import JsFile
 from analyzer.core.js_extraction_patterns import JsExtractionPatterns
 from analyzer.abstracts.feature import Feature
 import re
@@ -11,12 +12,11 @@ class CharDigitsCount(Feature):
 
 	PATTERN = ""
 
-	def _evaluate(self, js_buffer):
-		return sum(c.isdigit() for c in js_buffer)
-		# return len(re.findall(self.PATTERN, js_buffer))
+	def _evaluate(self, js_file: JsFile) -> int:
+		return sum(c.isdigit() for c in js_file.content)
 
-	def extract(self, js_buffer):
-		return self._evaluate(js_buffer)
+	def extract(self, js_file: JsFile):
+		return self._evaluate(js_file.content)
 
 	@property
 	def index_no(self):

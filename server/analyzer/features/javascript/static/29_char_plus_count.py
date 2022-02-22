@@ -1,3 +1,4 @@
+from analyzer.datatypes.js_file import JsFile
 from analyzer.core.js_extraction_patterns import JsExtractionPatterns
 from analyzer.abstracts.feature import Feature
 import re
@@ -11,11 +12,11 @@ class CharPlusCount(Feature):
 
 	PATTERN = "+"
 
-	def _evaluate(self, js_buffer):
-		return js_buffer.count(self.PATTERN)
+	def _evaluate(self, js_file: JsFile) -> int:
+		return js_file.content.count(self.PATTERN)
 
-	def extract(self, js_buffer):
-		return self._evaluate(js_buffer)
+	def extract(self, js_file: JsFile):
+		return self._evaluate(js_file.content)
 
 	@property
 	def index_no(self):
