@@ -1,20 +1,24 @@
+from analyzer.datatypes.js_file import JsFile
 from analyzer.core.js_extraction_patterns import JsExtractionPatterns
 from analyzer.abstracts.feature import Feature
 import re
+from analyzer.core.syntactic_helper import ConditionsFactory, parse_esprima
+
 
 class FuncCharAtCount(Feature):
 
 	_index_no: int = 5
 	_name: str = "func_char_at_count"
 	_var_type: type = int
+	
+	CONDITIONS = [ConditionsFactory.element_func_call_condition("charAt")]
+	# PATTERN = JsExtractionPatterns.var_function("charAt")
 
-	PATTERN = JsExtractionPatterns.var_function("charAt")
+	def _evaluate(self, js_file: JsFile) -> int:
+		return sum(parse_esprima(js_file.body, cond) for cond in self.CONDITIONS)
 
-	def _evaluate(self, js_buffer):
-		return len(re.findall(self.PATTERN, js_buffer))
-
-	def extract(self, js_buffer):
-		return self._evaluate(js_buffer)
+	def extract(self, js_file: JsFile):
+		return self._evaluate(js_file)
 
 	@property
 	def index_no(self):
