@@ -1,3 +1,4 @@
+from analyzer.datatypes.js_file import JsFile
 import re
 import esprima
 
@@ -13,11 +14,11 @@ class KeywordVarCount(Feature):
 	_name: str = "keyword_var_count"
 	_var_type: type = int
 
-	def _evaluate(self, js_buffer):
-		return sum(1 for x in esprima.tokenize(js_buffer) if x.type == 'Keyword' and x.value == "var")
+	def _evaluate(self, js_file: JsFile) -> int:
+		return sum(1 for x in esprima.tokenize(js_file.content) if x.type == 'Keyword' and x.value == "var")
 
-	def extract(self, js_buffer):
-		return self._evaluate(js_buffer)
+	def extract(self, js_file: JsFile):
+		return self._evaluate(js_file)
 
 	@property
 	def index_no(self):

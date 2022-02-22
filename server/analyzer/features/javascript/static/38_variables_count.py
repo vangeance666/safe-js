@@ -1,3 +1,4 @@
+from analyzer.datatypes.js_file import JsFile
 from analyzer.core.js_extraction_patterns import JsExtractionPatterns
 from analyzer.abstracts.feature import Feature
 from analyzer.config import JS_RESERVED_WORDS_PATH
@@ -17,11 +18,11 @@ class VariablesCount(Feature):
 	def __init__(self):
 		self.reserved_words = self.load_reserved_words()
 
-	def _evaluate(self, js_buffer):
-		return sum(1 for x in esprima.tokenize(js_buffer) if x.type == "Identifier")
+	def _evaluate(self, js_file: JsFile) -> int:
+		return sum(1 for x in esprima.tokenize(js_file.content) if x.type == "Identifier")
 
-	def extract(self, js_buffer):
-		return self._evaluate(js_buffer)
+	def extract(self, js_file: JsFile):
+		return self._evaluate(js_file)
 
 	@property
 	def index_no(self):

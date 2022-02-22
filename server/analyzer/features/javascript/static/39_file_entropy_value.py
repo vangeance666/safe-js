@@ -1,3 +1,4 @@
+from analyzer.datatypes.js_file import JsFile
 from analyzer.core.js_extraction_patterns import JsExtractionPatterns
 from analyzer.abstracts.feature import Feature
 from analyzer.config import JS_RESERVED_WORDS_PATH
@@ -10,11 +11,11 @@ class FileEntropyValue(Feature):
 	_name: str = "file_entropy_value"
 	_var_type: type = int
 
-	def _evaluate(self, js_buffer):
-		return entropy_value(js_buffer)
+	def _evaluate(self, js_file: JsFile) -> int:
+		return entropy_value(js_file.content)
 
-	def extract(self, js_buffer):
-		return self._evaluate(js_buffer)
+	def extract(self, js_file: JsFile):
+		return self._evaluate(js_file)
 
 	@property
 	def index_no(self):
