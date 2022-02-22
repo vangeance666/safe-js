@@ -41,6 +41,8 @@ def parse_esprima(item, found_condition: Callable):
 				counter += parse_esprima(getattr(item, key), found_condition)
 		except:
 			pass
+	else:
+		print("hmm managed to receive not dict or obj", )
 
 	return counter
 
