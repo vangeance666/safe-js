@@ -2,17 +2,15 @@ import sys
 import os
 from typing import List
 from analyzer.core.utils import get_file_buffer
-from analyzer.extractors.page_parser import PageParser
 from analyzer.features.javascript.static import features
 from analyzer.datatypes.page import Page
 from analyzer.datatypes.js_file import JsFile
 
-from analyzer.config import FLDR_JS_TEMP
-
+# from analyzer.config import FLDR_JS_TEMP
 import esprima
 
-TEST = """
 
+TEST = """
 
 let youmother = "1";
 
@@ -504,7 +502,7 @@ class FeaturesController:
 	
 
 	def __init__(self):
-		self._page_parser = PageParser()
+		# self._page_parser = PageParser()
 		self._features = features
 		self.sequence = {}
 
@@ -514,7 +512,8 @@ class FeaturesController:
 		# First check if already have the file
 		# If dont have then create and save
 		try:
-			with open(os.path.join(FLDR_JS_TEMP, os.path.basename(js_file.src)), 'w') as f:
+			with open(os.path.join(FLDR_JS_TEMP
+				, os.path.basename(js_file.src)), 'w') as f:
 				f.write(js_file.content)
 		except Exception as e:
 			print("Failed to save ", js_file.src, str(e))
@@ -547,7 +546,7 @@ class FeaturesController:
 		# TODO
 		pass
 
-	def extract_urls_features(self, urls: list) -> List[Page]:
+	def extract_urls_features(self, pages: List[Page]) -> bool:
 		"""	Flow 
 		1. Takes in a list of URL then,
 		2. Extract all contents followed 
@@ -557,8 +556,6 @@ class FeaturesController:
 		Args:
 		    urls (list): Description
 		"""
-		pages = [self._page_parser.get_page_details(url=url) for url in urls]
-
 		for page in pages:
 
 			if not page.success:
@@ -586,7 +583,7 @@ class FeaturesController:
 				# if js_file.src == "https://developer.mozilla.org//static/js/4.a756dea3.chunk.js":
 				# 	print("Doing extract")
 			
-		return pages
+		return True
 		
 
 

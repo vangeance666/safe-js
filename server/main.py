@@ -1,16 +1,46 @@
 from app import create_app
+
 from analyzer.controllers.features_controller import FeaturesController
-from analyzer.core.syntactic_helper import *
+from analyzer.controllers.page_controller import PageController
 from analyzer.extractors.page_parser import PageParser
 
-import esprima
-
+from analyzer.core.syntactic_helper import *
 from dataclasses import asdict
- 	
+
+import esprima
+# import hashlib
+
+# hs = hashlib.sha256("test".encode()).hexdigest()
+# print("hs: ", hs)
+# print("hs: ", type(hs))
+
+
+
 if __name__ == '__main__':
 
+	# A = [1,2,3,4]
+
+	# B= [5,6,7,8]
+
+
+	# for x in [*A,*B]:
+	# 	print(x)
+
+	# pass
+
+	P = PageController()
 	C = FeaturesController()
-	pages = C.extract_urls_features(["https://developer.mozilla.org/en-US/docs/Web/API/WindowEventHandlers/onbeforeunload"])
+
+	pages = P.extract_pages(["https://developer.mozilla.org/en-US/docs/Web/API/WindowEventHandlers/onbeforeunload"])
+	
+	print(len(pages))
+	print(type(pages[0].script_elements))
+	# print(pages.exter)
+	# print("pages: ", pages)
+	# C.extract_urls_features(pages)
+
+
+
 	# print("C.get_static_features(): ", C.get_static_features())
 	
 	# malware_path = "C:\\Users\\User\\Documents\\GitHub\\safe-js\\server\\analyzer\\careful.txt"

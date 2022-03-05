@@ -1,6 +1,6 @@
 import os 
 import requests
-from typing import Union
+from typing import Union, Any
 
 from bs4 import BeautifulSoup, ResultSet
 from analyzer.datatypes.js_file import JsFile
@@ -8,9 +8,11 @@ from analyzer.datatypes.page import Page
 from urllib.parse import urlparse
 
 
+
 class PageParser:
 
 	MSG_JS_RETRIEVE_FAIL = "Failed to retrieve JS Content"
+
 	URL_START = ("http://", "https://")
 
 	def __init__(self):
@@ -19,6 +21,11 @@ class PageParser:
 	def _format_internal_js_src(self, counter):
 		return "internal_js_"+str(counter)
 
+	def _get_formated_src(self, page_src, element_src) -> str:
+		if not self._is_url(element_src):
+			return ''.join([self._get_url_root_path(page_src), element_src])
+		return element_src
+
 	def _is_url(self, text):
 		return text.lower().startswith(self.URL_START)
 	
@@ -26,50 +33,51 @@ class PageParser:
 		parsed_url = urlparse(url)
 		return ''.join([parsed_url.scheme, "://", parsed_url.netloc, "/"])
 
-	def _request_url_html(self, url) -> Union[str, None]:
+	def _request_url_html(self, obj: Any) -> bool:
 		try:
-			r = requests.get(url, allow_redirects=True)
-			return r.text if r.ok and r.text else None
+			r = requests.get(obj.src, allow_redirects=True)
+			if r.ok and r.text:
+				obj.text = r.text
+				return True
 		except requests.exceptions.RequestException as e:
-			return None
+			print(e)
+		return False
 		
-	def _get_script_results(self, page_html: str) -> Union[ResultSet, None]:
+	def _parse_script_results(self, obj: Any) -> bool:
 		try:
-			return BeautifulSoup(page_html, 'html.parser').find_all("script")
+			obj.script_elements = BeautifulSoup(obj.text, 'html.parser').find_all("script")
+			return True
 		except Exception as e:
-			return None
+			print(e)
+		return False	
 
-	def _extract_js_files(self, page: Page, ele_results: ResultSet):
-		"""Parses page html and extracts all JS files details.
-			Internal and external JS files contents will be extracted
-		
-		Args:
-		    page (Page): Description
-		    ele_results (ResultSet): Description		
-		
-		"""
+	def _extract_js_files(self, page: Page) -> bool:
 
 		counter = 0
 
-		for res in ele_results:
-			if res.has_attr('src'):
-				# External
-				js_file = JsFile()
+		for element in page.script_elements:
 
-				js_file.src = res['src'] if self._is_url(res['src']) else ''.join([self._get_url_root_path(page.url), res['src']])					
-				js_file.content = self._request_url_html(js_file.src) or self.MSG_JS_RETRIEVE_FAIL					
+			js_file = JsFile()
+
+			if element.has_attr('src') and element['src']:
+				# External
+				js_file.src = self._get_formated_src(page.src, element['src'])
+				js_file.success = self._request_url_html(js_file)
 
 				page.external_js_files.append(js_file)
 			else:
 				# Internal
-				page.internal_js_files.append(
-					JsFile(src=self._format_internal_js_src(counter)
-					, content=res.text)
-				)
+				js_file.src = self._format_internal_js_src(counter)
+				js_file.text = element.text
+
+				page.internal_js_files.append(js_file)
 
 				counter += 1
 
-	def get_page_details(self, url: str) -> Page:
+		return True	
+
+	def extract_page_details(self, url: str) -> Page:
+		print("extract url: ", url)
 		"""Parses url html content and extract JS file details
 		
 		Args:
@@ -78,16 +86,20 @@ class PageParser:
 		Returns:
 		    Page: Page Object containing information about JS files and page data
 		"""
-		page = Page(url=url)		
+		page = Page(src=url)
+		print("page: ", page)
 
-		html_text = self._request_url_html(page.url)
-		
-		if html_text:
-			page.success = True
+		page.success = self._request_url_html(page)
+		print("page.success: ", page.success)
 
-			script_results = self._get_script_results(html_text)
-			if script_results:
-				self._extract_js_files(page, script_results)
+		if not page.success:
+			return page
+
+		page.parsed = self._parse_script_results(page)
+		print("page.parsed: ", page.parsed)
+
+		if page.parsed and page.script_elements:
+			page.extracted = self._extract_js_files(page)
 
 		return page
 
