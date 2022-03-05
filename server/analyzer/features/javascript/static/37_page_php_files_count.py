@@ -10,10 +10,11 @@ class PagePhpFilesCount(Feature):
 	_name: str = "page_php_files_count"
 	_var_type: type = int
 
-	PATTERN =  JsExtractionPatterns.files("php")
+	# PATTERN =  JsExtractionPatterns.files("php")
 	
 	def _evaluate(self, js_file: JsFile) -> int:
-		return len(re.findall(self.PATTERN, js_file.content))
+		return js_file.content.count(".php")
+		# return len(re.findall(self.PATTERN, js_file.content))
 
 	def extract(self, js_file: JsFile):
 		return self._evaluate(js_file)

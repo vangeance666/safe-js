@@ -17,7 +17,7 @@ class CharOpenBraceCount(Feature):
 		
 
 	def extract(self, js_file: JsFile):
-		return self._evaluate(js_file.content)
+		return self._evaluate(js_file)
 
 	@property
 	def index_no(self):
