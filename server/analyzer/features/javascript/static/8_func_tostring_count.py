@@ -18,7 +18,7 @@ class FuncTostringCount(Feature):
 	# PATTERN = JsExtractionPatterns.var_function("toString")
 
 	def _evaluate(self, js_file: JsFile) -> int:
-		return sum(parse_esprima(js_file.body, cond) for cond in self.CONDITIONS)
+		return sum(parse_esprima(js_file.syntactic_extract.body, cond) for cond in self.CONDITIONS)
 
 	def extract(self, js_file: JsFile):
 		return self._evaluate(js_file)

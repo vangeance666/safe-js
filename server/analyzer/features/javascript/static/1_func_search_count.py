@@ -16,8 +16,8 @@ class FuncSearchCount(Feature):
 	]
 	# PATTERN = JsExtractionPatterns.var_function("search")
 
-	def _evaluate(self, js_buffer):
-		return sum(parse_esprima(js_file.body, cond) for cond in self.CONDITIONS)
+	def _evaluate(self, js_file: JsFile):
+		return sum(parse_esprima(js_file.syntactic_extract.body, cond) for cond in self.CONDITIONS)
 
 	def extract(self, js_file: JsFile):
 		return self._evaluate(js_file)
