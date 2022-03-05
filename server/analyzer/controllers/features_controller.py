@@ -1,9 +1,13 @@
 import sys
+import os
 from typing import List
 from analyzer.core.utils import get_file_buffer
 from analyzer.extractors.page_parser import PageParser
 from analyzer.features.javascript.static import features
 from analyzer.datatypes.page import Page
+from analyzer.datatypes.js_file import JsFile
+
+from analyzer.config import FLDR_JS_TEMP
 
 import esprima
 
@@ -268,7 +272,7 @@ if (typeof ifopracxa == 'undefined') {
 									var qkisylmi = "81623";
 									var xyskubsahs = null;
 								}
-								var pighictiqi = undefined;
+var pighictiqi = undefined;
 								if (pighictiqi === 'upxudurde') {
 									var begdyvgu = "ege";
 									begdyvgu = "neqane" + begdyvgu;
@@ -498,38 +502,52 @@ if (typeof ifopracxa == 'undefined') {
 
 class FeaturesController:
 	
+
 	def __init__(self):
 		self._page_parser = PageParser()
 		self._features = features
-
 		self.sequence = {}
 
+		self.saved_js_paths: list = []
 
-	def _extract_static_features(self, js_content) -> dict:
+	def _save_js_file_content(self, js_file: JsFile) -> bool:
+		# First check if already have the file
+		# If dont have then create and save
+		try:
+			with open(os.path.join(FLDR_JS_TEMP, os.path.basename(js_file.src)), 'w') as f:
+				f.write(js_file.content)
+		except Exception as e:
+			print("Failed to save ", js_file.src, str(e))
+			return False
+		return True
 
-		ret = {}
+	def _extract_static_features(self, js_file: JsFile) -> bool:
 
-		# js_buffer = js_content
-		# TEST
-		#self._get_js_buffer(js_path)
+		if not js_file.content:
+			return False
 
-		if not js_content:
-			return ret
+		print("Extracting static features for :", js_file.src)
 
 		for x in self._features:
-			# print("x: ", x)
 			print("Currently extracting: ", x)
 
 			x_obj = self._features[x]()
-			ret[x_obj.name] = x_obj.extract(js_content)
+			js_file.static_features[x_obj.name] = x_obj.extract(js_file)
 
-		return ret
+		return True
+
+	def _run_syntactic_extraction(self, js_file: JsFile) -> bool:
+		try:
+			js_file.syntactic_extract = esprima.parse(js_file.content)
+		except:
+			return False
+		return True
 
 	def _extract_dynamic_features(self):
 		# TODO
 		pass
 
-	def extract_urls_features(self, urls: list) -> List[Page]:	
+	def extract_urls_features(self, urls: list) -> List[Page]:
 		"""	Flow 
 		1. Takes in a list of URL then,
 		2. Extract all contents followed 
@@ -542,16 +560,34 @@ class FeaturesController:
 		pages = [self._page_parser.get_page_details(url=url) for url in urls]
 
 		for page in pages:
-			for x in page.external_js_files:
-				print("JS_file src", x.src)
-				if (x.src == "https://developer.mozilla.org//static/js/4.a756dea3.chunk.js"):
-					print("Doing extract")
-					# print(x.content)
-					x.static_features = self._extract_static_features(x.content)
-				# print(dir(x))
 
+			if not page.success:
+				continue
 
+			for js_file in page.external_js_files:
 
+				if not js_file.content:
+					continue
+
+				print(js_file.content)
+
+				if not self._run_syntactic_extraction(js_file):
+					continue
+
+				# After extracting all the syntactic details, then extract static details
+				 
+				if not self._save_js_file_content(js_file):
+					continue
+
+				if not self._extract_static_features(js_file):
+					print("Failed to retrieve static features forP: ", js_file.src)
+					continue
+
+				# if js_file.src == "https://developer.mozilla.org//static/js/4.a756dea3.chunk.js":
+				# 	print("Doing extract")
+			
+		return pages
+		
 
 
 
