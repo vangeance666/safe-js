@@ -15,7 +15,7 @@ class KeywordVarCount(Feature):
 	_var_type: type = int
 
 	def _evaluate(self, js_file: JsFile) -> int:
-		return sum(1 for x in esprima.tokenize(js_file.content) if x.type == 'Keyword' and x.value == "var")
+		return sum(1 for x in esprima.tokenize(js_file.text) if x.type == 'Keyword' and x.value == "var")
 
 	def extract(self, js_file: JsFile):
 		return self._evaluate(js_file)

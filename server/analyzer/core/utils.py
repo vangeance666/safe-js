@@ -41,13 +41,6 @@ def enumerate(dirpath, module_prefix, namespace, class_,
 
     return sorted(modules, key=lambda x: x.__name__.lower())
 
-def read_in_chunks(file_object, chunk_size=1024):
-    while True:
-        data = file_object.read(chunk_size)
-        if not data:
-            break
-        yield data
-
 def get_file_buffer(file_path):
     with open(file_path, 'r') as f:
         return f.read()

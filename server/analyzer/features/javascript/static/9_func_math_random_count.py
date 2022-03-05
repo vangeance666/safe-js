@@ -14,7 +14,7 @@ class FuncMathRandomCount(Feature):
 	PATTERN = ""
 
 	def _evaluate(self, js_file: JsFile) -> int:
-		return js_file.content.count("Math.random()")
+		return js_file.text.count("Math.random()")
 
 	def extract(self, js_file: JsFile):
 		return self._evaluate(js_file)

@@ -15,7 +15,6 @@ class JsFile:
 	saved_path: str = ""
 
 	syntactic_extract: list = field(default_factory=list)
-
 	static_features: dict = field(default_factory=dict)
 	dynamic_features: dict = field(default_factory=dict)
 	

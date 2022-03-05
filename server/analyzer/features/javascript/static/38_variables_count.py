@@ -19,7 +19,7 @@ class VariablesCount(Feature):
 		self.reserved_words = self.load_reserved_words()
 
 	def _evaluate(self, js_file: JsFile) -> int:
-		return sum(1 for x in esprima.tokenize(js_file.content) if x.type == "Identifier")
+		return sum(1 for x in esprima.tokenize(js_file.text) if x.type == "Identifier")
 
 	def extract(self, js_file: JsFile):
 		return self._evaluate(js_file)

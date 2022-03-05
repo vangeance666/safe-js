@@ -13,7 +13,7 @@ class KeywordWscriptCount(Feature):
 	KEYWORD = "wscript"
 
 	def _evaluate(self, js_file: JsFile) -> int:
-		return js_file.content.upper().count(self.KEYWORD.upper())
+		return js_file.text.upper().count(self.KEYWORD.upper())
 
 
 	def extract(self, js_file: JsFile):
