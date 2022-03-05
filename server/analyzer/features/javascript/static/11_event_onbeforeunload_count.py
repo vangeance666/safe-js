@@ -1,7 +1,9 @@
-from analyzer.core.js_extraction_patterns import JsExtractionPatterns
-from analyzer.abstracts.feature import Feature
 import re
 
+from analyzer.datatypes.js_file import JsFile
+from analyzer.core.js_extraction_patterns import JsExtractionPatterns
+from analyzer.abstracts.feature import Feature
+from analyzer.core.syntactic_helper import ConditionsFactory, parse_esprima
 
 class EventOnbeforeunloadCount(Feature):
 
@@ -9,13 +11,18 @@ class EventOnbeforeunloadCount(Feature):
 	_name: str = "event_onbeforeunload_count"
 	_var_type: type = int
 
-	PATTERN = JsExtractionPatterns.event("onbeforeunload", "beforeunload")
-	
-	def _evaluate(self, js_buffer):
-		return len(re.findall(self.PATTERN, js_buffer))
+	CONDITIONS = [
+		ConditionsFactory.add_event_listener_condition("beforeunload")
+		,ConditionsFactory.on_event_assign_condition("onbeforeunload")
+	]
 
-	def extract(self, js_buffer):
-		return self._evaluate(js_buffer)
+	# PATTERN = JsExtractionPatterns.event("onbeforeunload", "beforeunload")
+	
+	def _evaluate(self, js_file: JsFile) -> int:
+		return sum(parse_esprima(js_file.body, cond) for cond in self.CONDITIONS)
+
+	def extract(self, js_file: JsFile):
+		return self._evaluate(js_file)
 
 	@property
 	def index_no(self):

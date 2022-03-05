@@ -1,22 +1,25 @@
+import re
 from analyzer.datatypes.js_file import JsFile
 from analyzer.core.js_extraction_patterns import JsExtractionPatterns
 from analyzer.abstracts.feature import Feature
-import re
 from analyzer.core.syntactic_helper import ConditionsFactory, parse_esprima
 
 
-class FuncSearchCount(Feature):
+class FuncFireeventCount(Feature):
 
-	_index_no: int = 1
-	_name: str = "search_function_count"
+	_index_no: int = 17
+	_name: str = "event_fireevent_count"
 	_var_type: type = int
 
 	CONDITIONS = [
-		ConditionsFactory.element_func_call_condition("search")
+		ConditionsFactory.element_func_call_condition("fireEvent")
 	]
-	# PATTERN = JsExtractionPatterns.var_function("search")
 
-	def _evaluate(self, js_buffer):
+	# https://stackoverflow.com/questions/2490825/how-to-trigger-event-in-javascript
+	# https://www.vbsedit.com/html/ce2dd21d-bfe5-4987-a313-d1284de606fd.asp
+	# PATTERN = JsExtractionPatterns.normal_function("fireEvent")
+
+	def _evaluate(self, js_file: JsFile) -> int:
 		return sum(parse_esprima(js_file.body, cond) for cond in self.CONDITIONS)
 
 	def extract(self, js_file: JsFile):

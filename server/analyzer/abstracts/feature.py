@@ -1,5 +1,6 @@
 from abc import ABC, abstractmethod, abstractproperty
-
+# from analyzer.datatypes.js_file import Jsfile
+from typing import Callable
 
 class Feature(ABC):
 
@@ -16,6 +17,5 @@ class Feature(ABC):
 		pass
 
 	@abstractmethod
-	def _evaluate(self, js_buffer):
+	def extract(self, js_file):
 		pass
-

@@ -1,6 +1,9 @@
+from analyzer.datatypes.js_file import JsFile
 import re
 from analyzer.core.js_extraction_patterns import JsExtractionPatterns
 from analyzer.abstracts.feature import Feature
+from analyzer.core.syntactic_helper import ConditionsFactory, parse_esprima
+
 
 class FuncDecodeCount(Feature):
 
@@ -10,13 +13,15 @@ class FuncDecodeCount(Feature):
 
 	_description = "Detect decode function count from atob()"
 
+	CONDITIONS = [ConditionsFactory.element_func_call_condition("dispatchEvent")]
+	
 	PATTERN = ""
 
-	def _evaluate(self, js_buffer):
-		return js_buffer.count("atob(")
+	def _evaluate(self, js_file: JsFile) -> int:
+		return js_file.content.count("atob(")
 
-	def extract(self, js_buffer):
-		return self._evaluate(js_buffer)
+	def extract(self, js_file: JsFile):
+		return self._evaluate(js_file)
 
 	@property
 	def index_no(self):

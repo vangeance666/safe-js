@@ -80,9 +80,11 @@ class PageParser:
 		"""
 		page = Page(url=url)		
 
-		html_text = self._request_url_html(page.url)		
-
+		html_text = self._request_url_html(page.url)
+		
 		if html_text:
+			page.success = True
+
 			script_results = self._get_script_results(html_text)
 			if script_results:
 				self._extract_js_files(page, script_results)
