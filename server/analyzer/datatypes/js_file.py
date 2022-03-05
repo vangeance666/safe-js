@@ -6,7 +6,13 @@ from analyzer.abstracts.feature import Feature
 class JsFile:
 
 	src: str = ""
-	content: str = ""
+	text: str = ""
+
+	success: bool = False #Determine if text variable parsed success
+
+	is_saved: bool = False
+
+	saved_path: str = ""
 
 	syntactic_extract: list = field(default_factory=list)
 
