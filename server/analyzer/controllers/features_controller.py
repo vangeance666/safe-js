@@ -1,13 +1,12 @@
-import sys
-import os
-from typing import List
 from analyzer.core.utils import get_file_buffer
 from analyzer.features.javascript.static import features
 from analyzer.datatypes.page import Page
 from analyzer.datatypes.js_file import JsFile
 
-# from analyzer.config import FLDR_JS_TEMP
+from typing import List
 import esprima
+
+import os
 
 
 TEST = """
@@ -514,7 +513,7 @@ class FeaturesController:
 		try:
 			with open(os.path.join(FLDR_JS_TEMP
 				, os.path.basename(js_file.src)), 'w') as f:
-				f.write(js_file.content)
+				f.write(js_file.text)
 		except Exception as e:
 			print("Failed to save ", js_file.src, str(e))
 			return False
@@ -522,7 +521,7 @@ class FeaturesController:
 
 	def _extract_static_features(self, js_file: JsFile) -> bool:
 
-		if not js_file.content:
+		if not js_file.text:
 			return False
 
 		print("Extracting static features for :", js_file.src)
@@ -537,7 +536,7 @@ class FeaturesController:
 
 	def _run_syntactic_extraction(self, js_file: JsFile) -> bool:
 		try:
-			js_file.syntactic_extract = esprima.parse(js_file.content)
+			js_file.syntactic_extract = esprima.parse(js_file.text)
 		except:
 			return False
 		return True
@@ -563,22 +562,27 @@ class FeaturesController:
 
 			for js_file in page.external_js_files:
 
-				if not js_file.content:
+				if not js_file.text:
+					print("if not js_file.text:")
 					continue
 
-				print(js_file.content)
+				# print(js_file.text)
 
 				if not self._run_syntactic_extraction(js_file):
+					print("if not self._run_syntactic_extraction(js_file):")
 					continue
 
 				# After extracting all the syntactic details, then extract static details
 				 
-				if not self._save_js_file_content(js_file):
-					continue
+				# if not self._save_js_file_content(js_file):
+				# 	print("if not self._save_js_file_content(js_file):")
+				# 	continue
 
 				if not self._extract_static_features(js_file):
 					print("Failed to retrieve static features forP: ", js_file.src)
 					continue
+
+				print("fin js")
 
 				# if js_file.src == "https://developer.mozilla.org//static/js/4.a756dea3.chunk.js":
 				# 	print("Doing extract")

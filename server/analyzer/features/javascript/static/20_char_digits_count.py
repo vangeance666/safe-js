@@ -13,7 +13,7 @@ class CharDigitsCount(Feature):
 	PATTERN = ""
 
 	def _evaluate(self, js_file: JsFile) -> int:
-		return sum(c.isdigit() for c in js_file.content)
+		return sum(c.isdigit() for c in js_file.text)
 
 	def extract(self, js_file: JsFile):
 		return self._evaluate(js_file)

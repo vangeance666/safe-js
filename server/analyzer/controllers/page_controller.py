@@ -1,6 +1,6 @@
 import os
 
-from analyzer.extractors.page_parser import PageParser
+from analyzer.core.page_parser import PageParser
 from typing import List
 from analyzer.datatypes.page import Page
 from analyzer.config import PAGE_SAVE_FLDR
@@ -16,7 +16,6 @@ class PageController:
 
 	def _hash(self, text) -> str:
 		return hashlib.sha256(text.encode()).hexdigest()
-
 
 	def _save_file(self, file_name: str, text: str) -> bool:
 		try:

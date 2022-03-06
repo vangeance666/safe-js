@@ -12,7 +12,7 @@ class FileEntropyValue(Feature):
 	_var_type: type = int
 
 	def _evaluate(self, js_file: JsFile) -> int:
-		return entropy_value(js_file.content)
+		return entropy_value(js_file.text)
 
 	def extract(self, js_file: JsFile):
 		return self._evaluate(js_file)

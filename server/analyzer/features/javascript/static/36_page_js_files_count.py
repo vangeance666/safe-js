@@ -13,8 +13,8 @@ class PageJsFilesCount(Feature):
 	# PATTERN = JsExtractionPatterns.files("js")
 
 	def _evaluate(self, js_file: JsFile) -> int:
-		return js_file.content.count(".js")
-		# return len(re.findall(self.PATTERN, js_file.content))
+		return js_file.text.count(".js")
+		# return len(re.findall(self.PATTERN, js_file.text))
 
 	def extract(self, js_file: JsFile):
 		return self._evaluate(js_file)

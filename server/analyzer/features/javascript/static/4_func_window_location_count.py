@@ -15,7 +15,7 @@ class FuncWindowLocationCount(Feature):
 	# PATTERN = ""
 
 	def _evaluate(self, js_file: JsFile) -> int:
-		return js_file.content.count("window.location(")
+		return js_file.text.count("window.location(")
 		# return len(re.findall(self.PATTERN, js_buffer))
 
 	def extract(self, js_file: JsFile):

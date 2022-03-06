@@ -16,7 +16,7 @@ class FuncLogCount(Feature):
 	# CONDITIONS = [ConditionsFactory.element_func_call_condition("dispatchEvent")]
 
 	def _evaluate(self, js_file: JsFile) -> int:
-		return js_file.content.count("console.log(")
+		return js_file.text.count("console.log(")
 		# return len(re.findall(self.PATTERN, js_buffer))
 
 	def extract(self, js_file: JsFile):
