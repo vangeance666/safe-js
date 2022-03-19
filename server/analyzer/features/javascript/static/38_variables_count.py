@@ -1,11 +1,10 @@
-from analyzer.datatypes.js_file import JsFile
-from analyzer.core.js_extraction_patterns import JsExtractionPatterns
-from analyzer.abstracts.feature import Feature
-from analyzer.config import JS_RESERVED_WORDS_PATH
 import re
+
 import esprima
-
-
+from analyzer.abstracts import Feature
+from analyzer.core.js_extraction_patterns import JsExtractionPatterns
+from analyzer.datatypes.js_file import JsFile
+from config import JS_RESERVED_WORDS_PATH
 
 
 class VariablesCount(Feature):

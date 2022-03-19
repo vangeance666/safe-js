@@ -1,7 +1,9 @@
-from analyzer.datatypes.js_file import JsFile
-from analyzer.core.js_extraction_patterns import JsExtractionPatterns
-from analyzer.abstracts.feature import Feature
 import re
+
+from analyzer.abstracts import Feature
+from analyzer.core.js_extraction_patterns import JsExtractionPatterns
+from analyzer.datatypes.js_file import JsFile
+
 
 class CharLeftParenthesisCount(Feature):
 
@@ -28,4 +30,3 @@ class CharLeftParenthesisCount(Feature):
 	@property
 	def var_type(self):
 		return self._var_type
-

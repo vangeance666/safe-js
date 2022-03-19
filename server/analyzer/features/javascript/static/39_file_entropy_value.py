@@ -1,9 +1,11 @@
-from analyzer.datatypes.js_file import JsFile
-from analyzer.core.js_extraction_patterns import JsExtractionPatterns
-from analyzer.abstracts.feature import Feature
-from analyzer.config import JS_RESERVED_WORDS_PATH
-from analyzer.core.utils import entropy as entropy_value
 import re
+
+from analyzer.abstracts import Feature
+from analyzer.core.js_extraction_patterns import JsExtractionPatterns
+from analyzer.core.utils import entropy as entropy_value
+from analyzer.datatypes.js_file import JsFile
+from config import JS_RESERVED_WORDS_PATH
+
 
 class FileEntropyValue(Feature):
 

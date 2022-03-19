@@ -1,9 +1,8 @@
-from analyzer.abstracts import Feature
-from analyzer.datatypes.box_js_result import BoxJsResult
-
 from dataclasses import dataclass, field
 from typing import List
 
+from analyzer.abstracts import Feature
+from analyzer.datatypes.box_js_result import BoxJsResult
 
 
 @dataclass(order=True)
@@ -29,4 +28,3 @@ class JsFile:
 
 	static_features: dict = field(default_factory=dict)
 	dynamic_features: dict = field(default_factory=dict)
-

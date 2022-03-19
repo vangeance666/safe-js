@@ -1,9 +1,9 @@
 import re
-from analyzer.datatypes.js_file import JsFile
-from analyzer.core.js_extraction_patterns import JsExtractionPatterns
-from analyzer.abstracts.feature import Feature
 
+from analyzer.abstracts import Feature
+from analyzer.core.js_extraction_patterns import JsExtractionPatterns
 from analyzer.core.syntactic_helper import ConditionsFactory, parse_esprima
+from analyzer.datatypes.js_file import JsFile
 
 
 class EventOnerrorCount(Feature):
@@ -37,4 +37,3 @@ class EventOnerrorCount(Feature):
 	@property
 	def var_type(self):
 		return self._var_type
-

@@ -1,12 +1,13 @@
-import os
+import hashlib
 import importlib
 import inspect
-import pkgutil
 import math
-import hashlib
+import os
+import pkgutil
 import subprocess
 
 from analyzer.datatypes.js_file import JsFile
+
 
 def enumerate(dirpath, module_prefix, namespace, class_, attributes={}, as_dict=False):
     
