@@ -1,6 +1,5 @@
 from abc import ABC, abstractmethod, abstractproperty
-# from analyzer.datatypes.js_file import Jsfile
-from typing import Callable
+
 
 class Feature(ABC):
 
@@ -19,3 +18,20 @@ class Feature(ABC):
 	@abstractmethod
 	def extract(self, js_file):
 		pass
+
+
+class DynamicFeature(Feature):
+	pass
+
+
+class IOCFeature(DynamicFeature):
+	pass
+
+
+class UrlsFeatures(DynamicFeature):
+	pass
+
+
+class ActiveUrlsFeature(DynamicFeature):
+	pass
+
