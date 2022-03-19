@@ -8,7 +8,6 @@ from analyzer.datatypes.page import Page
 from urllib.parse import urlparse
 
 
-
 class PageParser:
 
 	MSG_JS_RETRIEVE_FAIL = "Failed to retrieve JS Content"

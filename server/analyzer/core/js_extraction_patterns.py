@@ -1,5 +1,4 @@
 
-
 class JsExtractionPatterns:
 
 	@staticmethod
@@ -19,13 +18,3 @@ class JsExtractionPatterns:
 	@staticmethod
 	def files(extention):
 		return ".+\.%s" %(extention)
-# print(JsExtractionTypes.var_function("nigga"))
-
-import re
-test_str = "fireEvent(\"your mother\")"
-
-print(JsExtractionPatterns.normal_function("fireEvent"))
-
-
-
-print(JsExtractionPatterns.var_function("yo"))
