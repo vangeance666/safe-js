@@ -37,12 +37,13 @@ class PageParser:
 			r = requests.get(obj.src, allow_redirects=True)
 			if r.ok and r.text:
 				obj.text = r.text
+
 				return True
 		except requests.exceptions.RequestException as e:
 			print(e)
 		return False
 		
-	def _parse_script_results(self, obj: Any) -> bool:
+	def parse_script_results(self, obj: Any) -> bool:
 		try:
 			obj.script_elements = BeautifulSoup(obj.text, 'html.parser').find_all("script")
 			return True
@@ -76,26 +77,15 @@ class PageParser:
 		return True	
 
 	def extract_page_details(self, url: str) -> Page:
-		print("extract url: ", url)
-		"""Parses url html content and extract JS file details
-		
-		Args:
-		    url (str): URL to extract info from
-		
-		Returns:
-		    Page: Page Object containing information about JS files and page data
-		"""
+
 		page = Page(src=url)
-		print("page: ", page)
 
 		page.success = self._request_url_html(page)
-		print("page.success: ", page.success)
 
 		if not page.success:
 			return page
 
-		page.parsed = self._parse_script_results(page)
-		print("page.parsed: ", page.parsed)
+		page.parsed = self.parse_script_results(page)
 
 		if page.parsed and page.script_elements:
 			page.extracted = self._extract_js_files(page)
