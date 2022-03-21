@@ -12,7 +12,7 @@ class PageController:
 	def __init__(self):
 		self._page_parser = PageParser()
 		self._save_fldr = PAGE_SAVE_FLDR
-
+		
 	def save_js_files(self, pages: List[Page]) -> bool:
 		for page in pages:
 
@@ -23,18 +23,11 @@ class PageController:
 				js_file.page_src = page.src
 
 				save_path = format_js_file_save(self._save_fldr, js_file)
-				# save_path = os.path.join(self._save_fldr
-				# 		, folder_name
-				# 		, sha_256_str(js_file.src))
-
-				print("save_path: ", save_path)
 
 				if save_file(save_path, js_file.text):
 					print("sucess save file")
 					js_file.saved_path = save_path
-					# js_file.rel_path = '\\'.join(save_path.split('\\')[-2:])
 					js_file.is_saved = True
-
 
 			page.saved = True
 

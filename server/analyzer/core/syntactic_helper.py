@@ -49,8 +49,6 @@ def parse_esprima(item, found_condition: Callable):
 
 if __name__ == '__main__':
 	
-
-
 	malware_path = "C:\\Users\\User\\Documents\\GitHub\\safe-js\\server\\analyzer\\careful.txt"
 
 

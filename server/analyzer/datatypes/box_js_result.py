@@ -8,7 +8,7 @@ class BoxJsResult:
 	# analysis_logs: str = ""
 	# snippets: list = field(default_factory=list)
 	urls: list = field(default_factory=list)
-	# active_urls: list = field(default_factory=list)
+	active_urls: list = field(default_factory=list)
 	# resources: list = field(default_factory=list)
 	iocs: list = field(default_factory=list)
 
