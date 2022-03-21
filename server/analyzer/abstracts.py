@@ -3,22 +3,23 @@ from abc import ABC, abstractmethod, abstractproperty
 
 class Feature(ABC):
 
-	@abstractproperty
-	def name(self):
-		pass
+	has_error: bool = False
 
-	@abstractproperty
+	@property
 	def index_no(self):
-		pass
+		return self._index_no
 
-	@abstractproperty
+	@property
+	def name(self):
+		return self._name	
+
+	@property
 	def var_type(self):
-		pass
+		return self._var_type
 
 	@abstractmethod
 	def extract(self, js_file):
-		pass
-
+		raise NotImplementedError("Need to override this")
 
 class DynamicFeature(Feature):
 	pass
