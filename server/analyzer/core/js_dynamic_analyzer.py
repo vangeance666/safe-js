@@ -1,4 +1,7 @@
+import glob
+import json
 import os
+import shutil
 
 from analyzer.core.utils import (format_js_file_save, recurs_create_folder,
                                  run_command, sha_256_str)
@@ -6,21 +9,47 @@ from analyzer.datatypes.box_js_result import BoxJsResult
 from analyzer.datatypes.js_file import JsFile
 from config import DYNAMIC_DUMP_FLDR
 
+def onerror(func, path, exc_info):
+    import stat
+    # Is the error an access error?
+    if not os.access(path, os.W_OK):
+        os.chmod(path, stat.S_IWUSR)
+        func(path)
+    else:
+        raise
+
 
 class JsDynamicAnalyzer:
 
 	RES_FLDR_EXT = ".results"
 
-	CMD_BOX_JS = "box-js {} --no-shell-error --no-folder-exists --output-dir {}"	
+	CMD_BOX_JS = "box-js {} --no-shell-error --no-folder-exists --threads 0 --output-dir {}"	
 
 	def __init__(self):
 		self._dump_folder = DYNAMIC_DUMP_FLDR 
 
-		self.FILE_FUNC_MAP = {
-			"IOC.json" : self._parse_iocs
-			, "urls.json" : self._parse_urls
-			, "active_urls.json" : self._parse_active_urls
+		self.MAPPING = {
+			"active_urls.json" : ("active_urls", self._parse_active_urls)
+			, "IOC.json" : ("iocs", self._parse_iocs)
+			, "urls.json" : ("urls", self._parse_urls)
 		}
+
+	def cleanup(self):	
+		shutil.rmtree(self._dump_folder, ignore_errors=False, onerror=onerror)
+
+	def _read_json_file(self, file_path) -> dict:
+		try:
+			with open(file_path):
+				return json.load(f)
+		except Exception as e:
+			return None
+
+	def _parse_active_urls(self, json_details: dict):
+		pass
+	def _parse_iocs(self, json_details: dict):
+		pass
+	def _parse_urls(self, json_details: dict):
+		pass
 
 	def _eval_latest_result_fldr(self, results_folder: str, js_file: JsFile) -> str:
 
@@ -41,32 +70,46 @@ class JsDynamicAnalyzer:
 
 		return ''.join([start, '.', str(max(res)), self.RES_FLDR_EXT])
 
-	def _parse_iocs(self, dynamic_results: BoxJsResult):
-		pass
+	def parse_box_js_results(self, js_file: JsFile):
 
-	def _parse_urls(self, dynamic_results: BoxJsResult):
-		pass
+		if not js_file.dynamic_done:
+			raise Exception("Havent analyzed js_file yet")
 
-	def _parse_active_urls(self, dynamic_results: BoxJsResult):
-		pass
-		
-	def parse_result(self, js_file: JsFile) -> BoxJsResult:
+		print("js_file.dynamic_results_folder: ", js_file.dynamic_results_folder)
+		if not js_file.dynamic_results_folder:			
+			raise ValueError("JS File invalid box-js results folder")
 
-		if not js_file.dynamic_done or not js_file.dynamic_dump_folder:
-			raise Exception("JS File dynamic analysis not done yet.")
+		# print(os.path.exists(js_file.dynamic_results_folder))
+		# if not os.path.exists(js_file.dynamic_results_folder):
+		# 	raise Exception("Invalid Dynamic Results folder")
 
-		results_files = [f for f in os.listdir(js_file.dynamic_dump_folder)]
+		for file_name, tup in self.MAPPING.items():
+			attr, parse_func = tup[0], tup[1]
 
-		for file_name, func in self.FILE_FUNC_MAP.items():
-			if file_name in results_files:
-				func(js_file.dynamic_results)
+			json_path = os.path.join(js_file.dynamic_results_folder, file_name)
 
-	def analyze(self, js_file: JsFile):
+			if not os.path.exists(json_path): # Skip if particular json not found
+				print("json_path not exist: ", json_path)
+				continue
+
+			json_details = self._read_json_file(json_path) 
+
+			if not json_details: # Skip if failed to retrieve json from file
+				continue
+
+			js_file.dynamic_results[attr] = parse_func(json_details)
+
+		js_file.dynamic_results_parsed = True	
+
+
+	def run_box_js(self, js_file: JsFile):
 
 		if not os.path.exists(js_file.saved_path):
-			raise Exception("JS File save path does not exist.")
+			print("js_file.saved_path: ", js_file.saved_path)
+			raise Exception("JS File save path does not exist, Box-js only takes in files.")
 		
 		if not js_file.page_src:
+			print("js_file.page_src: ", js_file.page_src)
 			raise Exception("Js File not linked to any page.")
 
 		# eval dump path by joining folder with js_file results path within page folder
@@ -75,28 +118,18 @@ class JsDynamicAnalyzer:
 		recurs_create_folder(dump_dir) # Safe create folder if does not exists
 
 		if not os.path.exists(dump_dir):
-			raise Exception("Box-JS Dump directory {} does not exist." % dump_dir)
+			raise Exception("Box-JS Dump directory \"{}\" does not exist." % dump_dir)
 
+		response = run_command(self.CMD_BOX_JS.format(js_file.saved_path, dump_dir))
 
-		# save_point = [f for f in os.listdir(dump_dir)]
+		if response.stderr or response.returncode != 0:
+			raise Exception("Box JS execution error.")
 
-		try:
-			command = self.CMD_BOX_JS.format(js_file.saved_path, dump_dir)
-			print("command: ", command)
-			response = run_command(command)
+		res_folder = self._eval_latest_result_fldr(dump_dir, js_file)
 
-			if response.stderr or response.returncode != 0:
-				raise Exception("Box JS execution error.")
-
-			res_folder = self._eval_latest_result_fldr(dump_dir, js_file)
-			print("res_folder: ", res_folder)
-
-			if not res_folder:
-				raise Exception("Cant evaluate and find box-js results folder.")
-		
-			js_file.dynamic_dump_folder = os.path.join(dump_dir, res_folder)
+		if not res_folder:
+			raise Exception("Cant evaluate and find box-js results folder.")
 	
-		except Exception as e:
-			raise e
+		js_file.dynamic_results_folder = os.path.join(dump_dir, res_folder)
 
 		js_file.dynamic_done = True
