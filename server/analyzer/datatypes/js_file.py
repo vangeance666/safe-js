@@ -15,16 +15,32 @@ class JsFile:
 
 	is_saved: bool = False
 
-	dynamic_done: bool = False
+	synthetic_done: bool = False
+	static_run_error: bool = False
+	static_done: bool = False
 
 	page_src: str = "" # To identify which page is it from (Parent)
-	# rel_path: str = ""
 	saved_path: str = ""
 
+	dynamic_done: bool = False
+	dynamic_run_error: bool = False
+
 	dynamic_results_folder: str = ""
+	dynamic_results_parsed: bool = False
 	dynamic_results: BoxJsResult = field(default_factory=BoxJsResult)
 
 	syntactic_extract: list = field(default_factory=list)
 
 	static_features: dict = field(default_factory=dict)
+	static_features_done: bool = False
+
 	dynamic_features: dict = field(default_factory=dict)
+	dynamic_features_done: bool = False
+
+	def get_text(self) -> str:
+		if self.saved_path:
+			with open(self.saved_path, 'r') as f:
+				return f.read()
+
+		return ""
+
