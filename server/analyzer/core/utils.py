@@ -46,7 +46,7 @@ def enumerate(dirpath, module_prefix, namespace, class_, attributes={}, as_dict=
     return sorted(modules, key=lambda x: x.__name__.lower())
 
 def get_file_buffer(file_path):
-    with open(file_path, 'r') as f:
+    with open(file_path, 'r', encoding='utf8') as f:
         return f.read()
 
 def entropy(string):
