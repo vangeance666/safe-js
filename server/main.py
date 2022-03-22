@@ -10,7 +10,7 @@ from analyzer.controllers.results_controller import ResultsController
 from app import create_app
 
 page_controller = PageController()
-# features_controller = FeaturesController()
+features_controller = FeaturesController()
 results_controller = ResultsController()
 
 
@@ -38,8 +38,8 @@ if __name__ == '__main__':
 	# # print("saving js files---")	
 	page_controller.save_js_files(pages)
 
-	with FeaturesController() as features_controller:
-		features_controller.extract_pages_features(pages)
+	# with FeaturesController() as features_controller:
+	features_controller.extract_pages_features(pages)
 	
 	# results_controller.save_pages(pages)
 
