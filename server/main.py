@@ -7,19 +7,19 @@ import esprima
 from analyzer.controllers.features_controller import FeaturesController
 from analyzer.controllers.page_controller import PageController
 from analyzer.controllers.results_controller import ResultsController
+
 from app import create_app
 
-page_controller = PageController()
-features_controller = FeaturesController()
-results_controller = ResultsController()
+# page_controller = PageController()
+# features_controller = FeaturesController()
+# results_controller = ResultsController()
 
-
-
-
-
+app = create_app()
 
 
 if __name__ == '__main__':
+
+	app.run(debug=True)
 
 
 	# pages = results_controller.load_pages()
