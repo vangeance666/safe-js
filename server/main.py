@@ -10,19 +10,23 @@ from analyzer.controllers.results_controller import ResultsController
 from app import create_app
 
 page_controller = PageController()
-features_controller = FeaturesController()
+# features_controller = FeaturesController()
 results_controller = ResultsController()
-
-
-
-
 
 
 
 if __name__ == '__main__':
 
+	# import os
 
-	# pages = results_controller.load_pages()
+	# for f in os.listdir("c:\\Users"):
+	# X = "C:\\Users\\User\\Documents\\GitHub\\safe-js\\server\\data\\js_dynamic_results\\page_cd5799acbcd45100ffea5ff03da25ef53e72678433193b23d627d8a42ef96844\\js_file_0901879a02a24f54ab20c7641049f1b25a42fb91be805a82fbb86d031a330823\\js_file_0901879a02a24f54ab20c7641049f1b25a42fb91be805a82fbb86d031a330823.results\\"
+	# for f in os.listdir(X):
+
+
+	# 	print(f)
+
+	pages = results_controller.load_pages()
 
 	# if not pages:
 	# 	print("No saved pages results found")
@@ -31,13 +35,13 @@ if __name__ == '__main__':
 	pages = page_controller.extract_pages(["https://developer.mozilla.org/en-US/docs/Web/API/WindowEventHandlers/onbeforeunload"])
 	
 
-	# print("saving js files---")	
+	# # print("saving js files---")	
 	page_controller.save_js_files(pages)
 
-	# with FeaturesController() as features_controller:
-	features_controller.extract_pages_features(pages)
+	with FeaturesController() as features_controller:
+		features_controller.extract_pages_features(pages)
 	
-	results_controller.save_pages(pages)
+	# results_controller.save_pages(pages)
 
 
 
