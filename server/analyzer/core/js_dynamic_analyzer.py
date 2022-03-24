@@ -101,8 +101,7 @@ class JsDynamicAnalyzer:
 
 			js_file.dynamic_results[attr] = parse_func(json_details)
 
-		js_file.dynamic_results_parsed = True	
-
+		js_file.dynamic_results_parsed = True
 
 	def run_box_js(self, js_file: JsFile):
 
