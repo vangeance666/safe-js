@@ -30,22 +30,12 @@ class FeaturesController:
 	def save_pages_to_csv(self, pages: List[Page]):
 		pass
 
-	def _extract_dynamic_features(self, js_file: JsFile) -> BoxJsResult:
-
-		self._dynamic_analyzer.run_box_js(js_file)
-		self._dynamic_analyzer.parse_box_js_results(js_file)
-
-		self._features_extractor.extract_dynamic_features(js_file)
-		# return None
-		
-		if not js_file.dynamic_done:
-			return None
-
 	def extract_pages_features(self, pages: List[Page]) -> bool:
 
 		for page in pages:
 
 			if not page.success: #Ensure that its successfully scraped
+				print("Skiped {} since not success".format(page.src))
 				continue
 
 			for js_file in itertools.chain(page.internal_js_files, page.external_js_files):
