@@ -1,11 +1,10 @@
 import os
 
 from analyzer.core.exceptions import InvalidUsageError
+from analyzer.core.utils import cw2us, us2mc
 from analyzer.datatypes.js_file import JsFile
-from analyzer.features.javascript.dynamic import (active_url_features, ioc_features, url_features)
-# print("active_url_features: ", active_url_features)
-# print("url_features: ", url_features)
-# print("ioc_features: ", ioc_features)
+from analyzer.features.javascript.dynamic import (active_url_features,
+                                                  ioc_features, url_features)
 from analyzer.features.javascript.static import static_features
 
 
@@ -23,10 +22,10 @@ class JsFeaturesExtractor:
 			feature_obj = features[key]()
 
 			try:
-				ret[feature_obj.name] = (1, feature_obj.extract(js_file))
+				ret[features[key].__name__] = (1, feature_obj.extract(js_file))
 			except Exception as e:
 				print(e)
-				ret[feature_obj.name]  = (0,0) # 0 To represent error				
+				ret[features[key].__name__]  = (0,0) # 0 To represent error				
 
 		return ret
 
@@ -34,6 +33,8 @@ class JsFeaturesExtractor:
 
 		if not js_file.dynamic_done:
 			raise InvalidUsageError("Not analyzed with Box-jS yet, cant extract features")
+
+		
 
 		js_file.dynamic_features["iocs"] = self._parse_features(ioc_features
 			, js_file)
