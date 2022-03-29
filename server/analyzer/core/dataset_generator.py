@@ -83,7 +83,8 @@ class DatasetGenerator:
 						and js_file.dynamic_features:
 
 						for feature_category, results_dict in js_file.dynamic_features.items():
-							if not results_dict:
+
+							if not results_dict: # Skip if dict is totally empty meaning file not found
 								continue
 
 							print("results_dict: ", results_dict)
