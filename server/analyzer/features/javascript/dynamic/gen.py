@@ -3,13 +3,14 @@ import os
 import re
 
 
+
 def cw2us(x): # capwords to underscore notation
     return re.sub(r'(?<=[a-z])[A-Z]|(?<!^)[A-Z](?=[a-z])',
         r"_\g<0>", x).lower(  )
 
 def us2mc(x): # underscore to mixed-case notation
     return re.sub(r'_([a-z])', lambda m: (m.group(1).upper(  )), x)
-    
+
 if __name__ == '__main__':
 		
 
