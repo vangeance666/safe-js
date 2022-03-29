@@ -19,6 +19,7 @@ class DatasetWriter:
 		self.f = open(self._csv_path, 'w', newline='')
 
 		self.writer = csv.DictWriter(self.f, fieldnames=self._field_names)
+		self.writer.writeheader()
 
 		return self.writer
 
@@ -33,17 +34,16 @@ class DatasetGenerator:
 		print("self._headers: ", self._headers)
 
 	@staticmethod
-	def no_feature_found_row(feature_category: dict):
+	def no_feature_found_row(feature_category: dict) -> dict:
 		""" For JS features extractor to generate default values if
 		file is not found. 
 		
 		Args:
 		    feature_category (dict): Dictionary of features class definitions
 		"""	
-		cols_names = [cw2us(y.__name__) for x, y in feature_category.items()] 
+		col_names = [cw2us(y.__name__) for x, y in feature_category.items()] 
 
-		return DatasetGenerator.default_row(col_names)
-
+		return {col_name: (0,0) for col_name in col_names}
 
 	def _feature_format(self, e) -> tuple:
 		return ("has_"+cw2us(e), cw2us(e))
@@ -56,8 +56,8 @@ class DatasetGenerator:
 		return list(itertools.chain.from_iterable(self._feature_format(S.__name__)
 			for _, S in dynamic_features.items()))
 	
-	@staticmethod
-	def default_row(self, col_names: list) -> dict:
+
+	def default_vals(self, col_names: list) -> dict:
 		return { col_name:0 for col_name in col_names }
 
 
@@ -66,18 +66,17 @@ class DatasetGenerator:
 			for page in pages:
 				for js_file in itertools.chain(page.internal_js_files, page.external_js_files):
 
-					static_default = DatasetGenerator.default_row(self._eval_static_features_headers())
-					dynamic_default = DatasetGenerator.default_row(self._eval_dynamic_features_headers())
+					static_default = self.default_vals(self._eval_static_features_headers())
+					dynamic_default = self.default_vals(self._eval_dynamic_features_headers())
 
-					row_data = {**{ "js_src": js_file.src }, **static_default, **dynamic_default}
-					
+					row_data = {**{ "js_src": js_file.src }, **static_default, **dynamic_default}					
 
 					if not js_file.static_run_error \
 						and js_file.static_features \
 						and js_file.static_features.get("all"):
 
-						for name, value in js_file.static_features.get("all").items():
-							row_data["has_"+name], row_data[name] = value
+						for name, values in js_file.static_features.get("all").items():
+							row_data["has_"+name], row_data[name] = values
 
 
 					if not js_file.dynamic_run_error \
@@ -87,7 +86,10 @@ class DatasetGenerator:
 							if not results_dict:
 								continue
 
+							print("results_dict: ", results_dict)
+
 							for name, value in results_dict.items():
+								print("value: ", value)
 								row_data["has_"+name], row_data[name] = value
 
 					writer.writerow(row_data)
