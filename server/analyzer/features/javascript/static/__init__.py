@@ -1,4 +1,4 @@
-from analyzer.core.util import enumerate_packages
+from analyzer.core.utils import enumerate_packages
 from analyzer.abstracts import Feature
 
 static_features = enumerate_packages(
