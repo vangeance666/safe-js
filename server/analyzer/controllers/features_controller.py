@@ -2,8 +2,6 @@ import os
 from typing import List
 import itertools
 
-from analyzer.core.js_dynamic_analyzer import JsDynamicAnalyzer
-from analyzer.core.js_static_analyzer import JsStaticAnalyzer
 from analyzer.core.js_features_extractor import JsFeaturesExtractor
 from analyzer.core.utils import get_file_buffer
 from analyzer.datatypes.box_js_result import BoxJsResult
@@ -14,21 +12,7 @@ from analyzer.datatypes.page import Page
 class FeaturesController:
 	
 	def __init__(self):
-
-		self._dynamic_analyzer = JsDynamicAnalyzer()
-
-		self._static_analyzer = JsStaticAnalyzer()
-
-		self._features_extractor = JsFeaturesExtractor()	
-
-	def __enter__(self):
-		return self
-
-	def __exit__(self, type, value, traceback):
-		self._dynamic_analyzer.cleanup()
-
-	def save_pages_to_csv(self, pages: List[Page]):
-		pass
+		self._features_extractor = JsFeaturesExtractor()		
 
 	def extract_pages_features(self, pages: List[Page]) -> bool:
 
@@ -42,24 +26,22 @@ class FeaturesController:
 
 				print("Extracting features for {}".format(js_file.src))
 
-				try:
-					self._static_analyzer.run_syntactic_extraction(js_file)
-					self._features_extractor.extract_static_features(js_file)
-				except Exception as e:
-					print("e: ", e)
-					js_file.static_run_error = True
-					continue
+				if not js_file.dynamic_run_error:
+					print("Dynamic features for {}".format(js_file.src))
 
-				try:
-					self._dynamic_analyzer.run_box_js(js_file)
 					self._features_extractor.extract_dynamic_features(js_file)
-				except Exception as e:
-					print("e: ", e)
-					js_file.dynamic_run_error = True					
-					continue
+				else:
+					print("[!] Skipped Dynamic features for {}".format(js_file.src))
 
-				print("fin js")
-			
+
+				if not js_file.static_run_error:
+					print("Static features for {}".format(js_file.src))
+
+					self._features_extractor.extract_static_features(js_file)
+				else:
+					print("[!] Skipped Static features for {}".format(js_file.src))
+
+
 		return True
 
 
