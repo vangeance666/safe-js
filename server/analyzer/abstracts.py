@@ -25,7 +25,7 @@ class DynamicFeature(Feature):
 	pass
 
 
-class IOCFeature(DynamicFeature):
+class IocFeature(DynamicFeature):
 	pass
 
 
