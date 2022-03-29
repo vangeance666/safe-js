@@ -6,40 +6,57 @@ from dataclasses import asdict
 import esprima
 from analyzer.controllers.features_controller import FeaturesController
 from analyzer.controllers.page_controller import PageController
+from analyzer.controllers.analysis_controller import AnalysisController
 from analyzer.controllers.results_controller import ResultsController
+
+from analyzer.core.dataset_generator import DatasetGenerator
+
+
 from app import create_app
+
+dataset_generator = DatasetGenerator()
 
 page_controller = PageController()
 features_controller = FeaturesController()
+analysis_controller  = AnalysisController()
 results_controller = ResultsController()
-
-
 
 if __name__ == '__main__':
 
-	# import os
 
-	# for f in os.listdir("c:\\Users"):
-	# X = "C:\\Users\\User\\Documents\\GitHub\\safe-js\\server\\data\\js_dynamic_results\\page_cd5799acbcd45100ffea5ff03da25ef53e72678433193b23d627d8a42ef96844\\js_file_0901879a02a24f54ab20c7641049f1b25a42fb91be805a82fbb86d031a330823\\js_file_0901879a02a24f54ab20c7641049f1b25a42fb91be805a82fbb86d031a330823.results\\"
-	# for f in os.listdir(X):
+	dataset_generator._evaluate_dynamic_headers()
 
-	# print(f)
+	# pages = results_controller.load_pages()
 
-	pages = results_controller.load_pages()
+	# if pages is None:
 
-	# if not pages:
-	# 	print("No saved pages results found")
-	
 
-	pages = page_controller.extract_pages(["https://developer.mozilla.org/en-US/docs/Web/API/WindowEventHandlers/onbeforeunload"])
-	
+	# 	# if 
 
-	# # print("saving js files---")	
-	page_controller.save_js_files(pages)
+	# 	# if not pages:
+	# 	# 	print("No saved pages results found")
+		
 
-	# with FeaturesController() as features_controller:
-	features_controller.extract_pages_features(pages)
-	
+	# 	pages = page_controller.extract_pages(["https://developer.mozilla.org/en-US/docs/Web/API/WindowEventHandlers/onbeforeunload"])
+
+	# 	# # print("saving js files---")
+	# 	page_controller.save_js_files(pages)
+
+	# 	analysis_controller.analyze_pages_js_files(pages)
+	# 	# with FeaturesController() as features_controller:
+	# 	features_controller.extract_pages_features(pages)
+		
+
+	# for p in pages:
+	# 	for i, j in enumerate(p.internal_js_files):
+	# 		print("Internal--", str(i), str(j.src))
+	# 		print(j.static_features)
+
+	# 	for i, j in enumerate(p.external_js_files):
+	# 		print("External--", str(i), str(j.src))
+	# 		print(j.dynamic_features)
+
+	# print('---saving pages---')
 	# results_controller.save_pages(pages)
 
 
@@ -69,6 +86,3 @@ if __name__ == '__main__':
 	# 		except Exception as e:
 	# 			print(e)
 	# 		continue
-
-
-
