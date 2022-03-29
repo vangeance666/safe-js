@@ -4,12 +4,13 @@ import inspect
 import math
 import os
 import pkgutil
+import re
 import subprocess
 
 from analyzer.datatypes.js_file import JsFile
 
 
-def enumerate(dirpath, module_prefix, namespace, class_, attributes={}, as_dict=False):
+def enumerate_packages(dirpath, module_prefix, namespace, class_, attributes={}, as_dict=False):
     
     if os.path.isfile(dirpath):
         dirpath = os.path.dirname(dirpath)
@@ -88,6 +89,14 @@ def format_js_file_save(folder: str, js_file: JsFile) -> str:
     return os.path.join(folder
         , "page_"+sha_256_str(js_file.page_src)
         , "js_file_"+sha_256_str(js_file.src))
+
+
+def cw2us(x): # capwords to underscore notation
+    return re.sub(r'(?<=[a-z])[A-Z]|(?<!^)[A-Z](?=[a-z])',
+        r"_\g<0>", x).lower(  )
+
+def us2mc(x): # underscore to mixed-case notation
+    return re.sub(r'_([a-z])', lambda m: (m.group(1).upper(  )), x)
 
 
 "C:\\Users\\User\\Documents\\GitHub\\safe-js\\server\\save\\pages\\cd5799acbcd45100ffea5ff03da25ef53e72678433193b23d627d8a42ef96844\\87f23dbb35cf254215afee3a56defbbdd57f431f0e5ac3e8410b9a4881ea9028",

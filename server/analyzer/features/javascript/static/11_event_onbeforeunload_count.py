@@ -23,6 +23,7 @@ class EventOnbeforeunloadCount(Feature):
 		return sum(parse_esprima(js_file.syntactic_extract.body, cond) for cond in self.CONDITIONS)
 
 	def extract(self, js_file: JsFile):
+
 		return self._evaluate(js_file)
 
 	

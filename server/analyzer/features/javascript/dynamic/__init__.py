@@ -1,38 +1,13 @@
-from analyzer.abstracts import (Feature, IOCFeature, UrlsFeatures, ActiveUrlsFeature)
 
-from analyzer.core.utils import enumerate
+from analyzer.abstracts import Feature, IocFeature, UrlsFeatures, ActiveUrlsFeature
 
-dynamic_features = enumerate(
-    __file__, "analyzer.features.javascript.dynamic"
-    , globals(), Feature, as_dict=True
-)
-
-ioc_features = enumerate(
-    __file__, "analyzer.features.javascript.dynamic"
-    , globals(), IOCFeature, as_dict=True
-)
-
-url_features  = enumerate(
-    __file__, "analyzer.features.javascript.dynamic"
-    , globals(), UrlsFeatures, as_dict=True
-)
-
-active_url_features = enumerate(
-    __file__, "analyzer.features.javascript.dynamic"
-    , globals(), ActiveUrlsFeature, as_dict=True
-)
+from analyzer.core.utils import enumerate_packages
 
 
-# benign_urls = [
-# 	"xsite.singaporetech.edu.sg"
-# 	, "google.com"
-# ]
+ioc_features = enumerate_packages(__file__, "analyzer.features.javascript.dynamic", globals(), IocFeature, as_dict=True)
+url_features  = enumerate_packages(__file__, "analyzer.features.javascript.dynamic", globals(), UrlsFeatures, as_dict=True)
 
-# malign_urls = [
-# 	"example.virus.com"
-# 	, "example2.virus.com"
-# ]
+active_url_features = enumerate_packages(__file__, "analyzer.features.javascript.dynamic", globals(), ActiveUrlsFeature, as_dict=True)
 
 
-
-
+dynamic_features = ioc_features

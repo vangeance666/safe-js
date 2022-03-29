@@ -1,3 +1,4 @@
+import itertools
 import os
 import pickle
 from typing import Any, List
@@ -21,28 +22,40 @@ class ResultsController:
 		with open(file_path, 'rb') as f:
 			return pickle.load(f)
 
-	def _pickle_dump(self, save_path: str, data: Any):
+	def _pickle_dump(self, save_path: str, data):
 		with open(save_path, 'wb') as f:
-			pickle.dump(data, f, pickle.HIGHEST_PROTOCOL)
+			pickle.dump(data, f)
 
 	def _flush_script_elements(self, pages: List[Page]):
 		# Have to do this cause pickle cant save BS4 Elements
 		for p in pages:
-			p.script_elements = None
+			p.text = ""
+			p.script_elements = []
+			for j in itertools.chain(p.internal_js_files, p.external_js_files):
+				j.text = ""
+				j.syntactic_extract = []
 
 	def load_pages(self) -> List[Page]:
-		
-		if not os.path.exists(self._pages_results_path):
-			return None
-		
-		return self.reparse_script_elements(self._pickle_load(self._pages_results_path))
-		
+		try:
+			data = self._pickle_load(self._pages_results_path)
+			self.reparse_script_elements(data)			
+			return data
+		except Exception as e:
+			print(e)
 
+			return None
 
 	def save_pages(self, pages: List[Page]) -> bool:
 		try:
+			if pages is None:
+				print('Pages is none')
+
 			self._flush_script_elements(pages)
-			self._pickle_dump(self._pages_results_path, data=pages)
+
+			if pages is None:
+				print('Pages is none')
+
+			self._pickle_dump(self._pages_results_path, pages)
 		except Exception as e:
 			raise
 		return True
