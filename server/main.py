@@ -26,8 +26,8 @@ if __name__ == '__main__':
 	
 	# pass
 
-	# pages = results_controller.load_pages()
-	# dataset_generator.pages_to_csv(pages, "yoyo.csv")
+	pages = results_controller.load_pages()
+	dataset_generator.pages_to_csv(pages, "yoyo.csv")
 
 	# if pages is None:
 
@@ -38,28 +38,29 @@ if __name__ == '__main__':
 	# 	# 	print("No saved pages results found")
 		
 
-	pages = page_controller.extract_pages(["https://developer.mozilla.org/en-US/docs/Web/API/WindowEventHandlers/onbeforeunload"])
+	# pages = page_controller.extract_pages(["https://developer.mozilla.org/en-US/docs/Web/API/WindowEventHandlers/onbeforeunload"])
 
-	# # print("saving js files---")
-	page_controller.save_js_files(pages)
+	# # # print("saving js files---")
+	# page_controller.save_js_files(pages)
 
-	analysis_controller.analyze_pages_js_files(pages)
-	# with FeaturesController() as features_controller:
-	features_controller.extract_pages_features(pages)
+	# # with AnalysisController() as analysis_controller:
+	# analysis_controller.analyze_pages_js_files(pages)
+	# # with FeaturesController() as features_controller:
+	# features_controller.extract_pages_features(pages)
 		
 
-	for p in pages:
-		for i, j in enumerate(p.internal_js_files):
-			print("Internal--", str(i), str(j.src))
-			print(j.static_features)
+	# for p in pages:
+	# 	for i, j in enumerate(p.internal_js_files):
+	# 		print("Internal--", str(i), str(j.src))
+	# 		print(j.static_features)
 
-		for i, j in enumerate(p.external_js_files):
-			print("External--", str(i), str(j.src))
-			print(j.dynamic_features)
+	# 	for i, j in enumerate(p.external_js_files):
+	# 		print("External--", str(i), str(j.src))
+	# 		print(j.dynamic_features)
 
-	print('---saving pages---')
-	results_controller.save_pages(pages)
-	print("finish")
+	# print('---saving pages---')
+	# results_controller.save_pages(pages)
+	# print("finish")
 
 
 
