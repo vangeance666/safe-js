@@ -9,9 +9,10 @@ class IocRun:
 	_name: str = "4_ioc_run"	
 
 	def _evaluate(self, js_file: JsFile):
-		return 1
+		for ioc in js_file.dynamic_results.iocs:
+			if ios['type'] == "Run":
+				return 1		
+		return 0
 
 	def extract(self, js_file: JsFile):
-		if not js_file.dynamic_results.iocs:
-			return 0, 0
-		return 1, self._evaluate(js_file)
+		return self._evaluate(js_file)
