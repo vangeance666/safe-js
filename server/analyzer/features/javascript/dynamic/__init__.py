@@ -1,7 +1,7 @@
 
 from analyzer.abstracts import Feature, IocFeature, UrlsFeatures, ActiveUrlsFeature
 
-from analyzer.core.util import enumerate_packages
+from analyzer.core.utils import enumerate_packages
 
 
 ioc_features = enumerate_packages(__file__, "analyzer.features.javascript.dynamic", globals(), IocFeature, as_dict=True)
@@ -10,4 +10,4 @@ url_features  = enumerate_packages(__file__, "analyzer.features.javascript.dynam
 active_url_features = enumerate_packages(__file__, "analyzer.features.javascript.dynamic", globals(), ActiveUrlsFeature, as_dict=True)
 
 
-dynamic_features = {**ioc_features, **url_features, **active_url_features}
+dynamic_features = ioc_features
