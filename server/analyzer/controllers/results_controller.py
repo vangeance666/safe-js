@@ -25,7 +25,6 @@ class ResultsController:
 	def _pickle_dump(self, save_path: str, data):
 		with open(save_path, 'wb') as f:
 			pickle.dump(data, f)
-			# pickle.dump(data, f, pickle.HIGHEST_PROTOCOL)
 
 	def _flush_script_elements(self, pages: List[Page]):
 		# Have to do this cause pickle cant save BS4 Elements
@@ -36,18 +35,15 @@ class ResultsController:
 				j.text = ""
 				j.syntactic_extract = []
 
-
 	def load_pages(self) -> List[Page]:
-		
-		if not os.path.exists(self._pages_results_path):
+		try:
+			data = self._pickle_load(self._pages_results_path)
+			self.reparse_script_elements(data)			
+			return data
+		except Exception as e:
+			print(e)
+
 			return None
-
-		data = self._pickle_load(self._pages_results_path)
-		self.reparse_script_elements(data)
-		
-		return data 
-		
-
 
 	def save_pages(self, pages: List[Page]) -> bool:
 		try:
