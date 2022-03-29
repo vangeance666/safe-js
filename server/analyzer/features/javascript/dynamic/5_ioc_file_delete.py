@@ -1,10 +1,10 @@
 
 import re
-from analyzer.abstracts import IOCFeature
+from analyzer.abstracts import IocFeature
 from analyzer.datatypes.js_file import JsFile
 
 
-class IocFileDelete:
+class IocFileDelete(IocFeature):
 	_index_no: int = 5
 	_name: str = "5_ioc_file_delete"	
 
@@ -16,3 +16,4 @@ class IocFileDelete:
 
 	def extract(self, js_file: JsFile):
 		return self._evaluate(js_file)
+	

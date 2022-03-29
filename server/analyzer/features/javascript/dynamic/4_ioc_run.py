@@ -1,10 +1,10 @@
 
 import re
-from analyzer.abstracts import IOCFeature
+from analyzer.abstracts import IocFeature
 from analyzer.datatypes.js_file import JsFile
 
 
-class IocRun:
+class IocRun(IocFeature):
 	_index_no: int = 4
 	_name: str = "4_ioc_run"	
 
@@ -16,3 +16,4 @@ class IocRun:
 
 	def extract(self, js_file: JsFile):
 		return self._evaluate(js_file)
+	
