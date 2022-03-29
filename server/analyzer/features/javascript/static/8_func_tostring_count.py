@@ -20,6 +20,10 @@ class FuncTostringCount(Feature):
 		return sum(parse_esprima(js_file.syntactic_extract.body, cond) for cond in self.CONDITIONS)
 
 	def extract(self, js_file: JsFile):
-		return self._evaluate(js_file)
+		try:
+			return 1, self._evaluate(js_file)
+		except Exception as e:
+			print(e)
+			return 0, 0 
 
 	

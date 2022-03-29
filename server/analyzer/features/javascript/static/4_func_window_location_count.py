@@ -20,6 +20,10 @@ class FuncWindowLocationCount(Feature):
 		# return len(re.findall(self.PATTERN, js_buffer))
 
 	def extract(self, js_file: JsFile):
-		return self._evaluate(js_file)
+		try:
+			return 1, self._evaluate(js_file)
+		except Exception as e:
+			print(e)
+			return 0, 0 
 
 	
