@@ -9,9 +9,9 @@ layout.pages.settings = (function() {
 	self.display = function() {
 		console.log("Settings display toggled")
 
-		$('#'+ids['rootBody']).html(HTML(self.ctx))
+		$('#'+eleIds['rootBody']).html(HTML(self.ctx))
 
-		addEvents();
+		// addEvents();
 	}
 
 	return self;

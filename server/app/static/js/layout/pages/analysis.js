@@ -7,8 +7,9 @@ layout.pages.analysis = (function() {
 	}
 
 	self.display = function() {
+		console.log("Analysis display toggled")
 
-		$('#'+ids['rootBody']).html(HTML(self.ctx))
+		$('#'+eleIds['rootBody']).html(HTML(self.ctx))
 
 		addEvents();
 	}

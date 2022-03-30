@@ -21,8 +21,6 @@ layout.nav = (function() {
         "d": "M11.366 22.564l1.291-1.807-1.414-1.414-1.807 1.291c-0.335-0.187-0.694-0.337-1.071-0.444l-0.365-2.19h-2l-0.365 2.19c-0.377 0.107-0.736 0.256-1.071 0.444l-1.807-1.291-1.414 1.414 1.291 1.807c-0.187 0.335-0.337 0.694-0.443 1.071l-2.19 0.365v2l2.19 0.365c0.107 0.377 0.256 0.736 0.444 1.071l-1.291 1.807 1.414 1.414 1.807-1.291c0.335 0.187 0.694 0.337 1.071 0.444l0.365 2.19h2l0.365-2.19c0.377-0.107 0.736-0.256 1.071-0.444l1.807 1.291 1.414-1.414-1.291-1.807c0.187-0.335 0.337-0.694 0.444-1.071l2.19-0.365v-2l-2.19-0.365c-0.107-0.377-0.256-0.736-0.444-1.071zM7 27c-1.105 0-2-0.895-2-2s0.895-2 2-2 2 0.895 2 2-0.895 2-2 2zM32 12v-2l-2.106-0.383c-0.039-0.251-0.088-0.499-0.148-0.743l1.799-1.159-0.765-1.848-2.092 0.452c-0.132-0.216-0.273-0.426-0.422-0.629l1.219-1.761-1.414-1.414-1.761 1.219c-0.203-0.149-0.413-0.29-0.629-0.422l0.452-2.092-1.848-0.765-1.159 1.799c-0.244-0.059-0.492-0.109-0.743-0.148l-0.383-2.106h-2l-0.383 2.106c-0.251 0.039-0.499 0.088-0.743 0.148l-1.159-1.799-1.848 0.765 0.452 2.092c-0.216 0.132-0.426 0.273-0.629 0.422l-1.761-1.219-1.414 1.414 1.219 1.761c-0.149 0.203-0.29 0.413-0.422 0.629l-2.092-0.452-0.765 1.848 1.799 1.159c-0.059 0.244-0.109 0.492-0.148 0.743l-2.106 0.383v2l2.106 0.383c0.039 0.251 0.088 0.499 0.148 0.743l-1.799 1.159 0.765 1.848 2.092-0.452c0.132 0.216 0.273 0.426 0.422 0.629l-1.219 1.761 1.414 1.414 1.761-1.219c0.203 0.149 0.413 0.29 0.629 0.422l-0.452 2.092 1.848 0.765 1.159-1.799c0.244 0.059 0.492 0.109 0.743 0.148l0.383 2.106h2l0.383-2.106c0.251-0.039 0.499-0.088 0.743-0.148l1.159 1.799 1.848-0.765-0.452-2.092c0.216-0.132 0.426-0.273 0.629-0.422l1.761 1.219 1.414-1.414-1.219-1.761c0.149-0.203 0.29-0.413 0.422-0.629l2.092 0.452 0.765-1.848-1.799-1.159c0.059-0.244 0.109-0.492 0.148-0.743l2.106-0.383zM21 15.35c-2.402 0-4.35-1.948-4.35-4.35s1.948-4.35 4.35-4.35 4.35 1.948 4.35 4.35c0 2.402-1.948 4.35-4.35 4.35z"
     }
 ]
-
-
 	// Header Logo and Overview
 	const mainNavCtx = ["nav", {"class": "navbar navbar-dark navbar-theme-primary px-4 col-12 d-lg-none"},
 	    ["a", {"class": "navbar-brand me-lg-5", "href": "/"},
@@ -76,32 +74,6 @@ layout.nav = (function() {
             ]
 	}
 
-	// ["li", {"class": "nav-item"},
- //                ["a", {
- //                        "target": "_blank",
- //                        "href": "https://appseed.us/support",
- //                        "class": "nav-link d-flex align-items-center"
- //                    },
- //                    ["span", {"class": "sidebar-icon"},
- //                        ["svg", {
- //                                "class": "icon icon-xs me-2",
- //                                "fill": "currentColor",
- //                                "viewbox": "0 0 20 20",
- //                                "xmlns": "http://www.w3.org/2000/svg"
- //                            },
- //                            ["path", {
- //                                    "fill-rule": "evenodd",
- //                                    "d": "M11.49 3.17c-.38-1.56-2.6-1.56-2.98 0a1.532 1.532 0 01-2.286.948c-1.372-.836-2.942.734-2.106 2.106.54.886.061 2.042-.947 2.287-1.561.379-1.561 2.6 0 2.978a1.532 1.532 0 01.947 2.287c-.836 1.372.734 2.942 2.106 2.106a1.532 1.532 0 012.287.947c.379 1.561 2.6 1.561 2.978 0a1.533 1.533 0 012.287-.947c1.372.836 2.942-.734 2.106-2.106a1.533 1.533 0 01.947-2.287c1.561-.379 1.561-2.6 0-2.978a1.532 1.532 0 01-.947-2.287c.836-1.372-.734-2.942-2.106-2.106a1.532 1.532 0 01-2.287-.947zM10 13a3 3 0 100-6 3 3 0 000 6z",
- //                                    "clip-rule": "evenodd"
- //                                }
- //                            ]
- //                        ]
- //                    ],
- //                    ["span", {"class": "sidebar-text"}, "Settings"]
- //                ]
- //            ]
-
-
 	const genMenuSeperator = function() {
 		return ["li", {
 	            "role": "separator",
@@ -109,7 +81,6 @@ layout.nav = (function() {
 	        }
 	    ]
 	}
-
 
 	const sideNavCtx = ["nav", {
         "id": "sidebarMenu",
@@ -147,33 +118,24 @@ layout.nav = (function() {
         ],
         ["ul", {"class": "nav flex-column pt-3 pt-md-0"},
 
-            // Start
-            // (itemId, clsAdd, itemHref, viewBox, iconPathCtx, labelName) 
-            
-            genSideMenuSingleItem(ids['navMenuDashboardItem'],
+            // (itemId, clsAdd, itemHref, viewBox, iconPathCtx, labelName)             
+            genSideMenuSingleItem(eleIds['navMenuDashboardItem'],
             	"", "#/dashboard", "0 0 20 20", dashboardPathCtx, "Dashboard"),
 
-            genSideMenuSingleItem(ids['navMenuRecentItem'],
+            genSideMenuSingleItem(eleIds['navMenuRecentItem'],
             	"", "#/recent", "0 0 20 20", recentPathCtx, "Recent"),
 
-            genSideMenuSingleItem(ids['navMenuAnalysisItem'],
+            genSideMenuSingleItem(eleIds['navMenuAnalysisItem'],
             	"", "#/analysis", "0 0 32 32", analysisPathCtx, "Analysis"),
 
             genMenuSeperator(),
 
-            genSideMenuSingleItem(ids['navMenuSystemItem'],
+            genSideMenuSingleItem(eleIds['navMenuSystemItem'],
             	"", "#/settings", "0 0 32 32", settingsPathCtx, "Settings")
 
-            
-        ]
-    ]
-]
-
-	
-
-
-
-
+	        ]
+	    ]
+	]
 	self.ctx = [mainNavCtx, sideNavCtx]
 
 	self.addEvents = function() {

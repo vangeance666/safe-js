@@ -34,7 +34,7 @@ var modelStats = {
 	chartClassifyNllLos: "",
 }
 
-const ids = {
+const eleIds = {
 	"root": "id-root",
 	"rootBody": "id-root-body",
 
