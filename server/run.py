@@ -9,24 +9,21 @@ from analyzer.controllers.features_controller import FeaturesController
 from analyzer.controllers.page_controller import PageController
 from analyzer.controllers.results_controller import ResultsController
 from analyzer.core.dataset_generator import DatasetGenerator
-from app import create_app
 
 # page_controller = PageController()
 # features_controller = FeaturesController()
 # results_controller = ResultsController()
 
-dataset_generator = DatasetGenerator()
-page_controller = PageController()
-features_controller = FeaturesController()
-analysis_controller  = AnalysisController()
-results_controller = ResultsController()
+# dataset_generator = DatasetGenerator()
+# page_controller = PageController()
+# features_controller = FeaturesController()
+# analysis_controller  = AnalysisController()
+# results_controller = ResultsController()
 
-app = create_app()
+import uvicorn
 
-if __name__ == '__main__':
-	app.run(debug=True)
-	
-	
+if __name__ == "__main__":
+    uvicorn.run("app.main:app", host="0.0.0.0", port=8090, reload=True)	
 	# pass
 
 	
