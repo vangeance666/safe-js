@@ -1,27 +1,23 @@
-
 $(function(){
 	console.log("onload---")
 
-	// $('body').html(HTML(
-	// 	layout.nav.ctx,
-	// 	['div', {'id': ids['root'], 'class':'container-fluid'}, 
-	// 		['div', {'id': ids['bodyRoot'], 'class': 'container-fluid'}], // pages only change this
-	// 	],
-	// ));
-
-	// HTML.route("dashboard/", testhash);
-
-
-	// HTML.route("overview/", layout.pages.overview.display);
-	// HTML.route("results/", layout.pages.results.display);
-	// HTML.route("modelstatistics/", layout.pages.modelStatistics.display);
+	$('body').html(HTML(
+		layout.nav.ctx,
+		['div', {'id': ids['root'], 'class':'container-fluid'}, 
+			['div', {'id': ids['rootBody'], 'class': 'container-fluid d-flex flex-column min-vh-100'}], // pages only change this
+		],
+		layout.footer.ctx
+	));
 
 
 	layout.nav.addEvents();
 	
-	loadPage();
-	// layout.pages.upload.display();
+	HTML.route("", layout.pages.dashboard.display);
+	HTML.route("dashboard", layout.pages.dashboard.display);
+	HTML.route("recent", layout.pages.recent.display);
+	HTML.route("analysis", layout.pages.analysis.display);
 
-	console.log("loaded main")
+	HTML.route.go();
+	
 
 });
