@@ -36,7 +36,13 @@ var modelStats = {
 
 const ids = {
 	"root": "id-root",
-	"rootBody": "id-root-body"
+	"rootBody": "id-root-body",
+
+	"navMenuDashboardItem": "nav-menu-dashboard-item",
+	"navMenuRecentItem": "nav-menu-recent-item",
+	"navMenuAnalysisItem": "nav-menu-analysis-item",
+	"navMenuSystemItem": "nav-menu-system-item",
+
 
 };
 
