@@ -1,5 +1,5 @@
 /*!
- * Aris JavaScript Library v1.0.8
+ * Aris JavaScript Library v1.0.10
  * @author Benjamin Kang Yue Sheng
  * MIT license
  * 
@@ -183,10 +183,10 @@
  *   HTML(['svg', {xmlns:'http://www.w3.org/2000/svg',
  *     width:'30px', height:'30px', viewBox:'0 0 30 30'},
  *       ['circle', {class:'frame', cx:15, cy:15, r:12}],
- *       ['path' {class:'hand hour', d:'M15,15 L20,15'}],
- *       ['path' {class:'hand minute', d:'M15,15 L15,2'}],
- *       ['path' {d:'M0,0 L1,1'}],
- *       ['path' {d:'M0,0 L1,1'}],
+ *       ['path', {class:'hand hour', d:'M15,15 L20,15'}],
+ *       ['path', {class:'hand minute', d:'M15,15 L15,2'}],
+ *       ['path', {d:'M0,0 L1,1'}],
+ *       ['path', {d:'M0,0 L1,1'}],
  *   ])
  *       =>
  *         
@@ -214,10 +214,10 @@
 	"use strict";
 
 	var document = window.document;
-	var gcs = window.getComputedStyle;
+	var gcs = function (x) { return window.getComputedStyle(x) };
 	var isUndefined = function (x) { return typeof(x) == 'undefined'; };
 
-	var noBrowser = isUndefined(document) || isUndefined(gcs);
+	var noBrowser = isUndefined(document);
 
 	var toSet = function (s) {
 		for (var d = {}, i = (s = s.split(',')).length; i--;) d[s[i]] = 1;
@@ -236,9 +236,6 @@
 	var stringTrimRe = /^[\s\uFEFF\xA0]+|[\s\uFEFF\xA0]+$/g;
 	var splitWordsRe = /(?:(?:^|[A-Z])[a-z]+|[0-9]+|[A-Za-z]+)/g;
 
-	var hashPopRe = /(?:(^\/)|\/)[^\/]+[\/]*$/; // $1
-	var hashResolveRe = /^#\/?|(\/)(?:\.?\/)+|(?:[^\/])+\/\.\.(?:\/|$)|([^\^])\/+$/;
-	var hashCompsRe = /(?:(^|\/)(:?)([^\/]+))/g;
 	var locationPathPopRe = /((^|\/)[^\/]*)$/;
 	var htmlTagRe = /^[\w]+$/;
 
@@ -664,14 +661,14 @@
 		return {r: r, i: o - 1};
 	};
 
+	var isUndefinedOrNull = function (x) { return isUndefined(x) || x === null; };
+
 	var HTML = function(context) {
 
-		var n = context.length;
+		if (isUndefinedOrNull(context)) return '';
 
-		if (!n || isUndefined(context) || context === null) return '';
-
-		var a = arguments, r, i, obj, k, k2, t, v, css, mSub, j, mn, sk, skk,
-		tag = context[0] + '', content = '', attrs = {};
+		var a = arguments, r, i, obj, k, k2, t, v, css, mSub, j, mn, sk, skk, f,
+		content = '', attrs = {};
 
 		if (a.length > 1) {
 			for (content = [], i = 0; i < a.length; ++i)
@@ -680,8 +677,12 @@
 		}
 		
 		if (!isArray(context)) return '' + context;
+		
+		var n = context.length, tag = context[0] + '';
 
-		if (n && (isArray(context[0]) || context[0] === null || !tag.match(htmlTagRe))) {
+		if (!n) return '';
+
+		if (n && (isArray(context[0]) || isUndefinedOrNull(context[0]) || !tag.match(htmlTagRe))) {
 			for (r = '', i = 0; i < n; i++) {
 				if (isFunction(context[i+1])) {
 					mn = mapNext(context, i);
@@ -695,7 +696,7 @@
 			return r;
 		}
 
-		for (i = 1; i < n; i++) if (context[i] !== null) {
+		for (i = 1; i < n; i++) if (!isUndefinedOrNull(context[i])) {
 			obj = context[i];
 			if (isArray(obj)) {
 				if (isFunction(context[i+1])) {
@@ -716,7 +717,7 @@
 							css[mSub[1]] = mSub[2];
 						v = css;
 					}
-					if (obj.hasOwnProperty(k) && v !== null) {
+					if (obj.hasOwnProperty(k) && !isUndefinedOrNull(v)) {
 						if (isObject(v)) {
 							if (!attrs.hasOwnProperty(k) || !isObject(attrs[k])) 
 								attrs[k] = {};
@@ -730,7 +731,9 @@
 						}
 					}
 				}
-			} else content += obj;
+			} else if (!isUndefinedOrNull(obj)) {
+				content += obj;
+			}
 		}
 		r = '<' + tag;
 		attrs = populateCaseVariations(attrs);
@@ -739,6 +742,7 @@
 		for (i = 0; i < sk.length; ++i) {
 			k = sk[i];
 			t = '';
+			f = 1;
 			if (isObject(attrs[k])) { // css case
 				css = autoFixCSS(attrs[k]);
 				skk = v(css).sort();
@@ -746,10 +750,19 @@
 					k2 = skk[j]
 					t += k2 + ':' + css[k2] + ';';
 				}
+			} else if (isArray(attrs[k])) {
+				for (j = 0; f && j < attrs[k].length; ++j) {
+					if (attrs[k][j]) {
+						r += ' ' + k;
+						f = 0;
+					}
+				}
+				f = 0;
 			} else {
 				t += attrs[k];
 			}
-			r += ' ' + k + '="' + HTML.escape(t) + '"';
+			if (f)
+				r += ' ' + k + '="' + HTML.escape(t) + '"';
 		}
 		
 		if (emptyTags[trim(tag).toLowerCase()] && !content)
@@ -838,8 +851,29 @@
 		svgPath[c] = svgPathAppender(c);
 
 	HTML.SVG.Path = svgPath;
+
+	var onceDones = {};
+	var once = function (k, t, f) {
+		if (onceDones[k]) {
+			if (isFunction(f)) f();
+			return false;
+		} else {
+			onceDones[k] = 1;
+			if (isFunction(t)) t();
+		}
+		return true;
+	};
+	once.clear = function (k) {
+		delete onceDones[k];
+		return once;
+	};
+	HTML.once = once;
+
+	var hashPopRe = /(?:(^\/)|\/)[^\/]+[\/]*$/; // $1
+	var hashResolveRe = /^#?\/?|(\/)(?:\.?\/)+|(?:(?!\.\.?)[^\/])+\/\.\.(?:\/|$)|([^\^])\/+$/;
+	var hashCompsRe = /(?:(^|\/)(:?)([^\/]+))/g;
 	
-	var routes = {}, savedRoutes = {}, routesInited = 0, refreshable = 0;
+	var routes = {}, savedRoutes = {}, routesInited = 0, refreshable = 0, visited = [];
 
 	var hashResolve = function (h) {
 		for (var p, t = 1; t; ) {
@@ -849,9 +883,18 @@
 		}
 		return h;
 	};
+	var setVisited = function (p) {
+		if (visited.length < 1) {
+			setTimeout(function () {
+				visited = [];
+			}, 60);
+		}
+		visited.push(p);
+	}
+
 	//HTML.hashResolve = hashResolve;
 	var execRoute = function (h, s) {
-		var p = '', j, c, m, a = hashResolve(h);
+		var p = '', j, c, m, a = hashResolve(h), t = h.length;
 		while (m = hashCompsRe.exec(a)) {
 			p += m[1];
 			c = m[3];
@@ -860,13 +903,24 @@
 			if (!s) savedRoutes[p] = c;
 			p += c;
 		}
-		for (j = p; j; j = j.replace(hashPopRe, '$1')) {
+		for (j = p; j && t > 0; j = j.replace(hashPopRe, '$1')) {
 			if (routes[j]) {
 				p = j;
 				j = '';
 			}
+			--t;
 		}
-		if (!s && isFunction(c = routes[p])) c();
+		if (!s && isFunction(c = routes[p])) {
+			if (visited.indexOf(p) < 0) {
+				setVisited(p);
+				c();
+			} else {
+				var v = h.replace('/:', '/');
+				if (v != h && visited.indexOf(v) < 0) {
+					execRoute(v);
+				}
+			}
+		}
 		return p;
 	};
 
@@ -922,8 +976,6 @@
 				// HTML.route('a', fn).route('b', fn)
 				return HTML; 	
 			} 
-			// If no args are provided, 
-			// return the window.location.hash splitted.
 			return routes[execRoute(hashResolve(r), 1)];
 		};
 
