@@ -6,6 +6,13 @@ from app.models.analysis_request import AnalysisRequest
 router = APIRouter()
 
 
+test_headers = ["ID", "Page URL", "JS Src", "Static analysis Status", "Dynamic analysis Status", "Flagged Files"]
+test_data_rows = [
+            [str(x), "www.facebook.commmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmm", 'jomama source', 'Done', 'Done', '50'] for x in range(500)
+
+        ]
+
+
 @router.get("/analysis/statistics/")
 async def get_dashboard_stats():
     return JSONResponse(content={"no_of_tasks": 2, "analyzed_count": 5})
@@ -14,9 +21,7 @@ async def get_dashboard_stats():
 @router.get("/analysis/results/")
 async def get_past_results():
     return JSONResponse(content={
-        "status": "ok", "headers": ["Page URL", "JS Src", "Static analysis Status", "Dynamic analysis Status", "Prediction"], "rows": [
-            ["www.facebook.com", 'jomama source', 'Done', 'Done', '50']
-        ]}
+        "status": "ok", "headers": test_headers, "rows": test_data_rows}
     )
 
 
