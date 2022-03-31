@@ -17,7 +17,7 @@ $(function(){
 		
 	));
 
-	layout.nav.addEvents();
+	layout.nav.initEvents();
 		
 	// HTML.route("", layout.pages.dashboard.display);
 	HTML.route("dashboard", layout.pages.dashboard.display);
