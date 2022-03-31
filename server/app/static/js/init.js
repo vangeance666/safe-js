@@ -26,22 +26,20 @@ const eleClass = {
 	homeTaskIdLink: "home-task-id-link"
 }
 
-// To store model stats data
-var modelStats = {
-	chartPredAcc: "",
-	chartNllLost: "",
-	chartClassifyAcc: "",
-	chartClassifyNllLos: "",
-}
-
 const eleIds = {
 	"root": "id-root",
 	"rootBody": "id-root-body",
+	"rootBodyMain": "root-body-main",
 
 	"navMenuDashboardItem": "nav-menu-dashboard-item",
 	"navMenuRecentItem": "nav-menu-recent-item",
 	"navMenuAnalysisItem": "nav-menu-analysis-item",
 	"navMenuSystemItem": "nav-menu-system-item",
+
+
+	"recentTableMain": "recent-table-main",
+	"recentTableHeader": "recent-table-header",
+	"recentTableBody": 	"recent-table-body",
 
 
 };
