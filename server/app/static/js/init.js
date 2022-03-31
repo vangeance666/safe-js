@@ -45,9 +45,12 @@ const eleIds = {
 	"recentTableMain": "recent-table-main",
 	"recentTableHeader": "recent-table-header",
 	"recentTableBody": 	"recent-table-body",
-
-
+	
+	"analysisTableMain": "analysis-table-main",
+	"analysisTableHeader": "analysis-table-header",
+	"analysisTableBody": "analysis-table-body",
 	"analysisSubmitBtn": "analysis-submit-btn",
+	
 
 };
 
