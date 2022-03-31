@@ -114,7 +114,7 @@ layout.pages.recent = (function() {
 
 	self.ctx = [recentTableCardCtx];
 
-	var addEvents = function() {
+	var initEvents = function() {
 		layout.banner.setBannerPath(["Page", "Recent"])
 		layout.banner.setBannerHeader("Recent Analysis")
 		layout.banner.setBannerDescription("Summary of past submissions")
@@ -125,7 +125,7 @@ layout.pages.recent = (function() {
 	self.display = function() {
 		console.log("Recent display toggled")
 		$('#'+eleIds['rootBody']).html(HTML(self.ctx))
-		addEvents();
+		initEvents();
 		loadRecentResultsTable();
 	}
 

@@ -76,7 +76,7 @@ layout.banner = (function() {
 		]
 
 	
-	self.addEvents = function() {
+	self.initEvents = function() {
 
 		// self.setBannerPath(["Default"])
 		// self.setBannerHeader("Default header")

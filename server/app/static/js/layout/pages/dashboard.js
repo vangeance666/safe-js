@@ -82,7 +82,7 @@ layout.pages.dashboard = (function() {
 
 	self.ctx = [rowOneCtx];
 
-	const addEvents = function() {
+	const initEvents = function() {
 		layout.banner.setBannerPath(["Page", "Dashboard"])
 		layout.banner.setBannerHeader("Dashboard")
 		layout.banner.setBannerDescription("Overview of all details")
@@ -95,7 +95,7 @@ layout.pages.dashboard = (function() {
 		console.log("Dashboard display toggled")
 		$('#'+eleIds['rootBody']).html(HTML(self.ctx))
 
-		addEvents();
+		initEvents();
 	}
 
 	return self;

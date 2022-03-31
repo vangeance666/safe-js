@@ -2,7 +2,7 @@ layout.pages.settings = (function() {
 	let self = {};
 
 
-	const addEvents = function() {
+	const initEvents = function() {
 		layout.banner.setBannerPath(["Page", "Settings"])
 		layout.banner.setBannerHeader("Settings")
 		layout.banner.setBannerDescription("Change configurations")
@@ -16,7 +16,7 @@ layout.pages.settings = (function() {
 
 		$('#'+eleIds['rootBody']).html(HTML(self.ctx))
 
-		addEvents();
+		initEvents();
 	}
 
 	return self;

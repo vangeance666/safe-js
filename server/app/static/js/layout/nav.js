@@ -138,7 +138,7 @@ layout.nav = (function() {
 	]
 	self.ctx = [mainNavCtx, sideNavCtx]
 
-	self.addEvents = function() {
+	self.initEvents = function() {
 		
 		$(".nav-item").click(function(){
 			$('.nav-item').removeClass("active");

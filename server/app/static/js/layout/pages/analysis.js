@@ -6,7 +6,7 @@ layout.pages.analysis = (function() {
 	    }
 	]
 
-	const addEvents = function() {
+	const initEvents = function() {
 		layout.banner.setBannerPath(["Page", "Analysis"])
 		layout.banner.setBannerHeader("Analysis")
 		layout.banner.setBannerDescription("View results details of submission")
@@ -21,7 +21,7 @@ layout.pages.analysis = (function() {
 		$('#'+eleIds['rootBody']).html(HTML(self.ctx))
 		
 
-		addEvents();
+		initEvents();
 	}
 
 	return self;
