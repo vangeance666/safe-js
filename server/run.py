@@ -10,27 +10,31 @@ from analyzer.controllers.page_controller import PageController
 from analyzer.controllers.results_controller import ResultsController
 from analyzer.core.dataset_generator import DatasetGenerator
 
-# page_controller = PageController()
-# features_controller = FeaturesController()
-# results_controller = ResultsController()
+page_controller = PageController()
+features_controller = FeaturesController()
+results_controller = ResultsController()
 
-# dataset_generator = DatasetGenerator()
-# page_controller = PageController()
-# features_controller = FeaturesController()
-# analysis_controller  = AnalysisController()
+dataset_generator = DatasetGenerator()
+page_controller = PageController()
+features_controller = FeaturesController()
+analysis_controller  = AnalysisController()
 # results_controller = ResultsController()
 
 import uvicorn
 
 if __name__ == "__main__":
-    uvicorn.run("app.main:app", host="0.0.0.0", port=8090, reload=True)	
+    # uvicorn.run("app.main:app", host="0.0.0.0", port=8090, reload=True)	
 	# pass
 
 	
+	pages = results_controller.load_pages()
+
+	print(pages[1].src)
+	for j in pages[1].internal_js_files:
+		print(j)
 
 	# if pages is None:
 
-	# pages = results_controller.load_pages()
 	# dataset_generator.pages_to_csv(pages, "yoyo.csv")
 
 
@@ -42,7 +46,7 @@ if __name__ == "__main__":
 		
 
 
-	# pages = page_controller.extract_pages(["https://developer.mozilla.org/en-US/docs/Web/API/WindowEventHandlers/onbeforeunload"])
+	# pages = page_controller.extract_pages(["https://developer.mozilla.org/en-US/docs/Web/API/WindowEventHandlers/onbeforeunload", "https://stackoverflow.com/questions/66770132/python-uniqe-integer-for-dataclass"])
 
 
 	# # # print("saving js files---")
