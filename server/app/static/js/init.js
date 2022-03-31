@@ -27,6 +27,11 @@ const eleClass = {
 }
 
 const eleIds = {
+	"bannerPath": "banner-path", 
+	"bannerHeader": "banner-header", 
+	"bannerDescription": "banner-description",
+	"bannerActionRightButton": "banner-action-right-button",
+
 	"root": "id-root",
 	"rootBody": "id-root-body",
 	"rootBodyMain": "root-body-main",
@@ -41,6 +46,8 @@ const eleIds = {
 	"recentTableHeader": "recent-table-header",
 	"recentTableBody": 	"recent-table-body",
 
+
+	"analysisSubmitBtn": "analysis-submit-btn",
 
 };
 
@@ -109,21 +116,9 @@ window.pageRouteMapping = function(){
 		"recent": layout.pages.recent,
 		"analysis": layout.pages.analysis		
 	}
-} 	
+}
 
 
-renderRoute = function() {
-	if (!window.location.hash) {
-		window.pageRouteMapping.dashboard.display()	
-		return
-	}
-
-	let hash = window.location.hash.substring(1);
-	console.log("hash: ", hash);
-	if (window.pageRouteMapping[hash] !== undefined) {
-		window.pageRouteMapping.display()
-	} else {
-		console.log("printing default dashboard")
-		window.pageRouteMapping.dashboard.display();
-	}
+renderErrorPage = function() {
+	layout.page.error.display();
 }
