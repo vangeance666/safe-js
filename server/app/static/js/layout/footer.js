@@ -4,17 +4,9 @@ layout.footer = (function () {
         ["div", {"class": "row"},
             ["div", {"class": "col-12 col-md-4 col-xl-6 mb-4 mb-md-0"},
                 ["p", {"class": "mb-0 text-center text-lg-start"},
-                    "&copy;",
-                    ["a", {
-                            "class": "text-primary fw-normal",
-                            "href": "https://themesberg.com",
-                            "target": "_blank"
-                        },
-                        "Themesberg"
-                    ],
-                    "- Coded by",
-                    ["a", {"href": "https://appseed.us", "target": "_blank"},
-                        "AppSeed"
+                    "- Coded by ",
+                    ["a", 
+                        "Jomama"
                     ],
                     "."
                 ]
@@ -26,9 +18,9 @@ layout.footer = (function () {
                     ["li", {"class": "list-inline-item px-0 px-sm-2"},
                         ["a", {
                                 "target": "_blank",
-                                "href": "https://appseed.us/admin-dashboards/flask-dashboard-volt"
+                                "href": ""
                             },
-                            "Flask Volt Dashboard"
+                            "Safe-JS Theme"
                         ]
                     ]
                 ]
