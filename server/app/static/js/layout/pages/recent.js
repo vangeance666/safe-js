@@ -1,11 +1,21 @@
 layout.pages.recent = (function() {
 	let self = {};
 
+	formatRowDataCtx = function(rowData) {
+		let res = ['tr'];
+		for (let i=0; i < rowData.length-1; i++) {
+			res.push(self.genNormalTd(rowData[i]))
+		}
+		res.push(self.genPredictionTd(rowData[rowData.length-1]))
+		return res;
+		
+	}
+
 	function loadRecentResultsTable() {
 
 		console.log("loadRecentResultsTable");
 
-		var requestResult = $.getJSON("api/v1_0/analysis/results/", function() {
+		var requestResult = $.getJSON("api/v1_0/analysis/overview/", function() {
 			console.log( "success" );
 			console.log("requestResult: ", requestResult);
 
@@ -42,13 +52,12 @@ layout.pages.recent = (function() {
 
 		  	$('#'+eleIds["recentTableBody"]).html(HTML(
 				jsonData.rows, function(rowData) {
-					return layout.helper.formatRowDataCtx(rowData)
+					return formatRowDataCtx(rowData)
 				}
 		    ));
 
 		    $('#'+eleIds["recentTableMain"]).DataTable();
 		})
-
 	}
 
 	var recentTableCardCtx = ['div', {'class': 'card border-0 shadow'},
@@ -62,7 +71,6 @@ layout.pages.recent = (function() {
 			]
 		]
 	];
-	
 
 	self.ctx = [recentTableCardCtx];
 
