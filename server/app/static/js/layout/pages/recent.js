@@ -1,54 +1,6 @@
 layout.pages.recent = (function() {
 	let self = {};
 
-	var genNormalTd = function(data) { 
-		return ['td', {'class': "fw-bolder text-gray-500"}, data]
-	}
-
-	var genPredictionTd = function(percentVal) {
-		console.log("percentVal: ", percentVal);
-		return ['td', {'class': "fw-bolder text-gray-500"}, 
-			["div", {"class": "row d-flex align-items-center"},
-				["div", {"class": "col-12 col-xl-2 px-0"},
-					["div", {"class": "small fw-bold"}, percentVal+"%"]
-				],
-				["div", {"class": "col-12 col-xl-10 px-0 px-xl-1"},
-					["div", {"class": "progress progress-lg mb-0"},
-						["div", {
-								"class": "progress-bar bg-dark",
-								"role": "progressbar",
-								"aria-valuemin": "0",
-								"aria-valuemax": "100",
-								"style": "width: "+percentVal+"%;",
-								"aria-valuenow": percentVal
-							}
-						]
-					]
-				]
-			]
-		];
-	}
-
-	formatRowDataCtx = function(rowData) {
-		let res = ['tr'];
-		for (let i=0; i < rowData.length-1; i++) {
-			res.push(genNormalTd(rowData[i]))
-		}
-		res.push(genPredictionTd(rowData[rowData.length-1]))
-		return res;
-		
-	}
-
-	genRowsDataCtx = function(rows) {
-		let ret = [];
-		for (let i=0; i < rows.length; i++) {
-			ret.push(formatRowDataCtx(rows[i]))
-		}
-		return ret;
-	}
-
-
-
 	function loadRecentResultsTable() {
 
 		console.log("loadRecentResultsTable");
@@ -90,7 +42,7 @@ layout.pages.recent = (function() {
 
 		  	$('#'+eleIds["recentTableBody"]).html(HTML(
 				jsonData.rows, function(rowData) {
-					return formatRowDataCtx(rowData)
+					return layout.helper.formatRowDataCtx(rowData)
 				}
 		    ));
 
