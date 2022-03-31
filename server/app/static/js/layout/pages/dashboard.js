@@ -1,8 +1,8 @@
 layout.pages.dashboard = (function() {
-	var self = {};
+	let self = {};
 
 
-	var genCardCtx = function(color, imgSrc, labelName, value) {
+	const genCardCtx = function(color, imgSrc, labelName, value) {
 		return ["div", {"class": "col-12 col-sm-6 col-xl-4 mb-4"},
             ["div", {"class": "card border-0 shadow"},
                 ["div", {"class": "card-body"},
@@ -34,91 +34,13 @@ layout.pages.dashboard = (function() {
         ];
 	}
 
-
-
-	var genTrCtx = function() {
-		["tr",
-            ["th", {
-                    "class": "text-gray-900",
-                    "scope": "row"
-                },
-                "/demo/admin/index.html"
-            ],
-            ["td", {
-                    "class": "fw-bolder text-gray-500"
-                },
-                "3,225"
-            ],
-            ["td", {
-                    "class": "fw-bolder text-gray-500"
-                },
-                "$20"
-            ],
-            ["td", {
-                    "class": "fw-bolder text-gray-500"
-                },
-                ["div", {"class": "d-flex"},
-                    ["svg", {
-                            "class": "icon icon-xs text-danger me-2",
-                            "fill": "currentColor",
-                            "viewbox": "0 0 20 20",
-                            "xmlns": "http://www.w3.org/2000/svg"
-                        },
-                        ["path", {
-                                "fill-rule": "evenodd",
-                                "d": "M5.293 7.707a1 1 0 010-1.414l4-4a1 1 0 011.414 0l4 4a1 1 0 01-1.414 1.414L11 5.414V17a1 1 0 11-2 0V5.414L6.707 7.707a1 1 0 01-1.414 0z",
-                                "clip-rule": "evenodd"
-                            }
-                        ]
-                    ],
-                    "42,55%"
-                ]
-            ]
-        ]
-	}
-
-	var genTableCtx = function(headerColNames, rowDatas) {
-		// Cols
-		// Page URL, No of internal JS Files, No of external JS files
-		return ["div", {"class": "table-responsive"},
-            ["table", {
-                    "class": "table align-items-center table-flush"
-                },
-                ["thead", {"class": "thead-light"},
-                    ["tr",
-                    	headerColNames, function(colName) {
-	                    	return ["th", {
-	                                "class": "border-bottom",
-	                                "scope": "col"
-	                            },
-	                            colName
-	                        ]
-	                    }
-                        
-                    ]
-                ],
-                ["tbody",
-	                rowDatas, function(rowData) {
-	                	return ['tr',
-	                		rowData, function(data) {
-	                			return ['td', {'class': "fw-bolder text-gray-500"}, data]
-	                		}
-	                	]
-	                }
-                    // Put TRs here
-                ]
-            ]
-        ];
-	}
-
-
-	var rowOneCtx = ["div", {"class": "row"},
+	const rowOneCtx = ["div", {"class": "row"},
 		genCardCtx("icon-shape-success", "./static/img/task.svg", "Number of Tasks", "0"),
 		genCardCtx("icon-shape-secondary", "./static/img/js_file.svg", "Analysed Files", "2"),
 		genCardCtx("icon-shape-danger", "./static/img/danger.svg", "Flagged Files", "1")
     ]
 
-    var rowTwoCtx = 
+    const rowTwoCtx = 
     ["div", {"class": "row"},
         ["div", {"class": "col-12 col-xl-12"},
             ["div", {"class": "row"},
@@ -154,17 +76,24 @@ layout.pages.dashboard = (function() {
         ]
     ]
 
-	self.ctx = 	["main", {"class": "content"},
-		rowOneCtx
-	]
+	// self.ctx = 	["main", {"class": "content"},
+	// 	rowOneCtx
+	// ]
 
-	var addEvents = function() {
+	self.ctx = [rowOneCtx];
+
+	const addEvents = function() {
+		layout.banner.setBannerPath(["Page", "Dashboard"])
+		layout.banner.setBannerHeader("Dashboard")
+		layout.banner.setBannerDescription("Overview of all details")
+        layout.banner.setActionRightButton("")
+
 
 	}
 
 	self.display = function() {
-
-		$('#'+ids['rootBody']).html(HTML(self.ctx))
+		console.log("Dashboard display toggled")
+		$('#'+eleIds['rootBody']).html(HTML(self.ctx))
 
 		addEvents();
 	}
