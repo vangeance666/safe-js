@@ -26,14 +26,14 @@ layout.nav = (function() {
 	    ["a", {"class": "navbar-brand me-lg-5", "href": "/"},
 	        ["img", {
 	                "class": "navbar-brand-dark",
-	                "src": "/static/assets/img/brand/light.svg",
+	                "src": "/static/img/brand/light.svg",
 	                "alt": "Volt logo",
 	                "/": "/"
 	            }
 	        ],
 	        ["img", {
 	                "class": "navbar-brand-light",
-	                "src": "/static/assets/img/brand/dark.svg",
+	                "src": "/static/img/brand/dark.svg",
 	                "alt": "Volt logo",
 	                "/": "/"
 	            }
@@ -139,11 +139,13 @@ layout.nav = (function() {
 	self.ctx = [mainNavCtx, sideNavCtx]
 
 	self.addEvents = function() {
-		// $('.'+eleClass['navBtn']).click(function(){
-		// 	$('.'+eleClass['navBtn']).removeClass("active");
-		// 	$(this).addClass("active");
-		// 	console.log("Clicked on nav item");
-		// });
+		
+		$(".nav-item").click(function(){
+			$('.nav-item').removeClass("active");
+			$(this).addClass("active");
+
+		})
+
 		console.log("nav added events");
 	}
 
