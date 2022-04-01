@@ -2,7 +2,7 @@ layout.pages.dashboard = (function() {
 	let self = {};
 
 
-	const genCardCtx = function(color, imgSrc, labelName, value) {
+    const genCardCtx = function(color, imgSrc, labelName, value) {
 		return ["div", {"class": "col-12 col-sm-6 col-xl-4 mb-4"},
             ["div", {"class": "card border-0 shadow"},
                 ["div", {"class": "card-body"},
@@ -13,7 +13,13 @@ layout.pages.dashboard = (function() {
                             ["div", {
                                     "class": "icon-shape rounded me-4 me-sm-0 "+ color
                                 },
-                                ["img", {"src": imgSrc}]
+                                ['img', {'src': imgSrc}]
+                                // ["svg", {
+                                //     "viewbox": viewBox,
+                                // }, ["g", {"transform": "scale(0.02734375 0.02734375)"},
+                                //         svgPath
+                                //     ]
+                                // ]
                             ],
                             ["div", {"class": "d-sm-none"},
                                 ["h2", {"class": "h5"}, labelName],
@@ -35,9 +41,9 @@ layout.pages.dashboard = (function() {
 	}
 
 	const rowOneCtx = ["div", {"class": "row"},
-		genCardCtx("icon-shape-success", "./static/img/task.svg", "Number of Tasks", "0"),
-		genCardCtx("icon-shape-secondary", "./static/img/js_file.svg", "Analysed Files", "2"),
-		genCardCtx("icon-shape-danger", "./static/img/danger.svg", "Flagged Files", "1")
+		genCardCtx("icon-shape-success", "/static/img/pages.svg", "Pages Analysed", "0"),
+		genCardCtx("icon-shape-secondary", "/static/img/js_file.svg", "JS Files Analysed", "2"),
+		genCardCtx("icon-shape-danger", "/static/img/danger2.svg", "Flagged Files", "1")
     ]
 
     const rowTwoCtx = 
