@@ -215,15 +215,7 @@ layout.pages.analysis = (function() {
 	        ]
 	    ]
 	]
-
-
-
 	
-
-	
-
-
-
 	const modalSubmitForm = ["div", {
 	        "class": "modal fade",
 	        "id": eleIds["analysisModalSubmit"],

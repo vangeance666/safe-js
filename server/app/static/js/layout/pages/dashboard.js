@@ -14,12 +14,6 @@ layout.pages.dashboard = (function() {
                                     "class": "icon-shape rounded me-4 me-sm-0 "+ color
                                 },
                                 ['img', {'src': imgSrc}]
-                                // ["svg", {
-                                //     "viewbox": viewBox,
-                                // }, ["g", {"transform": "scale(0.02734375 0.02734375)"},
-                                //         svgPath
-                                //     ]
-                                // ]
                             ],
                             ["div", {"class": "d-sm-none"},
                                 ["h2", {"class": "h5"}, labelName],

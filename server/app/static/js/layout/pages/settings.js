@@ -91,6 +91,7 @@ layout.pages.settings = (function() {
 		
 		$('#'+eleIds['settingsClearConfirmOk']).click(function() {
 			sendDeleteRequest();
+			$('#'+eleIds['settingsClearConfirmForm']).modal('toggle');
 		})
 	}
 
