@@ -42,11 +42,20 @@ layout.pages.recent = (function() {
 				],
 
 				rowDict['js_file_details'], function(jsFileDict) {
-        			return ['div', {'class': 'mx-5'},
-        				['a', {'class':'js-file-link',
-        					'href':`?pageId=${rowDict['id']}&jsFileId=${jsFileDict['id']}/#/analysis`},
-        					jsFileDict['src']]
-        			]
+
+					if (!jsFileDict['static_features_done'] || !jsFileDict['dynamic_features_done'])
+						return ['div', {'class': 'mx-5'},
+	        				['a', {'class':'js-file-link text-danger'},
+	        					jsFileDict['src']]
+	        			]	
+					else {
+						return ['div', {'class': 'mx-5'},
+	        				['a', {'class':'js-file-link text-success',
+	        					'href':`?pageId=${rowDict['id']}&jsFileId=${jsFileDict['id']}/#/analysis`},
+	        					jsFileDict['src']]
+	        			]	
+					}
+        			
         		}				
 			]
 		]
@@ -104,10 +113,11 @@ layout.pages.recent = (function() {
 				return
 			}		
 			console.log("jsonData.details: ", jsonData.details);
+			$('#'+eleIds["recentTableMain"]).DataTable();
 			setTableData(jsonData.details);					  	
 			
 			attachJsFileHrefEvent();
-		    // $('#'+eleIds["recentTableMain"]).DataTable();
+		    
 		})
 	}
 
