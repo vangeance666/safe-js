@@ -8,11 +8,10 @@ from analyzer.datatypes.js_file import JsFile
 
 class FuncEncodeCount(Feature):
 
-	_index_no: int = 7
+	_index_no: int = 21
 	_name: str = "func_encode_count"
 	_var_type: type = int
-
-	_description = "Encode function count from btoa()"
+	_description = "Checks for how many btoa functions are in the code"
 
 	CONDITIONS = [ConditionsFactory.element_func_call_condition("dispatchEvent")]
 	
