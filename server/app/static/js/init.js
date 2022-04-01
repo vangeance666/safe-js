@@ -1,5 +1,3 @@
-
-
 // var = can redeclare
 // let = can update but not redeclared
 // const cant change
@@ -7,6 +5,7 @@
 console.log("reached init js");
 
 const layout = {};
+const worker = {};
 
 layout.pages = {};
 
@@ -41,16 +40,18 @@ const eleIds = {
 	"navMenuAnalysisItem": "nav-menu-analysis-item",
 	"navMenuSystemItem": "nav-menu-system-item",
 
+	"dashboardPagesAnalysed" : "dashboard-pages-analysed" ,
+	"dashboardJsFilesAnalysed": "dashboardjs-files-analysed",
+	"dashboardFlaggedFiles": "dashboard-flagged-files",
 
 	"recentTableMain": "recent-table-main",
 	"recentTableHeader": "recent-table-header",
 	"recentTableBody": 	"recent-table-body",
-	
+
 	"analysisTableMain": "analysis-table-main",
 	"analysisTableHeader": "analysis-table-header",
 	"analysisTableBody": "analysis-table-body",
 	"analysisSubmitBtn": "analysis-submit-btn",
-	
 
 };
 
@@ -125,3 +126,5 @@ window.pageRouteMapping = function(){
 renderErrorPage = function() {
 	layout.page.error.display();
 }
+
+
