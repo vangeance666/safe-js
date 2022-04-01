@@ -113,10 +113,13 @@ layout.pages.recent = (function() {
 				return
 			}		
 			console.log("jsonData.details: ", jsonData.details);
-			$('#'+eleIds["recentTableMain"]).DataTable();
+			// $('#'+eleIds["recentTableMain"]).DataTable();
 			setTableData(jsonData.details);					  	
 			
 			attachJsFileHrefEvent();
+
+			// $('#'+eleIds["recentTableMain"]).DataTable();
+			
 		    
 		})
 	}
