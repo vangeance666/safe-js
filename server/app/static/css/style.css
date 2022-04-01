@@ -27,3 +27,31 @@ text-align: center;
     background-color: #0062cc;
     border-color: #1c7430;
 }
+
+tr.hide-table-padding td {
+  padding: 0 !important;
+}
+
+.expand-button {
+  position: relative;
+}
+
+.accordion-toggle .expand-button:after
+{
+  position: absolute;
+  left:.75rem;
+  top: 50%;
+  transform: translate(0, -50%);
+  content: '-';
+}
+.accordion-toggle.collapsed .expand-button:after
+{
+  content: '+';
+}
+.hiddenRow {
+    padding: 0 !important;
+}
+
+.clickable {
+  cursor: pointer !important;
+}
