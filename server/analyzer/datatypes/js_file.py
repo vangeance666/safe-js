@@ -1,4 +1,5 @@
 from dataclasses import dataclass, field
+from itertools import count
 from typing import List
 
 from analyzer.abstracts import Feature
@@ -7,6 +8,7 @@ from analyzer.datatypes.box_js_result import BoxJsResult
 
 @dataclass(order=True)
 class JsFile:
+	id: int = field(default_factory=count().__next__, init=False)
 
 	src: str = ""
 	text: str = ""
@@ -43,4 +45,3 @@ class JsFile:
 				return f.read()
 
 		return ""
-
