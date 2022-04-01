@@ -11,7 +11,7 @@ layout.pages.error = (function() {
 	                ["div",
 	                    ["img", {
 	                            "class": "img-fluid w-75",
-	                            "src": "/static/assets/img/illustrations/404.svg",
+	                            "src": "/static/img/illustrations/404.svg",
 	                            "alt": "404 not found"
 	                        }
 	                    ],
@@ -21,25 +21,6 @@ layout.pages.error = (function() {
 	                    ],
 	                    ["p", {"class": "lead my-4"},
 	                        "Oops! Looks like you followed a bad link. If you think this is a problem with us, please tell us."
-	                    ],
-	                    ["a", {
-	                            "href": "/dashboard.html",
-	                            "class": "btn btn-gray-800 d-inline-flex align-items-center justify-content-center mb-4"
-	                        },
-	                        ["svg", {
-	                                "class": "icon icon-xs me-2",
-	                                "fill": "currentColor",
-	                                "viewbox": "0 0 20 20",
-	                                "xmlns": "http://www.w3.org/2000/svg"
-	                            },
-	                            ["path", {
-	                                    "fill-rule": "evenodd",
-	                                    "d": "M7.707 14.707a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 1.414L5.414 9H17a1 1 0 110 2H5.414l2.293 2.293a1 1 0 010 1.414z",
-	                                    "clip-rule": "evenodd"
-	                                }
-	                            ]
-	                        ],
-	                        "Back to homepage"
 	                    ]
 	                ]
 	            ]
@@ -47,7 +28,12 @@ layout.pages.error = (function() {
 	    ]
 	]
 
-	self.ctx = [error404Ctx];
+	self.ctx = error404Ctx;
+
+	self.display = function() {
+		$('body').html(HTML(self.ctx))
+	}
+
 
 	return self;
 })();
