@@ -37,6 +37,7 @@ class AnalysisController:
 				for analyzer in self.analyzers:
 					print("Extracting analysis results using {}".format(analyzer.__class__))
 					analyzer.run(js_file)
-			
+					
+			page.is_analyzed = True			
 		return True
 
