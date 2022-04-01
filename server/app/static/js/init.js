@@ -53,6 +53,16 @@ const eleIds = {
 	"analysisTableBody": "analysis-table-body",
 	"analysisSubmitBtn": "analysis-submit-btn",
 
+
+	"analysisStaticFtTblMain": "analysis-static-ft-tbl-main",
+	"analysisStaticFtTblHeader": "analysis-static-ft-tbl-header",
+	"analysisStaticFtTblBody": "analysis-static-ft-tbl-body",
+	"analysisDyanmicFtTblMain": "analysis-dyanmic-ft-tbl-main",
+	"analysisDyanmicFtTblHeader": "analysis-dyanmic-ft-tbl-header",
+	"analysisDyanmicFtTblBody": "analysis-dyanmic-ft-tbl-body",
+	"analysisModalSubmit": "analysis-modal-submit",
+
+
 };
 
 
