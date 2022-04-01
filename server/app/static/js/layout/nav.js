@@ -140,9 +140,25 @@ layout.nav = (function() {
 
 	self.initEvents = function() {
 		
-		$(".nav-item").click(function(){
+		$(".nav-item").click(function(e){
+			e.preventDefault();
+			console.log("e: ", e);
+			
+			let hrefValue = $(this).find('.nav-link').attr('href')
+
+			if (hrefValue === undefined) {
+				console.log("Undefined href value")
+				return
+			}
+
+			layout.helper.href(hrefValue);
+			// 
+
+			
 			$('.nav-item').removeClass("active");
 			$(this).addClass("active");
+
+
 
 		})
 
