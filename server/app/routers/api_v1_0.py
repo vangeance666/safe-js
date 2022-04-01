@@ -2,7 +2,6 @@ from fastapi import APIRouter, Body
 from fastapi.responses import JSONResponse
 
 from app.models.analysis_request import AnalysisRequest
-from app.models.results_request import ResultsRequest
 
 from app.platform_controller import PlatformController
 
