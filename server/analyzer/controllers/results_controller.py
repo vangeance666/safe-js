@@ -42,8 +42,7 @@ class ResultsController:
 			return data
 		except Exception as e:
 			print(e)
-
-			return None
+			return []
 
 	def save_pages(self, pages: List[Page]) -> bool:
 		try:
