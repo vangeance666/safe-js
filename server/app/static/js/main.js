@@ -26,4 +26,6 @@ $(function(){
 	HTML.route("settings", layout.pages.settings.display);
 
 	HTML.route.go(":dashboard");
+
+	worker.status.start();
 });
