@@ -38,9 +38,9 @@ async def get_analysis_overview():
         
 # Done
 @router.get("/analysis/details/")
-async def get_analysis_details(page_id: int, js_src: str):
+async def get_analysis_details(page_id: int, js_file_id: int):
     try:
-        return JSONResponse(content={"status": "ok", "details": platform_controller.fetch_js_file_details(page_id, js_src)})
+        return JSONResponse(content={"status": "ok", "details": platform_controller.fetch_js_file_details(page_id, js_file_id)})
     except Exception as e:
         return JSONResponse(content={"status": "error", "error_message": str(e)})
     

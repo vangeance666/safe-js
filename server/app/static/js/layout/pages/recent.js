@@ -1,19 +1,87 @@
 layout.pages.recent = (function() {
 	let self = {};
 
-	formatRowDataCtx = function(rowData) {
-		let res = ['tr'];
-		for (let i=0; i < rowData.length-1; i++) {
-			res.push(self.genNormalTd(rowData[i]))
-		}
-		res.push(self.genPredictionTd(rowData[rowData.length-1]))
-		return res;
-		
+
+	const recentTableHeaders = ["ID", "Page URL", "Static analysis Status", "Dynamic analysis Status", "JS Files"]
+
+	const attachJsFileHrefEvent = function() {
+		$('.js-file-link').click(function(e){
+			e.preventDefault();
+			let hrefValue = $(this).attr('href')
+			console.log("hrefValue: ", hrefValue);
+			layout.helper.href(hrefValue);
+			
+		});
 	}
 
-	function loadRecentResultsTable() {
+	const formatRowDataCtx = function(rowDict) {
+		let collapseProperty = {
+				"class": "btn-sm clickable",
+		        "data-bs-toggle": "collapse",
+		        "data-bs-target": `#results-hidden-row-${rowDict['id']}`,
+		        "href": `#results-hidden-row-${rowDict['id']}`,
+		        "aria-expanded": "false",
+		        "aria-controls": `#results-hidden-row-${rowDict['id']}`
+	        }
 
-		console.log("loadRecentResultsTable");
+		let mainRow =  ['tr', 
+			layout.helper.genNormalTd(rowDict['id']),
+			layout.helper.genNormalTd(rowDict['page_url']),
+			layout.helper.genNormalTd(rowDict['static_done']),
+			layout.helper.genNormalTd(rowDict['dynamic_done']),
+			layout.helper.genNormalTdWithProp(collapseProperty, rowDict['js_file_details'] ? "+" : "")			
+			// layout.helper.genNormalTd(rowDict['js_file_details'] ? "+" : "")			
+		]
+
+		let colSpan = Object.keys(rowDict).length
+
+		let collapseRow = ['tr', {'class': 'hide-table-padding accordion-body collapse', 'id': `results-hidden-row-${rowDict['id']}`},
+			['td', {"colspan": "12"},
+				['div', {'class': 'mx-5'},
+					['h5', "JS Files"]
+				],
+
+				rowDict['js_file_details'], function(jsFileDict) {
+        			return ['div', {'class': 'mx-5'},
+        				['a', {'class':'js-file-link',
+        					'href':`?pageId=${rowDict['id']}&jsFileId=${jsFileDict['id']}/#/analysis`},
+        					jsFileDict['src']]
+        			]
+        		}				
+			]
+		]
+
+	    return [mainRow, collapseRow]
+	}
+	
+	const setTableHeaders = function(headerNames) {
+		$('#'+eleIds["recentTableHeader"]).html(HTML(
+	  		["tr",
+				headerNames, function(colHeader) {
+					return ["th", {
+							"class": "border-bottom",
+							"scope": "col"
+						},
+						colHeader
+					]
+				}
+				
+			]
+	    ));
+	}
+
+	const setTableData = function(headersRows) {
+		$('#'+eleIds["recentTableBody"]).html(HTML(
+			headersRows, function(rowDict) {
+				console.log("rowDict: ", rowDict);
+				return formatRowDataCtx(rowDict)
+			}
+	    ));
+	}
+
+	function loadTableData() {
+
+		console.log("loadTableData");
 
 		var requestResult = $.getJSON("api/v1_0/analysis/overview/", function() {
 			console.log( "success" );
@@ -31,46 +99,23 @@ layout.pages.recent = (function() {
 
 			jsonData = JSON.parse(requestResult.responseText)
 
-			if (jsonData.headers.length !== jsonData.rows[0].length) {
-				showError("Results header and row data different number of columns")
+			if (jsonData.status === "error") {
+				showError("Server error: "+jsonData.error_message)
 				return
-			}
-
-		  	$('#'+eleIds["recentTableHeader"]).html(HTML(
-		  		["tr",
-					jsonData.headers, function(colHeader) {
-						return ["th", {
-								"class": "border-bottom",
-								"scope": "col"
-							},
-							colHeader
-						]
-					}
-					
-				]
-		    ));
-
-		  	$('#'+eleIds["recentTableBody"]).html(HTML(
-				jsonData.rows, function(rowData) {
-					return formatRowDataCtx(rowData)
-				}
-		    ));
-
-		    $('#'+eleIds["recentTableMain"]).DataTable();
+			}		
+			console.log("jsonData.details: ", jsonData.details);
+			setTableData(jsonData.details);					  	
+			
+			attachJsFileHrefEvent();
+		    // $('#'+eleIds["recentTableMain"]).DataTable();
 		})
 	}
 
-	var recentTableCardCtx = ['div', {'class': 'card border-0 shadow'},
-		["div", {"class": "card-body"},
-			["div", {"class": "table-responsive-xxl overflow-auto"},
-				["table", {"id": eleIds["recentTableMain"],
-				 "class": "table table-centered table-nowrap mb-0 rounded"},
-					["thead", {"id": eleIds["recentTableHeader"],"class": "thead-light"}], //headers
-					["tbody", {"id": eleIds["recentTableBody"]}] // all data will be put inside
-				]
-			]
-		]
-	];
+	var recentTableCardCtx = layout.helper.tableTemplateCtx(
+			eleIds["recentTableMain"], 
+			eleIds["recentTableHeader"],
+			eleIds["recentTableBody"]
+		)
 
 	self.ctx = [recentTableCardCtx];
 
@@ -86,7 +131,9 @@ layout.pages.recent = (function() {
 		console.log("Recent display toggled")
 		$('#'+eleIds['rootBody']).html(HTML(self.ctx))
 		initEvents();
-		loadRecentResultsTable();
+
+		setTableHeaders(recentTableHeaders);
+		loadTableData();
 	}
 
 	return self;
