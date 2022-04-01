@@ -31,7 +31,7 @@ class DatasetGenerator:
 
 	def __init__(self):
 		self._headers = ["js_src"] + self._eval_static_features_headers() + self._eval_dynamic_features_headers()
-		print("self._headers: ", self._headers)
+		# print("self._headers: ", self._headers)
 
 	@staticmethod
 	def no_feature_found_row(feature_category: dict) -> dict:
