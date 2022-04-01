@@ -2,9 +2,9 @@ layout.pages.dashboard = (function() {
 	let self = {};
 
 
-    const genCardCtx = function(color, imgSrc, labelName, value) {
-		return ["div", {"class": "col-12 col-sm-6 col-xl-4 mb-4"},
-            ["div", {"class": "card border-0 shadow"},
+    const genCardCtx = function(eleId, color, imgSrc, labelName, value) {
+		return ["div", {"id": eleId, "class": "col-12 col-sm-6 col-xl-4 mb-4"},
+            ["div", {"class": "dashboard-card card border-0 shadow"},
                 ["div", {"class": "card-body"},
                     ["div", {"class": "row d-block d-xl-flex align-items-center"},
                         ["div", {
@@ -23,7 +23,7 @@ layout.pages.dashboard = (function() {
                             ],
                             ["div", {"class": "d-sm-none"},
                                 ["h2", {"class": "h5"}, labelName],
-                                ["h3", {"class": "fw-extrabold mb-1"}, value]
+                                ["h3", {"class": "results-value fw-extrabold mb-1"}, value]
                             ]
                         ],
                         ["div", {"class": "col-12 col-xl-7 px-xl-0"},
@@ -31,7 +31,7 @@ layout.pages.dashboard = (function() {
                                 ["h2", {"class": "h6 text-gray-400 mb-0"},
                                    labelName
                                 ],
-                                ["h3", {"class": "fw-extrabold mb-2"}, value]
+                                ["h3", {"class": "results-value fw-extrabold mb-2"}, value]
                             ]
                         ]
                     ]
@@ -41,9 +41,9 @@ layout.pages.dashboard = (function() {
 	}
 
 	const rowOneCtx = ["div", {"class": "row"},
-		genCardCtx("icon-shape-success", "/static/img/pages.svg", "Pages Analysed", "0"),
-		genCardCtx("icon-shape-secondary", "/static/img/js_file.svg", "JS Files Analysed", "2"),
-		genCardCtx("icon-shape-danger", "/static/img/danger2.svg", "Flagged Files", "1")
+		genCardCtx(eleIds['dashboardPagesAnalysed'], "icon-shape-success", "/static/img/pages.svg", "Pages Analysed", "0"),
+		genCardCtx(eleIds['dashboardJsFilesAnalysed'], "icon-shape-secondary", "/static/img/js_file.svg", "JS Files Analysed", "2"),
+		genCardCtx(eleIds['dashboardFlaggedFiles'], "icon-shape-danger", "/static/img/danger2.svg", "Flagged Files", "1")
     ]
 
     const rowTwoCtx = 
@@ -88,11 +88,44 @@ layout.pages.dashboard = (function() {
 
 	self.ctx = [rowOneCtx];
 
+    function loadDashboardStats() {
+
+        console.log("loadDashboardStats");
+
+        var requestResult = $.getJSON("api/v1_0/analysis/statistics/", function() {
+
+            if (requestResult.status !== 200) {
+                showError("Unable to retrieve recent results");
+                return
+            }
+
+            if (requestResult.responseText === undefined) {
+                showError("Invalid results response");
+                return
+            }
+
+            jsonData = JSON.parse(requestResult.responseText)
+
+            if (jsonData.status === "error"){
+                showError(jsonData.error_message)
+                return
+            }
+
+            $('#dashboard-pages-analysed')
+            $('#'+eleIds['dashboardPagesAnalysed']+" .results-value").text(jsonData.details.pages_analysed)
+            $('#'+eleIds['dashboardJsFilesAnalysed']+" .results-value").text(jsonData.details.js_file_analysed)
+            $('#'+eleIds['dashboardFlaggedFiles']+" .results-value").text(jsonData.details.predict_flagged_files)
+
+
+        })
+    }
+
 	const initEvents = function() {
 		layout.banner.setBannerPath(["Page", "Dashboard"])
 		layout.banner.setBannerHeader("Dashboard")
 		layout.banner.setBannerDescription("Overview of all details")
         layout.banner.setActionRightButton("")
+
 
 
 	}
@@ -102,6 +135,7 @@ layout.pages.dashboard = (function() {
 		$('#'+eleIds['rootBody']).html(HTML(self.ctx))
 
 		initEvents();
+        loadDashboardStats();
 	}
 
 	return self;
