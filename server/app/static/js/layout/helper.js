@@ -26,20 +26,6 @@ layout.helper = (function() {
 		]
 	}
 
-	// self.genLinkTd = function(srcLink, data) {
-	// 	console.log("srcLink, data: ", srcLink, data);
-	// 	return ['a', {'href': srcLink }, data]
-	// 	// return ['td', {'class': "fw-bolder text-gray-500"}, 
-	// 	// 	['a', {'href': srcLink }, data]
-	// 	// ]
-	// }
-
-	self.genCollapseRow = function(toggle) {
-
-
-	}
-
-
 	self.genPredictionTd = function(percentVal) {
 		console.log("percentVal: ", percentVal);
 		return ['td', {'class': "fw-bolder text-gray-500"}, 
@@ -83,10 +69,10 @@ layout.helper = (function() {
 	
 
 
-	self.tableTemplateCtx = function(tableId, theadId, tbodyId) {
+	self.tableTemplateCtx = function(tableId, theadId, tbodyId, tblHeight) {
 		return ['div', {'class': 'card border-0 shadow'},
 			["div", {"class": "card-body"},
-				["div", {"class": "table-responsive-xxl overflow-auto"},
+				["div", {"class": "table-responsive-xxl overflow-auto", "style": `height: ${tblHeight ? tblHeight : "600px"}`},
 					["table", {"id": tableId,
 					 "class": "table table-centered table-nowrap mb-0 rounded"},
 						["thead", {"id": theadId,"class": "thead-light"}], //headers
