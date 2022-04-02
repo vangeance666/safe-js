@@ -5,18 +5,10 @@ from app.models.analysis_request import AnalysisRequest
 
 from app.platform_controller import PlatformController
 
-platform_controller = PlatformController()
-
 router = APIRouter()
 
-
-test_headers = ["ID", "Page URL", "JS Src", "Static analysis Status", "Dynamic analysis Status"]
-test_data_rows = [
-            [str(x), "www.facebook.com", 'jomama source', 'Done', 'Done'] for x in range(100)
-        ]
-
-# test_analysis_headers = 
-# Used for dashboard view
+platform_controller = PlatformController()
+# platform_controller.start_threads()
 
 # Done
 @router.get("/analysis/statistics/")
