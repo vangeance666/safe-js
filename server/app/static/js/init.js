@@ -66,6 +66,12 @@ const eleIds = {
 	"analysisSubmitUrlFormText": "analysis-submit-url-form-text", 
 	"analysisSubmitUrlFormOk": "analysis-submit-url-form-ok", 
 
+	"analysisPredictHeaderTitle": "analysis-predict-header-title", 
+	"analysisPredictHeaderSpan": "analysis-predict-header-span", 
+	"analysisPredictBar": "analysis-predict-bar", 
+	"analysisPredictCardDesc": "analysisPredictCardDesc",
+	"analysisPredictCardHeader": "analysisPredictCardHeader",
+
 
 	"settingsClearResultsBtn": "settings-clear-results-btn",
 	"settingsClearConfirmForm": "settings-clear-confirm",
