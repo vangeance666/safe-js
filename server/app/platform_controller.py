@@ -17,6 +17,10 @@ class NotFoundDetails(Exception):
 
 class PlatformController:
 
+
+	FEATURE_HEADERS = ['Index', "Feature Name", "Exists/NoError", "Value"]
+
+
 	def __init__(self):
 		self._dataset_generator = DatasetGenerator()
 		self._page_controller = PageController()
@@ -70,14 +74,32 @@ class PlatformController:
 
 	# For analysis view
 	def fetch_js_file_details(self, page_id: int, js_file_id: int) -> dict:
-		# ret = {
-		# 	"page_id": page_id
-		# 	, "js_file_id": js_file_id
-		# }
+
+		
+
+		ret = {
+			"static_features": {}
+			, "dynamic_features": {}
+			, "predict_malign": ""
+		} 
+		
 		for page in self._analyzed_pages:
 			if page.id == page_id:
 				for js_file in itertools.chain(page.internal_js_files, page.external_js_files):
 					if js_file.id == js_file_id:
-						return asdict(js_file)
+						# print(js_file.static_features['all'])
+						ret['static_features']['headers'] = self.FEATURE_HEADERS
+						ret['static_features']['data'] = [ [i, item[0], item[1][0], item[1][1]] for i, item in enumerate(js_file.static_features['all'].items())]
+
+						ret['dynamic_features']['headers'] = self.FEATURE_HEADERS
+
+						ret['dynamic_features']['data'] = [ [i, item[0], item[1][0], item[1][1] ] for i, item in enumerate(js_file.dynamic_features['iocs'].items())]
+
+						ret['predict_malign'] = js_file.malign_percent
+
+						return ret
 
 		return None
+
+
+
