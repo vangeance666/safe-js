@@ -39,6 +39,9 @@ class JsFile:
 	dynamic_features: dict = field(default_factory=dict)
 	dynamic_features_done: bool = False
 
+	model_predicted: bool = False
+	malign_percent: float = 0.0
+
 	def get_text(self) -> str:
 		if self.saved_path:
 			with open(self.saved_path, 'r') as f:
