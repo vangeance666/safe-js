@@ -61,6 +61,11 @@ const eleIds = {
 	"analysisDyanmicFtTblHeader": "analysis-dyanmic-ft-tbl-header",
 	"analysisDyanmicFtTblBody": "analysis-dyanmic-ft-tbl-body",
 	"analysisModalSubmit": "analysis-modal-submit",
+	
+	"analysisSubmitUrlForm": "analysis-submit-url-form", 
+	"analysisSubmitUrlFormText": "analysis-submit-url-form-text", 
+	"analysisSubmitUrlFormOk": "analysis-submit-url-form-ok", 
+
 
 	"settingsClearResultsBtn": "settings-clear-results-btn",
 	"settingsClearConfirmForm": "settings-clear-confirm",
