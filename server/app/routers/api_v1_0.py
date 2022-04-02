@@ -54,7 +54,9 @@ async def get_analysis_details(page_id: int, js_file_id: int):
 @router.post("/analysis/run/")
 async def analyze_url(analysis_request: AnalysisRequest = Body(...)):
     # Add analysis to queue and return analysis id
-    return JSONResponse(content={"status": "ok", "task_id": 1})
+    
+    return JSONResponse(content={"status": "ok", "task_id": "1"})
+    # return JSONResponse(content={"status": "ok", "task_id": 1, "url": analysis_request.url, "mode": analysis_request.mode})
 
 # Used for querying status for both extension/site
 @router.get("/analysis/run/status/")

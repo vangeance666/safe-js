@@ -18,20 +18,47 @@ dataset_generator = DatasetGenerator()
 page_controller = PageController()
 features_controller = FeaturesController()
 analysis_controller  = AnalysisController()
-# results_controller = ResultsController()
+results_controller = ResultsController()
+
+from app.platform_controller import PlatformController
+platform_controller = PlatformController()
+
 
 import uvicorn
 
 if __name__ == "__main__":
-    # uvicorn.run("app.main:app", host="0.0.0.0", port=8090, reload=True)	
-	# pass
+
+
+
+	# results = platform_controller.fetch_js_file_details(0, 1)
+
+	# print("results: ", results)
+	
+	# header = ['Index', 'Feature', 'Found', 'value']
+	# reshape = [[i, item[0], item[1]] for i, item in enumerate(results.items())]
+	# print("reshape: ", reshape)
+	# 
+	# print(item.static_features)
+		
+
+	# reshape = [for x in result]
 
 	
-	pages = results_controller.load_pages()
 
-	print(pages[1].src)
-	for j in pages[1].internal_js_files:
-		print(j)
+	# print(platform_controller.fetch_dashboard_details())
+
+    uvicorn.run("app.main:app", host="0.0.0.0", port=8090, reload=True)	
+
+	# pages = results_controller.load_pages()
+
+
+	# for page in pages:
+	# 	for js_file in itertools.chain(page.internal_js_files, page.external_js_files):
+	# 		print("src", js_file.src)
+	# 		print(page.id, js_file.src)
+	# print(pages[1].src)
+	# for j in pages[1].internal_js_files:
+	# 	print(j)
 
 	# if pages is None:
 

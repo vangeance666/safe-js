@@ -74,9 +74,7 @@ class PlatformController:
 
 	# For analysis view
 	def fetch_js_file_details(self, page_id: int, js_file_id: int) -> dict:
-
 		
-
 		ret = {
 			"static_features": {}
 			, "dynamic_features": {}
