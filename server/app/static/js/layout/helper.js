@@ -18,13 +18,21 @@ layout.helper = (function() {
 		return ['td', {'class': "fw-bolder text-gray-500"}, data]
 	}
 
-	self.genLinkTd = function(srcLink, data) {
-		console.log("srcLink, data: ", srcLink, data);
-		return ['a', {'href': srcLink }, data]
-		// return ['td', {'class': "fw-bolder text-gray-500"}, 
-		// 	['a', {'href': srcLink }, data]
-		// ]
+	self.genDefaultTr = function(rowData) { 
+		return ['tr', 
+			rowData, function(x){
+				return
+			}
+		]
 	}
+
+	// self.genLinkTd = function(srcLink, data) {
+	// 	console.log("srcLink, data: ", srcLink, data);
+	// 	return ['a', {'href': srcLink }, data]
+	// 	// return ['td', {'class': "fw-bolder text-gray-500"}, 
+	// 	// 	['a', {'href': srcLink }, data]
+	// 	// ]
+	// }
 
 	self.genCollapseRow = function(toggle) {
 
@@ -72,6 +80,9 @@ layout.helper = (function() {
 	    ));
 	}
 
+	
+
+
 	self.tableTemplateCtx = function(tableId, theadId, tbodyId) {
 		return ['div', {'class': 'card border-0 shadow'},
 			["div", {"class": "card-body"},
@@ -86,52 +97,64 @@ layout.helper = (function() {
 		];
 	}
 
-	self.cardOverviewCtx = function(viewBox, svgPath, cardDesc, cardValue) {
+	self.cardDefaultOverviewCtx = function(viewBox, svgPath, cardDescId, cardHeaderId) {
 		return ["div", {"class": "col-auto d-flex align-items-center me-5"},
 		    ["div", {"class": "icon-shape icon-sm icon-shape-danger rounded me-3"},
 		        ["svg", {
 		                "fill": "currentColor",
 		                "viewbox": viewBox,
-		            },svgPath
-		            // ["path", {
-		            //         "fill-rule": "evenodd",
-		            //         "d": "M3 3a1 1 0 000 2v8a2 2 0 002 2h2.586l-1.293 1.293a1 1 0 101.414 1.414L10 15.414l2.293 2.293a1 1 0 001.414-1.414L12.414 15H15a2 2 0 002-2V5a1 1 0 100-2H3zm11 4a1 1 0 10-2 0v4a1 1 0 102 0V7zm-3 1a1 1 0 10-2 0v3a1 1 0 102 0V8zM8 9a1 1 0 00-2 0v2a1 1 0 102 0V9z",
-		            //         "clip-rule": "evenodd"
-		            //     }
-		            // ]
+		            }, svgPath
 		        ]
 		    ],
 		    ["div", {"class": "d-block"},
-		        ["label", {"class": "mb-0"}, cardDesc],
-		        ["h4", {"class": "mb-0"}, cardValue]
+		        ["label", {'id': cardDescId, "class": "mb-0"}, "Default Description"],
+		        ["h4", {'id': cardHeaderId,"class": "mb-0"}, "---"]
 		    ]
 		]
 	}
 
-	self.percentBarCtx = function (colorCls, headerValue, malignPercentValue) {
+
+	self.percentDefaultBarCtx = function (headerId, headerSpanId, barId, colorCls) {
 		return ["div", {"class": "col"},
             ["div", {"class": "progress-wrapper"},
                 ["div", {"class": `progress-info`},
-                    ["div", {"class": "h6 mb-0"},
-                        headerValue
+                    ["div", {'id': headerId, "class": "h6 mb-0"},
+                        "Default"
                     ],
                     ["div", {"class": "small fw-bold text-gray-500"},
-                        ["span", `${malignPercentValue} %`]
+                        ["span", {'id': headerSpanId},  `0 %`]
                     ]
                 ],
                 ["div", {"class": "progress mb-0"},
                     ["div", {
+                    		'id': barId,
                             "class": `progress-bar ${colorCls}`,
                             "role": "progressbar",
-                            "aria-valuenow": `${malignPercentValue}`,
+                            "aria-valuenow": `0`,
                             "aria-valuemin": "0",
                             "aria-valuemax": "100",
-                            "style": `width: ${malignPercentValue}%;`
+                            "style": `width: 0%;`
                         }
                     ]
                 ]
             ]
         ]
+	}
+
+
+	self.halfPageCardCtx = function(headerText, bodyElement) {
+		return ['div', {'class': "row col-6"},
+			["div", {"class": ""},
+                ["div", {"class": "mb-3"},
+                    ["h2", {"class": "h5 mb-1"}, headerText]
+                ]
+            ],
+            ["div", {"class": ""},
+                ["div", {"class": "mb-3"},
+                	bodyElement
+                ]
+            ]
+		]
 	}
 
 	self.stripTrailingSlash = function(str) {
