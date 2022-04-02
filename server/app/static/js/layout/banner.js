@@ -35,14 +35,18 @@ layout.banner = (function() {
 		$('#'+eleIds['bannerDescription']).text(description);
 	}
 
-	self.setActionRightButton = function(btnId, hrefValue, btnSvgPath, viewBox, btnText) {
+	self.setActionRightButton = function(btnId, hrefValue, attrsDict, btnSvgPath, viewBox, btnText) {
 		if (btnId === "") {
 			$('#'+eleIds['bannerActionRightButton']).html(HTML(""));
 			return 
 		}
 		
 		$('#'+eleIds['bannerActionRightButton']).html(HTML(
-			["a", {"id": btnId, "href": hrefValue, "class": "btn btn-outline-gray-600 d-inline-flex align-items-center"},
+			["a", Object.assign({},
+				 {"id": btnId, 
+					"href": hrefValue, 
+					"class": "btn btn-outline-gray-600 d-inline-flex align-items-center"},
+				attrsDict !== "" ? attrsDict : {}),
 			    ["svg", {
 			        "class": "icon icon-xs me-1",
 			        "fill": "currentColor",
