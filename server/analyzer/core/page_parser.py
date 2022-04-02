@@ -7,6 +7,11 @@ from analyzer.datatypes.js_file import JsFile
 from analyzer.datatypes.page import Page
 from urllib.parse import urlparse
 
+class HTMLContentError(Exception):
+	pass
+
+class ElementExtractionError(Exception):
+	pass
 
 class PageParser:
 
@@ -76,21 +81,25 @@ class PageParser:
 
 		return True	
 
-	def extract_page_details(self, url: str) -> Page:
+	def extract_page_details(self, page: Page):
 
-		page = Page(src=url)
+		if not page.src:
+			raise ValueError("Page source URL is invalid")
 
 		page.success = self._request_url_html(page)
 
 		if not page.success:
-			return page
+			raise HTMLContentError("Page HTML not retrieved")
 
 		page.parsed = self.parse_script_results(page)
 
-		if page.parsed and page.script_elements:
-			page.extracted = self._extract_js_files(page)
+		if not page.parsed:
+			raise ElementExtractionError("Fail to parse element from page HTML")
 
-		return page
+		if not page.script_elements:
+			raise ValueError("Invalid extracted elemetns from HTML")
+
+		page.extracted = self._extract_js_files(page)
 
 
 
