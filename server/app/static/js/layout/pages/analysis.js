@@ -94,7 +94,7 @@ layout.pages.analysis = (function() {
 				showError("Failed to send URL for analysis");
 				return
 			}
-			
+
 			jsonData = JSON.parse(e.responseText)
 
 			if (jsonData.status === "error") {
@@ -111,16 +111,38 @@ layout.pages.analysis = (function() {
 		})
 	}
 
-	const setStaticFeaturesTableData = function() {
+	setTableData = function() {}
 
+	defaultSetTableData = function(tableBodyId, headerRows) {
+		console.log("headerRows: ", headerRows);
+		$('#'+tableBodyId).html(HTML(
+			['tr', 
+				headerRows, function(tup) {
+					return layout.helper.genNormalTd(tup[0] === 1 ? tup[1] : "X")
+				}
+			]
+			
+	    ));
 	}
-	const setDynamicFeaturesTableData = function() {
+	
 
+	setPredictCardValues = function(headerDescription, headerValue) {
+		$('#'+eleIds['analysisPredictCardDesc']).text(headerDescription)
+		$('#'+eleIds['analysisPredictCardHeader']).text(headerValue)
 	}
 
-	function loadAnalysisResultsTable(analysisId) {
+	setPredictBarValues = function(barTitle, barSpanValue, barPercentInt) {
+		$('#'+eleIds['analysisPredictHeaderTitle']).text(barTitle)
+		$('#'+eleIds['analysisPredictHeaderSpan']).text(barSpanValue)
 
-		console.log("loadanalysisResultsTable");
+		$('#'+eleIds['analysisPredictBar']).attr("aria-valuenow", barPercentInt)
+		// $('#'+eleIds['analysisPredictBar']).attr("aria-valuenow", barPercentInt)
+		$('#'+eleIds['analysisPredictBar']).css("width", `${barPercentInt}%`)
+	}
+
+	const loadAnalysisResultsTable = function(analysisId) {
+
+		console.log("load analysis Results Table");
 		let allGetParams = window.location.search.substring(1)
 		if (allGetParams === "") {
 			showError("No ID and JS Src get params found")
@@ -136,7 +158,8 @@ layout.pages.analysis = (function() {
 			return
 		}	
 
-		console.log("newjsSrc: ", jsFileId);	
+		console.log("newjsSrc: ", jsFileId);
+
 		$.ajax({
 			url: "api/v1_0/analysis/details/",
         	type: 'GET',
@@ -155,18 +178,45 @@ layout.pages.analysis = (function() {
 				return
 			}
 
-			let staticFeaturesHeaders = Object.keys(e.details.static_features.all)
-			console.log("staticFeaturesHeaders: ", staticFeaturesHeaders);
+			let staticFeaturesHeaders = Object.keys(e.details.static_features.all);
 			let dynamicFeaturesHeaders = Object.keys(e.details.dynamic_features.iocs)
-			console.log("dynamicFeaturesHeaders: ", dynamicFeaturesHeaders);
+
+			if (e.details.model_predicted === true) {
+				console.log("e.details.model_predicted: ", e.details.model_predicted);
+				console.log("e.details.model_predicted: ", e.details.malign_percent);
+				setPredictCardValues("Malign scale", "0.65")
+				setPredictBarValues("Malign Percentage", "0.65", "65")
+			} else {
+				console.log("JS File not yet predicted by model")
+			}
+
+			if (staticFeaturesHeaders){
+				layout.helper.setTableHeaders(eleIds['analysisStaticFtTblHeader'], staticFeaturesHeaders)	
+			} else {
+				console.log("invalid static features")
+			}
+
+			if (dynamicFeaturesHeaders) {
+				layout.helper.setTableHeaders(eleIds['analysisDyanmicFtTblHeader'], dynamicFeaturesHeaders)	
+			} else {
+				console.log("invalid dynammic features")
+			}
+			
+			staticValues = Object.values(e.details.static_features.all)
+			dynamicValues = Object.values(e.details.dynamic_features.iocs)
+
+			if (staticValues) {
+				defaultSetTableData(eleIds['analysisStaticFtTblBody'], staticValues)
+				setStaticFeaturesTableData();
+			}
+
+			if (dynamicValues) {
+				defaultSetTableData(eleIds['analysisDyanmicFtTblBody'], dynamicValues)
+				setDynamicFeaturesTableData();
+			}
 
 
-			layout.helper.setTableHeaders(eleIds['analysisStaticFtTblHeader'], staticFeaturesHeaders)
-			layout.helper.setTableHeaders(eleIds['analysisDyanmicFtTblHeader'], dynamicFeaturesHeaders)
-
-
-			// setStaticFeaturesTableData();
-			// setDynamicFeaturesTableData();
+			
 
 			// $('#'+eleIds['analysisStaticFtTblMain']).DataTable([]);
 			// $('#'+eleIds['analysisDyanmicFtTblMain']).DataTable([]);
@@ -242,6 +292,8 @@ layout.pages.analysis = (function() {
 		eleIds['analysisDyanmicFtTblHeader'],
 		eleIds['analysisDyanmicFtTblBody'])
 
+
+	
 	const predictionCardCtx = ["div", {"class": "card border-0 shadow mb-5"},
 	        ["div", {
 	                "class": "card-header border-bottom d-flex align-items-center justify-content-between"
@@ -249,12 +301,17 @@ layout.pages.analysis = (function() {
 	            ["h2", {"class": "fs-5 fw-bold mb-0"}, "Prediction"]
 	        ],
 	        ["div", {"class": "card-body"},
-	        	//
+	                // viewBox, svgPath, cardDescId, cardHeaderId)
 	            ["div", {"class": "row align-items-center mb-4"},
-	                layout.helper.cardOverviewCtx("0 0 32 32", predictSvgPath, "Malign Probability", "75"),
+	                layout.helper.cardDefaultOverviewCtx("0 0 32 32",
+	                 predictSvgPath, 
+	                 eleIds['analysisPredictCardDesc'], 
+	                 eleIds['analysisPredictCardHeader']),
 					// Percent bar
-					layout.helper.percentBarCtx("bg-danger", "0.7514", "75")
-	                
+					layout.helper.percentDefaultBarCtx(eleIds['analysisPredictHeaderTitle']
+						, eleIds['analysisPredictHeaderSpan']
+						, eleIds['analysisPredictBar']
+						, "bg-danger")
 	            ]
 	            //
 	        ]
@@ -272,35 +329,9 @@ layout.pages.analysis = (function() {
 	            		]	            		
 	            	],
 	            	["div", {"class": "row"},
-
-	            		['div', {'class': "row col-6"},
-	            			["div", {"class": ""},
-		                        ["div", {"class": "mb-3"},
-		                            ["h2", {"class": "h5 mb-1"}, "Static Features"]
-		                        ]
-		                    ],
-		                    ["div", {"class": ""},
-		                        ["div", {"class": "mb-3"},
-		                        	staticFtTableCtx
-		                        ]
-		                    ]
-	            		],
-	            		['div', {'class': "row col-6"},
-	            		 	["div", {"class": ""},
-		                        ["div", {"class": "mb-3"},
-		                            ["h2", {"class": "h5 mb-1"}, "Dynamic Features"]
-		                        ]
-		                    ],
-	            			["div", {"class": ""},
-		                        ["div", {"class": "mb-3"},
-		                        	dynamicFtTableCtx
-		                        ]
-		                    ]
-		                   
-	            		]
-	            	]          	
-
-	                
+	            		layout.helper.halfPageCardCtx("Static Features", staticFtTableCtx),
+	            		layout.helper.halfPageCardCtx("Dynamic Features", dynamicFtTableCtx)
+	            	]	                
 	            ]
 	        ]
 	    ]
@@ -311,29 +342,26 @@ layout.pages.analysis = (function() {
 		layout.banner.setBannerHeader("Analysis")
 		layout.banner.setBannerDescription("View analysis results based on submission ID")
 
-		layout.banner.setActionRightButton(
-			eleIds["analysisSubmitBtn"],
-		 "", 
-		 {'data-bs-toggle': 'modal', 'data-bs-target': '#'+eleIds['analysisSubmitUrlForm']}, 
-		 submitUrlBtnPath, 
-		 "0 0 32 32", 
-		 "Submit New URL")
+		layout.banner.setActionRightButton(eleIds["analysisSubmitBtn"],
+	    "", {
+	        'data-bs-toggle': 'modal',
+	        'data-bs-target': '#' + eleIds['analysisSubmitUrlForm']
+	    },
+	    submitUrlBtnPath,
+	    "0 0 32 32",
+	    "Submit New URL")
 
 
 		$('#'+eleIds['analysisSubmitUrlFormOk']).click(function(e) {
 			e.preventDefault();
 
 			let urlText = $('#'+eleIds['analysisSubmitUrlFormText']).val();
-			console.log("urlText: ", urlText);
 			if (!urlText || urlText === "") {
 				showError("Please key in a valid URL to anaylyse");
 				return
 			}
-
 			postUrlForAnalysis(urlText);
-
 			$('#'+eleIds['analysisSubmitUrlForm']).modal('toggle');
-
 		})
 
 	}
@@ -343,7 +371,11 @@ layout.pages.analysis = (function() {
 
 		$('#'+eleIds['rootBody']).html(HTML(self.ctx, analyseUrlConfirmFormCtx))
 		initEvents();
+
 		loadAnalysisResultsTable();
+
+		setPredictCardValues("Malign scale", "0.65")
+		setPredictBarValues("Malign Percentage", "0.65", "65")	
 	}
 
 	return self;
