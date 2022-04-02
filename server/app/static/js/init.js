@@ -69,8 +69,8 @@ const eleIds = {
 	"analysisPredictHeaderTitle": "analysis-predict-header-title", 
 	"analysisPredictHeaderSpan": "analysis-predict-header-span", 
 	"analysisPredictBar": "analysis-predict-bar", 
-	"analysisPredictCardDesc": "analysisPredictCardDesc",
-	"analysisPredictCardHeader": "analysisPredictCardHeader",
+	"analysisPredictCardDesc": "analysis-predict-card-desc",
+	"analysisPredictCardHeader": "analysis-predict-card-header",
 
 
 	"settingsClearResultsBtn": "settings-clear-results-btn",
