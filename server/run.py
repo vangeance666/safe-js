@@ -23,31 +23,58 @@ results_controller = ResultsController()
 from app.platform_controller import PlatformController
 platform_controller = PlatformController()
 
-
 import uvicorn
+import pickle
+
+# platform_controller.save_all()
+atexit.register(platform_controller.cleanup)
+
+import threading
+
+
+class A(threading.Thread):
+	def __init__(self, pending_queue):
+		super().__init__()
+		self._pending_queue = pending_queue
+
+	def run(self):
+
+		for x in self._pending_queue:
+			print(x)
+		return 
+
+
+from app.threads.analyzer_thread import AnalyzerThread
+from collections import deque
+import time
+from analyzer.datatypes.page import Page
+from analyzer.datatypes.js_file import JsFile
 
 if __name__ == "__main__":
 
 
+	import shutil
 
+	shutil.rmtree("C:\\Users\\User\\Documents\\GitHub\\safe-js\\server\\data\\js_dynamic_results")
+
+	# analyzed = []
+	# pending = deque([])
+	# pending.append(Page("https://stackoverflow.com/questions/66770132/python-uniqe-integer-for-dataclass"))
+
+	# w = AnalyzerThread(pending, analyzed, True)
+	# w.start()
+
+	# pass
+	
+	# for i in range(3):
+	# 	a = A(pending_queue=[str(i) for i in range(100)])
+	# 	print(dir(a))
+		# a.start()
 	# results = platform_controller.fetch_js_file_details(0, 1)
-
-	# print("results: ", results)
-	
-	# header = ['Index', 'Feature', 'Found', 'value']
-	# reshape = [[i, item[0], item[1]] for i, item in enumerate(results.items())]
-	# print("reshape: ", reshape)
-	# 
-	# print(item.static_features)
-		
-
-	# reshape = [for x in result]
-
-	
 
 	# print(platform_controller.fetch_dashboard_details())
 
-    uvicorn.run("app.main:app", host="0.0.0.0", port=8090, reload=True)	
+    # uvicorn.run("app.main:app", host="0.0.0.0", port=8090, reload=True)	
 
 	# pages = results_controller.load_pages()
 
