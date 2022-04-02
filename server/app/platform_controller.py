@@ -1,42 +1,47 @@
+import copy
 import itertools
 from collections import deque
-from dataclasses import asdict
 from typing import List
 
-from analyzer.controllers.analysis_controller import AnalysisController
-from analyzer.controllers.features_controller import FeaturesController
-from analyzer.controllers.page_controller import PageController
 from analyzer.controllers.results_controller import ResultsController
 from analyzer.core.dataset_generator import DatasetGenerator
 from analyzer.datatypes.js_file import JsFile
 from analyzer.datatypes.page import Page
+from config import ANALYZED_PAGES_SAVE_PATH, PENDING_PAGES_SAVE_PATH
 
+from app.threads.analyzer_thread import AnalyzerThread
 
 class NotFoundDetails(Exception):
 	pass
 
-class PlatformController:
 
+
+class PlatformController:
 
 	FEATURE_HEADERS = ['Index', "Feature Name", "Exists/NoError", "Value"]
 
-
 	def __init__(self):
+
+		self._platform_running: bool = True
+
+		self.save_analyzed_path = ANALYZED_PAGES_SAVE_PATH
+		self.save_pending_path = PENDING_PAGES_SAVE_PATH
+		
 		self._dataset_generator = DatasetGenerator()
-		self._page_controller = PageController()
-		self._features_controller = FeaturesController()
-		self._analysis_controller  = AnalysisController()
 		self._results_controller = ResultsController()
 
-		self._analyzed_pages: List[Pages] = []
+		self._analyzed_pages: List[Pages] = self._results_controller.load_pages(ANALYZED_PAGES_SAVE_PATH) or []
 
-		self._analysis_queue: deque = deque()
+		self._analysis_queue: deque = deque([])
 
-		self.load_analyzed_pages()
+		self._threads = [
+			AnalyzerThread(self._analysis_queue, self._analyzed_pages, self._platform_running)
+		]
 
-	def load_analyzed_pages(self):
-		self._analyzed_pages = self._results_controller.load_pages()
 
+	def start_threads(self):
+		for thread in self._threads:
+			thread.start()
 	# ok
 	def fetch_dashboard_details(self) -> dict:
 		all_js_files = [js_file for page in self._analyzed_pages
@@ -52,7 +57,6 @@ class PlatformController:
 	def fetch_all_pages_details(self) -> list:
 
 		ret = []
-
 		for page in self._analyzed_pages:
 			row = {}
 			row['id'] = page.id
@@ -71,7 +75,6 @@ class PlatformController:
 			ret.append(row)
 		return ret
 
-
 	# For analysis view
 	def fetch_js_file_details(self, page_id: int, js_file_id: int) -> dict:
 		
@@ -85,19 +88,35 @@ class PlatformController:
 			if page.id == page_id:
 				for js_file in itertools.chain(page.internal_js_files, page.external_js_files):
 					if js_file.id == js_file_id:
-						# print(js_file.static_features['all'])
+						
 						ret['static_features']['headers'] = self.FEATURE_HEADERS
 						ret['static_features']['data'] = [ [i, item[0], item[1][0], item[1][1]] for i, item in enumerate(js_file.static_features['all'].items())]
-
 						ret['dynamic_features']['headers'] = self.FEATURE_HEADERS
-
 						ret['dynamic_features']['data'] = [ [i, item[0], item[1][0], item[1][1] ] for i, item in enumerate(js_file.dynamic_features['iocs'].items())]
-
 						ret['predict_malign'] = js_file.malign_percent
-
 						return ret
-
 		return None
 
 
+	
 
+	def _save_analysed_pages(self) -> bool:
+		return self._results_controller.save_pages(
+			self._analyzed_pages, self.save_analyzed_path)
+
+	def _save_pending_pages(self) -> bool:
+		return self._results_controller.save_pages(
+			self._analysis_queue, self.save_pending_path)
+
+	def _save_all(self) -> bool:
+		self._save_analysed_pages()
+		self._save_pending_pages()
+
+	def delete_past_data(self) -> bool:
+		del self._analyzed_pages
+		self._analyzed_pages = []
+		self._save_all()
+
+	def cleanup(self): 
+		self._platform_running = False # to Stop all thteads
+		self._save_all()
