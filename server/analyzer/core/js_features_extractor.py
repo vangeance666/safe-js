@@ -44,6 +44,9 @@ class JsFeaturesExtractor:
 
 	def extract_dynamic_features(self, js_file: JsFile):
 
+		if js_file.dynamic_run_error:
+			raise InvalidUsageError("Unable to extract dynamic features since dynamic analysis has errors")
+
 		if not js_file.dynamic_done:
 			raise InvalidUsageError("Not analyzed with Box-jS yet, cant extract features.")
 
@@ -63,6 +66,9 @@ class JsFeaturesExtractor:
 
 	def extract_static_features(self, js_file: JsFile):
 
+		if js_file.static_run_error:
+			raise InvalidUsageError("Unable to extract static features since static analysis has errors")
+
 		if not js_file.synthetic_done:
 			raise InvalidUsageError("Synthetic details not extracted yet.")
 
@@ -73,3 +79,13 @@ class JsFeaturesExtractor:
 			js_file.static_features[mapping['attr_name']] = self._parse_features(mapping['features_dict'], js_file)
 
 		js_file.static_features_done = True
+
+
+
+
+
+
+
+
+
+

@@ -5,13 +5,10 @@ from typing import Any, List
 
 from analyzer.core.page_parser import PageParser
 from analyzer.datatypes.page import Page
-from config import RESULTS_SAVED_PATH
-
 
 class ResultsController:
 
 	def __init__(self):
-		self._pages_results_path = RESULTS_SAVED_PATH
 		self._page_parser = PageParser()
 
 	def reparse_script_elements(self, pages: List[Page]):
@@ -21,8 +18,10 @@ class ResultsController:
 	def _pickle_load(self, file_path: str):
 		with open(file_path, 'rb') as f:
 			return pickle.load(f)
-
-	def _pickle_dump(self, save_path: str, data):
+			
+	def _pickle_dump(self, data, save_path: str):		
+		print("data: ", data)
+		print("save_path: ", save_path)
 		with open(save_path, 'wb') as f:
 			pickle.dump(data, f)
 
@@ -35,26 +34,25 @@ class ResultsController:
 				j.text = ""
 				j.syntactic_extract = []
 
-	def load_pages(self) -> List[Page]:
+	def load_pages(self, pikle_dump_path) -> List[Page]:
 		try:
-			data = self._pickle_load(self._pages_results_path)
-			self.reparse_script_elements(data)			
+			data = self._pickle_load(pikle_dump_path)
+			self.reparse_script_elements(data)	
 			return data
 		except Exception as e:
 			print(e)
 			return []
 
-	def save_pages(self, pages: List[Page]) -> bool:
+	def save_pages(self, pages: List[Page], pickle_dump_path) -> bool:
+		print("pickle_dump_path: ", pickle_dump_path)
 		try:
-			if pages is None:
-				print('Pages is none')
-
 			self._flush_script_elements(pages)
-
-			if pages is None:
-				print('Pages is none')
-
-			self._pickle_dump(self._pages_results_path, pages)
+			self._pickle_dump(pages, pickle_dump_path)
 		except Exception as e:
 			raise
+			return False
 		return True
+
+
+
+

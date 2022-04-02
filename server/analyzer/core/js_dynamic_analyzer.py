@@ -28,6 +28,8 @@ def onerror(func, path, exc_info):
 
 class JsDynamicAnalyzer:
 
+	name = "JsDynamicAnalyzer"
+
 	RES_FLDR_EXT = ".results"
 
 	CMD_BOX_JS = "box-js {} --no-shell-error --no-folder-exists --output-dir {}"
@@ -125,12 +127,11 @@ class JsDynamicAnalyzer:
 
 		js_file.dynamic_done = True
 
-	def run(self, js_file: JsFile):
+	def run(self, js_file: JsFile) -> bool:
 		try:
 			self._run_box_js(js_file)
+			return True				
 		except Exception as e:
 			print("Dynamic Extraction Error: ", e)
-			js_file.dynamic_run_error = True					
-
-
-
+			js_file.dynamic_run_error = True
+			return False

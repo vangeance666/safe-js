@@ -33,5 +33,25 @@ class PageController:
 
 		return True
 
+	def save_js_file(self, page: Page):
+		folder_name = sha_256_str(page.src)
+			
+		for js_file in [*page.internal_js_files, *page.external_js_files]:
+
+			js_file.page_src = page.src
+
+			save_path = format_js_file_save(self._save_fldr, js_file)
+
+			if save_file(save_path, js_file.text):
+				print("sucess save file")
+				js_file.saved_path = save_path
+				js_file.is_saved = True
+
+		page.saved = True
+
+	# New
+	def crawl_details(self, page: Page) -> Page:
+		self._page_parser.extract_page_details(page)
+
 	def extract_pages(self, urls: list) -> List[Page]:
 		return [self._page_parser.extract_page_details(url=url) for url in urls]
