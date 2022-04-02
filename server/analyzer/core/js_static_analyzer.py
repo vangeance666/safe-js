@@ -6,6 +6,8 @@ import sys
 
 class JsStaticAnalyzer:
 
+	name = "JsStaticAnalyzer"
+
 	def _run_syntactic_extraction(self, js_file: JsFile):
 
 		if not js_file.text:
@@ -20,10 +22,12 @@ class JsStaticAnalyzer:
 		js_file.synthetic_done = True
 		js_file.static_done = True
 
-	def run(self, js_file: JsFile):
+	def run(self, js_file: JsFile) -> bool:
 
 		try:
 			self._run_syntactic_extraction(js_file)
 		except Exception as e:
 			print("Static Extraction Error: ", e)
 			js_file.static_run_error = True
+			return False
+		return True
