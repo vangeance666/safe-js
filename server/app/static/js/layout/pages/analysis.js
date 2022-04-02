@@ -76,7 +76,7 @@ layout.pages.analysis = (function() {
 	}
 
 	const postUrlForAnalysis = function(urlText) {
-		console.log("POST url for analysis")
+		
 
 		let postData = {}
 
@@ -89,7 +89,7 @@ layout.pages.analysis = (function() {
 			
 		})
 		.done(function(e) {
-			console.log("e: ", e);
+			
 			if (e.status !== "ok") {
 				showError("Failed to send URL for analysis");
 				return
@@ -102,7 +102,7 @@ layout.pages.analysis = (function() {
 				return
 			}
 
-			console.log(jsonData)
+			
 			showSucess(jsonData)
 
 		})
@@ -111,17 +111,16 @@ layout.pages.analysis = (function() {
 		})
 	}
 
-	setTableData = function() {}
-
-	defaultSetTableData = function(tableBodyId, headerRows) {
-		console.log("headerRows: ", headerRows);
+	defaultSetTableData = function(tableBodyId, dataRows) {
 		$('#'+tableBodyId).html(HTML(
-			['tr', 
-				headerRows, function(tup) {
-					return layout.helper.genNormalTd(tup[0] === 1 ? tup[1] : "X")
+			[dataRows, function(row) {
+					return ['tr',
+						row, function(colVal) {
+							return layout.helper.genNormalTd(colVal)
+						}
+					]
 				}
-			]
-			
+			]			
 	    ));
 	}
 	
@@ -142,10 +141,10 @@ layout.pages.analysis = (function() {
 
 	const loadAnalysisResultsTable = function(analysisId) {
 
-		console.log("load analysis Results Table");
+		
 		let allGetParams = window.location.search.substring(1)
 		if (allGetParams === "") {
-			showError("No ID and JS Src get params found")
+			
 			return
 		}
 
@@ -158,7 +157,7 @@ layout.pages.analysis = (function() {
 			return
 		}	
 
-		console.log("newjsSrc: ", jsFileId);
+		
 
 		$.ajax({
 			url: "api/v1_0/analysis/details/",
@@ -178,41 +177,36 @@ layout.pages.analysis = (function() {
 				return
 			}
 
-			let staticFeaturesHeaders = Object.keys(e.details.static_features.all);
-			let dynamicFeaturesHeaders = Object.keys(e.details.dynamic_features.iocs)
+			let staticFeaturesHeaders = e.details.static_features.headers
+			let dynamicFeaturesHeaders = e.details.dynamic_features.headers
 
 			if (e.details.model_predicted === true) {
-				console.log("e.details.model_predicted: ", e.details.model_predicted);
-				console.log("e.details.model_predicted: ", e.details.malign_percent);
 				setPredictCardValues("Malign scale", "0.65")
 				setPredictBarValues("Malign Percentage", "0.65", "65")
-			} else {
-				console.log("JS File not yet predicted by model")
-			}
+			} 
 
 			if (staticFeaturesHeaders){
 				layout.helper.setTableHeaders(eleIds['analysisStaticFtTblHeader'], staticFeaturesHeaders)	
-			} else {
-				console.log("invalid static features")
-			}
+			} 
 
 			if (dynamicFeaturesHeaders) {
 				layout.helper.setTableHeaders(eleIds['analysisDyanmicFtTblHeader'], dynamicFeaturesHeaders)	
-			} else {
-				console.log("invalid dynammic features")
-			}
+			} 
 			
-			staticValues = Object.values(e.details.static_features.all)
-			dynamicValues = Object.values(e.details.dynamic_features.iocs)
+
+			let staticValues = e.details.static_features.data
+			let dynamicValues = e.details.dynamic_features.data
 
 			if (staticValues) {
+				console.log("staticValues: ", staticValues);
 				defaultSetTableData(eleIds['analysisStaticFtTblBody'], staticValues)
-				setStaticFeaturesTableData();
+				// setStaticFeaturesTableData();
 			}
 
 			if (dynamicValues) {
+				console.log("dynamicValues: ", dynamicValues);
 				defaultSetTableData(eleIds['analysisDyanmicFtTblBody'], dynamicValues)
-				setDynamicFeaturesTableData();
+				// setDynamicFeaturesTableData();
 			}
 
 
@@ -221,7 +215,7 @@ layout.pages.analysis = (function() {
 			// $('#'+eleIds['analysisStaticFtTblMain']).DataTable([]);
 			// $('#'+eleIds['analysisDyanmicFtTblMain']).DataTable([]);
 
-			console.log(e)	
+				
 		})
 		.fail(function(e){
 			showError("Failed to query analysis results, API down?")
@@ -367,15 +361,15 @@ layout.pages.analysis = (function() {
 	}
 // btnId, hrefValue, attrsDict, btnSvgPath, viewBox, btnText)
 	self.display = function() {
-		console.log("Analysis display toggled")
+		
 
 		$('#'+eleIds['rootBody']).html(HTML(self.ctx, analyseUrlConfirmFormCtx))
 		initEvents();
 
 		loadAnalysisResultsTable();
 
-		setPredictCardValues("Malign scale", "0.65")
-		setPredictBarValues("Malign Percentage", "0.65", "65")	
+		setPredictCardValues("Malign scale", "---")
+		setPredictBarValues("Malign Percentage", "---", "---")	
 	}
 
 	return self;

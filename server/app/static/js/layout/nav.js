@@ -154,7 +154,7 @@ layout.nav = (function() {
 
 			layout.helper.href(hrefValue);
 			// 
-
+			
 			
 			$('.nav-item').removeClass("active");
 			$(this).addClass("active");
