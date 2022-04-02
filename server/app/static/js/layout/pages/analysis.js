@@ -11,6 +11,61 @@ layout.pages.analysis = (function() {
 	    }
 	]
 
+	const sendUrlSvgPath = ["path", {
+	        "d": "M30.148 5.588c-2.934-3.42-7.288-5.588-12.148-5.588-8.837 0-16 7.163-16 16s7.163 16 16 16c4.86 0 9.213-2.167 12.148-5.588l-10.148-10.412 10.148-10.412zM22 3.769c1.232 0 2.231 0.999 2.231 2.231s-0.999 2.231-2.231 2.231-2.231-0.999-2.231-2.231c0-1.232 0.999-2.231 2.231-2.231z"
+	    }
+	];
+
+	const analyseUrlConfirmFormCtx = ["div", {
+	        "class": "modal fade",
+	        "id": eleIds['analysisSubmitUrlForm'],
+	        "tabindex": "-1",
+	        "aria-labelledby": eleIds['analysisSubmitUrlForm'],
+	        "style": "display: none;",
+	        "aria-hidden": "true"
+	    },
+	    ["div", {
+	            "class": "modal-dialog modal-tertiary modal-dialog-centered modal-lg",
+	            "role": "document"
+	        },
+	        ["div", {"class": "modal-content bg-dark text-white"},
+	            ["div", {"class": "modal-body text-center"},
+	                ["span", {"class": "modal-icon"},
+	                    ["svg", {
+	                            "class": "icon icon-xl text-gray-200",
+	                            "fill": "currentColor",
+	                            "viewbox": "0 0 32 32",
+	                        }, sendUrlSvgPath
+	                    ] 
+	                ],
+	                ["p", {"class": "lead"},
+	                    "Enter URL to add to anaylsis queue"
+	                ],
+	                ["div", {"class": "form-group px-lg-5"},
+	                    ["div", {"class": "d-flex mb-3 justify-content-center"},
+	                        ["input", {
+	                                "type": "text",
+	                                "id": eleIds['analysisSubmitUrlFormText'],
+	                                "class": "me-sm-1 mb-sm-0 form-control form-control-lg",
+	                                "placeholder": "www.facebook.com"
+	                            }
+	                        ],
+	                        ["div",
+	                            ["button", {
+	                            		"id": eleIds['analysisSubmitUrlFormOk'],
+	                                    "type": "submit",
+	                                    "class": "ms-2 btn large-form-btn btn-secondary"
+	                                },
+	                                "Analyse"
+	                            ]
+	                        ]
+	                    ]
+	                ]
+	            ]
+	        ]
+	    ]
+	]
+
 	formatRowDataCtx = function(rowData) {
 		let res = ['tr'];
 		for (let i=0; i < rowData.length-1; i++) {
@@ -18,7 +73,42 @@ layout.pages.analysis = (function() {
 		}
 		res.push(layout.helper.genPredictionTd(rowData[rowData.length-1]))
 		return res;
-		
+	}
+
+	const postUrlForAnalysis = function(urlText) {
+		console.log("POST url for analysis")
+
+		let postData = {}
+
+		$.ajax({
+			url: "api/v1_0/analysis/run/",
+			contentType: 'application/json',
+			type: 'POST',
+			data: JSON.stringify({url: "google.com"}),
+			dataType: "json",
+			
+		})
+		.done(function(e) {
+			console.log("e: ", e);
+			if (e.status !== "ok") {
+				showError("Failed to send URL for analysis");
+				return
+			}
+			
+			jsonData = JSON.parse(e.responseText)
+
+			if (jsonData.status === "error") {
+				showError("Server error: "+jsonData.error_message)
+				return
+			}
+
+			console.log(jsonData)
+			showSucess(jsonData)
+
+		})
+		.fail(function(e) {
+			showError("Unale to POST url for analysis")
+		})
 	}
 
 	const setStaticFeaturesTableData = function() {
@@ -215,96 +305,43 @@ layout.pages.analysis = (function() {
 	        ]
 	    ]
 	]
-	
-	const modalSubmitForm = ["div", {
-	        "class": "modal fade",
-	        "id": eleIds["analysisModalSubmit"],
-	        "tabindex": "-1",
-	        "aria-labelledby": eleIds["analysisModalSubmit"],
-	        "style": "display: none;",
-	        "aria-hidden": "true"
-	    },
-	    ["div", {
-	            "class": "modal-dialog modal-tertiary modal-dialog-centered modal-lg",
-	            "role": "document"
-	        },
-	        ["div", {"class": "modal-content bg-dark text-white"},
-	            ["div", {"class": "modal-header"},
-	                ["button", {
-	                        "type": "button",
-	                        "class": "btn-close btn-close-white text-white",
-	                        "data-bs-dismiss": "modal",
-	                        "aria-label": "Close"
-	                    }
-	                ]
-	            ],
-	            ["div", {"class": "modal-body text-center py-3"},
-	                ["span", {"class": "modal-icon"},
-	                    ["svg", {
-	                            "class": "icon icon-xl text-gray-200 mb-4",
-	                            "fill": "currentColor",
-	                            "viewbox": "0 0 20 20",
-	                            "xmlns": "http://www.w3.org/2000/svg"
-	                        },
-	                        ["path", {
-	                                "fill-rule": "evenodd",
-	                                "d": "M2.94 6.412A2 2 0 002 8.108V16a2 2 0 002 2h12a2 2 0 002-2V8.108a2 2 0 00-.94-1.696l-6-3.75a2 2 0 00-2.12 0l-6 3.75zm2.615 2.423a1 1 0 10-1.11 1.664l5 3.333a1 1 0 001.11 0l5-3.333a1 1 0 00-1.11-1.664L10 11.798 5.555 8.835z",
-	                                "clip-rule": "evenodd"
-	                            }
-	                        ]
-	                    ]
-	                ],
-	                ["h3", {"class": "modal-title mb-3"},
-	                    "Join our 1,360,462 subscribers"
-	                ],
-	                ["p", {"class": "mb-4 lead"},
-	                    "Get exclusive access to freebies, premium products and news."
-	                ],
-	                ["div", {"class": "form-group px-lg-5"},
-	                    ["div", {"class": "d-flex mb-3 justify-content-center"},
-	                        ["input", {
-	                                "type": "text",
-	                                "id": "subscribe",
-	                                "class": "me-sm-1 mb-sm-0 form-control form-control-lg",
-	                                "placeholder": "example@company.com"
-	                            }
-	                        ],
-	                        ["div",
-	                            ["button", {
-	                                    "type": "submit",
-	                                    "class": "ms-2 btn large-form-btn btn-secondary"
-	                                },
-	                                "Subscribe"
-	                            ]
-	                        ]
-	                    ]
-	                ]
-	            ],
-	            ["div", {"class": "modal-footer z-2 mx-auto text-center"},
-	                ["p", {"class": "text-white font-small"},
-	                    "We’ll never share your details with third parties.",
-	                    ["br", {"class": "visible-md"}],
-	                    "View our",
-	                    ["a", {"href": "#"}, "Privacy Policy"],
-	                    "for more info."
-	                ]
-	            ]
-	        ]
-	    ]
-	]
+
 	const initEvents = function() {
 		layout.banner.setBannerPath(["Page", "Analysis"])
 		layout.banner.setBannerHeader("Analysis")
 		layout.banner.setBannerDescription("View analysis results based on submission ID")
-		layout.banner.setActionRightButton(eleIds["analysisSubmitBtn"],
-		 "", submitUrlBtnPath, "0 0 32 32", "Submit New URL")
+
+		layout.banner.setActionRightButton(
+			eleIds["analysisSubmitBtn"],
+		 "", 
+		 {'data-bs-toggle': 'modal', 'data-bs-target': '#'+eleIds['analysisSubmitUrlForm']}, 
+		 submitUrlBtnPath, 
+		 "0 0 32 32", 
+		 "Submit New URL")
+
+
+		$('#'+eleIds['analysisSubmitUrlFormOk']).click(function(e) {
+			e.preventDefault();
+
+			let urlText = $('#'+eleIds['analysisSubmitUrlFormText']).val();
+			console.log("urlText: ", urlText);
+			if (!urlText || urlText === "") {
+				showError("Please key in a valid URL to anaylyse");
+				return
+			}
+
+			postUrlForAnalysis(urlText);
+
+			$('#'+eleIds['analysisSubmitUrlForm']).modal('toggle');
+
+		})
 
 	}
-
+// btnId, hrefValue, attrsDict, btnSvgPath, viewBox, btnText)
 	self.display = function() {
 		console.log("Analysis display toggled")
 
-		$('#'+eleIds['rootBody']).html(HTML(self.ctx))
+		$('#'+eleIds['rootBody']).html(HTML(self.ctx, analyseUrlConfirmFormCtx))
 		initEvents();
 		loadAnalysisResultsTable();
 	}
