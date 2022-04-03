@@ -8,26 +8,32 @@ from analyzer.datatypes.box_js_result import BoxJsResult
 from analyzer.datatypes.js_file import JsFile
 from analyzer.datatypes.page import Page
 
+from config import DYNAMIC_DUMP_FLDR
 
 class FeaturesController:
 	
-	def __init__(self):
-		self._features_extractor = JsFeaturesExtractor()		
-
-	def extract_page_features(self, page: Page):
-		for js_file in itertools.chain(page.internal_js_files, page.external_js_files):
-			if not js_file.static_run_error:
-				self._features_extractor.extract_static_features(js_file)
-
-			if not js_file.dynamic_run_error:
-				self._features_extractor.extract_dynamic_features(js_file)
+	def __init__(self, dynamic_dump_folder: str=None):
+		self._js_features_extractor = JsFeaturesExtractor(dynamic_dump_folder 
+			or DYNAMIC_DUMP_FLDR)		
 
 	def extract_static_features(self, js_file: JsFile):
-		self._features_extractor.extract_static_features(js_file)
+		try:
+			self._js_features_extractor.extract_static_features(js_file)
+			js_file.static_features_done = True
+		except Exception as e:
+			print("e: ", e)
+			js_file.static_features_error = True
 
 	def extract_dynamic_features(self, js_file: JsFile):
-		self._features_extractor.extract_dynamic_features(js_file)
+		try:
+			self._js_features_extractor.extract_dynamic_features(js_file)
+		except Exception as e:
+			print("e: ", e)
+			js_file.dynamic_features_error = True
 
+	def extract_all_features(self, js_file):
+		self.extract_static_features(js_file)
+		self.extract_dynamic_features(js_file)
 	# old
 	# def extract_pages_features(self, pages: List[Page]) -> bool:
 
