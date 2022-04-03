@@ -18,11 +18,7 @@ class JsStaticAnalyzer:
 
 	def _run_syntactic_extraction(self, js_file: JsFile):
 
-		if not js_file.text:
-			raise InvalidResourceError("JS file does not have text")
-
 		try:
-			print("Type of text: ", type(js_file.text))
 			js_file.syntactic_extract = esprima.parse(js_file.text)
 		except Exception as e:
 			try:
@@ -32,17 +28,21 @@ class JsStaticAnalyzer:
 			except Exception as e2:
 				raise
 
-
 		js_file.synthetic_done = True
 		js_file.static_done = True
 
-	def run(self, js_file: JsFile) -> bool:
+	def run(self, js_file: JsFile):
+		
+		if not js_file.text:
+			raise InvalidResourceError("JS file does not have text")
 
-		try:
-			self._run_syntactic_extraction(js_file)
-		except Exception as e:
-			print("Static Extraction Error: ", e)
-			self._write_error_file(js_file, str(e))
-			js_file.static_run_error = True
-			return False
-		return True
+		self._run_syntactic_extraction(js_file)	
+
+		# try:
+		# 	self._run_syntactic_extraction(js_file)
+		# except Exception as e:
+		# 	print("Static Extraction Error: ", e)
+		# 	self._write_error_file(js_file, str(e))
+		# 	js_file.static_run_error = True
+		# 	return False
+		# return True
