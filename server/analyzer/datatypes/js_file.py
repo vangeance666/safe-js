@@ -10,6 +10,8 @@ from analyzer.datatypes.box_js_result import BoxJsResult
 class JsFile:
 	id: int = field(default_factory=count().__next__, init=False)
 
+	page_id: int = -1
+	
 	src: str = ""
 	text: str = ""
 
