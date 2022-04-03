@@ -1,11 +1,15 @@
-import os 
-import requests
-from typing import Union, Any
+import ast
+import json
+import os
+from typing import Any, Union
+from urllib.parse import urlparse
 
-from bs4 import BeautifulSoup, ResultSet
+import jsbeautifier
+import requests
 from analyzer.datatypes.js_file import JsFile
 from analyzer.datatypes.page import Page
-from urllib.parse import urlparse
+from bs4 import BeautifulSoup, ResultSet
+
 
 class HTMLContentError(Exception):
 	pass
@@ -54,7 +58,14 @@ class PageParser:
 			return True
 		except Exception as e:
 			print(e)
-		return False	
+		return False
+
+	def _preprocess(self, text) -> str:
+		ret = ast.literal_eval(json.dumps(text))
+		ret = ret.replace("\'", "\"")
+		ret = ret.replace(':true', ':True')
+		ret = ret.replace(':false', ':False')
+		return ret
 
 	def _extract_js_files(self, page: Page) -> bool:
 
@@ -73,7 +84,7 @@ class PageParser:
 			else:
 				# Internal
 				js_file.src = self._format_internal_js_src(counter)
-				js_file.text = element.text
+				js_file.text = self._preprocess(element.text)
 
 				page.internal_js_files.append(js_file)
 
@@ -100,7 +111,3 @@ class PageParser:
 			raise ValueError("Invalid extracted elemetns from HTML")
 
 		page.extracted = self._extract_js_files(page)
-
-
-
-
