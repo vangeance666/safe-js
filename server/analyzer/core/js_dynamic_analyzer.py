@@ -22,10 +22,6 @@ def onerror(func, path, exc_info):
     else:
         raise
 
-# C:\Users\User\Documents\GitHub\safe-js\server\data\js_dynamic_results\page_cd5799acbcd45100ffea5ff03da25ef53e72678433193b23d627d8a42ef96844\js_file_0901879a02a24f54ab20c7641049f1b25a42fb91be805a82fbb86d031a330823\js_file_0901879a02a24f54ab20c7641049f1b25a42fb91be805a82fbb86d031a330823.results
-
-
-
 class JsDynamicAnalyzer:
 
 	name = "JsDynamicAnalyzer"
@@ -41,10 +37,11 @@ class JsDynamicAnalyzer:
 	}	
 
 	def __init__(self):
-		self._dump_folder = DYNAMIC_DUMP_FLDR 
+		self._dump_folder = DYNAMIC_DUMP_FLDR # os.path.join(os.getcwd(), "data", "js_dynamic_results")
 
 	def cleanup(self):
-		shutil.rmtree(self._dump_folder, ignore_errors=False)
+		if os.path.exists((self._dump_folder)):
+			shutil.rmtree(self._dump_folder, ignore_errors=False)
 
 	def _read_json_file(self, file_path) -> dict:
 		try:
@@ -107,7 +104,7 @@ class JsDynamicAnalyzer:
 
 		# eval dump path by joining folder with js_file results path within page folder
 		# Format for saving the js_file result: <DUMP_FOLDER>/<page_sha256>/<file_src_sha256>
-		dump_dir = format_js_file_save(self._dump_folder, js_file) + "/" # add slash to make to dir
+		dump_dir = format_js_file_save(self._dump_folder, js_file.page_id, js_file.id) + "/" # add slash to make to dir
 		recurs_create_folder(dump_dir) # Safe create folder if does not exists
 
 		if not os.path.exists(dump_dir):

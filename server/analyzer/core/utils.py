@@ -64,6 +64,9 @@ def entropy(string):
 def sha_256_str(text) -> str:
     return hashlib.sha256(text.encode()).hexdigest()
 
+def md5_str(text) -> str:
+    return hashlib.sha256(text.encode()).hexdigest()
+
 def save_file(file_path, text) -> bool:
     try:
         os.makedirs(os.path.dirname(file_path), exist_ok=True)
@@ -85,10 +88,10 @@ def run_command(command):
     except Exception as e:
         raise e
 
-def format_js_file_save(folder: str, js_file: JsFile) -> str:
+def format_js_file_save(folder: str, page_id, js_file_id) -> str:
     return os.path.join(folder
-        , "page_"+sha_256_str(js_file.page_src)
-        , "js_file_"+sha_256_str(js_file.src))
+        , "page_"+str(page_id)
+        , "js_"+str(js_file_id))
 
 
 def cw2us(x): # capwords to underscore notation
