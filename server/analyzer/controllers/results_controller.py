@@ -20,8 +20,8 @@ class ResultsController:
 			return pickle.load(f)
 			
 	def _pickle_dump(self, data, save_path: str):		
-		print("data: ", data)
-		print("save_path: ", save_path)
+		
+		
 		with open(save_path, 'wb') as f:
 			pickle.dump(data, f)
 
@@ -40,11 +40,11 @@ class ResultsController:
 			self.reparse_script_elements(data)	
 			return data
 		except Exception as e:
-			print(e)
+			
 			return []
 
 	def save_pages(self, pages: List[Page], pickle_dump_path) -> bool:
-		print("pickle_dump_path: ", pickle_dump_path)
+		
 		try:
 			self._flush_script_elements(pages)
 			self._pickle_dump(pages, pickle_dump_path)
