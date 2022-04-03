@@ -5,6 +5,7 @@ import itertools
 import pandas as pd
 from analyzer.core.utils import cw2us, us2mc
 from analyzer.datatypes.page import Page
+from analyzer.datatypes.js_file import JsFile
 from analyzer.features.javascript.dynamic import dynamic_features
 from analyzer.features.javascript.static import static_features
 from dataclasses import asdict
@@ -31,7 +32,7 @@ class DatasetGenerator:
 
 	def __init__(self):
 		self._headers = ["js_src"] + self._eval_static_features_headers() + self._eval_dynamic_features_headers()
-		# print("self._headers: ", self._headers)
+		
 
 	@staticmethod
 	def no_feature_found_row(feature_category: dict) -> dict:
@@ -56,45 +57,44 @@ class DatasetGenerator:
 		return list(itertools.chain.from_iterable(self._feature_format(S.__name__)
 			for _, S in dynamic_features.items()))
 	
-
 	def default_vals(self, col_names: list) -> dict:
 		return { col_name:0 for col_name in col_names }
 
+	# Use for one single js file too before inference later on.
+	def eval_js_file_row(self, js_file: JsFile) -> dict:
+		static_default = self.default_vals(self._eval_static_features_headers())
+		dynamic_default = self.default_vals(self._eval_dynamic_features_headers())
+
+		row_data = {**{ "js_src": js_file.src }, **static_default, **dynamic_default}					
+
+		if not js_file.static_run_error and js_file.static_features and js_file.static_features.get("all"):
+			for name, values in js_file.static_features.get("all").items():
+				row_data["has_"+name], row_data[name] = values
+
+		if not js_file.dynamic_run_error and js_file.dynamic_features:
+			for feature_category, results_dict in js_file.dynamic_features.items():
+				if not results_dict: # Skip if dict is totally empty meaning file not found
+					continue
+				for name, value in results_dict.items():
+					
+					row_data["has_"+name], row_data[name] = value
+
+		return row_data
+
+	def js_files_to_csv(self, js_files: List[JsFile], csv_save_path) -> bool:
+		with DatasetWriter(csv_save_path, self._headers) as writer:
+			for js_file in js_files:
+				row_data = self.eval_js_file_row(js_file)
+				writer.writerow(row_data)
+		return True
 
 	def pages_to_csv(self, pages: List[Page], csv_save_path: str) -> bool:
 		with DatasetWriter(csv_save_path, self._headers) as writer:
 			for page in pages:
 				for js_file in itertools.chain(page.internal_js_files, page.external_js_files):
-
-					static_default = self.default_vals(self._eval_static_features_headers())
-					dynamic_default = self.default_vals(self._eval_dynamic_features_headers())
-
-					row_data = {**{ "js_src": js_file.src }, **static_default, **dynamic_default}					
-
-					if not js_file.static_run_error \
-						and js_file.static_features \
-						and js_file.static_features.get("all"):
-
-						for name, values in js_file.static_features.get("all").items():
-							row_data["has_"+name], row_data[name] = values
-
-
-					if not js_file.dynamic_run_error \
-						and js_file.dynamic_features:
-
-						for feature_category, results_dict in js_file.dynamic_features.items():
-
-							if not results_dict: # Skip if dict is totally empty meaning file not found
-								continue
-
-							print("results_dict: ", results_dict)
-
-							for name, value in results_dict.items():
-								print("value: ", value)
-								row_data["has_"+name], row_data[name] = value
-
+					row_data = self.eval_js_file_row(js_file)
 					writer.writerow(row_data)
-					# print("row_data: ", row_data)
+					
 					# import sys
 					# sys.exit()
 
