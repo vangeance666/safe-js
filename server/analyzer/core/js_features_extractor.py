@@ -48,10 +48,10 @@ class JsFeaturesExtractor:
 			raise InvalidUsageError("Unable to extract dynamic features since dynamic analysis has errors")
 
 		if not js_file.dynamic_done:
-			raise InvalidUsageError("Not analyzed with Box-jS yet, cant extract features.")
+			raise InvalidUsageError("Not analyzed with Box-jS yet, cant extract features")
 
 		if not js_file.dynamic_results_folder:
-			raise InvalidUsageError("Invalid dynamic results folder.")
+			raise InvalidUsageError("Invalid dynamic results folder")
 
 		for mapping in self.BOX_JS_MAPING:
 			if not os.path.exists(os.path.join(js_file.dynamic_results_folder, mapping['file_name'])):
@@ -70,7 +70,7 @@ class JsFeaturesExtractor:
 			raise InvalidUsageError("Unable to extract static features since static analysis has errors")
 
 		if not js_file.synthetic_done:
-			raise InvalidUsageError("Synthetic details not extracted yet.")
+			raise InvalidUsageError("Synthetic details not extracted")
 
 		if not js_file.text:
 			raise ValueError("Invalid JS text attribute.")
