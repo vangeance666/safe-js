@@ -88,8 +88,8 @@ def run_command(command):
     except Exception as e:
         raise e
 
-def format_js_file_save(folder: str, page_id, js_file_id) -> str:
-    return os.path.join(folder
+def format_js_file_save(dump_folder: str, page_id, js_file_id) -> str:
+    return os.path.join(dump_folder
         , "page_"+str(page_id)
         , "js_"+str(js_file_id))
 
