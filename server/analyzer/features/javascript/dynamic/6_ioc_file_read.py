@@ -10,7 +10,7 @@ class IocFileRead(IocFeature):
 
 	def _evaluate(self, js_file: JsFile):
 		for ioc in js_file.dynamic_results.iocs:
-			if ios['type'] == "FileRead":
+			if ioc['type'] == "FileRead":
 				return 1		
 		return 0
 

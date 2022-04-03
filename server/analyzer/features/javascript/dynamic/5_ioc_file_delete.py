@@ -10,7 +10,7 @@ class IocFileDelete(IocFeature):
 
 	def _evaluate(self, js_file: JsFile):
 		for ioc in js_file.dynamic_results.iocs:
-			if ios['type'] == "FileDelete":
+			if ioc['type'] == "FileDelete":
 				return 1		
 		return 0
 

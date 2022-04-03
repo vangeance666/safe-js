@@ -9,8 +9,11 @@ class IocUrlFetch(IocFeature):
 	_name: str = "1_ioc_url_fetch"	
 
 	def _evaluate(self, js_file: JsFile):
+		print("js_file.dynamic_results.iocs: ", js_file.dynamic_results.iocs)
+
 		for ioc in js_file.dynamic_results.iocs:
-			if ios['type'] == "UrlFetch":
+			print("ioc: ", ioc)
+			if ioc['type'] == "UrlFetch":
 				return 1		
 		return 0
 

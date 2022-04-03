@@ -10,7 +10,7 @@ class IocFolderCreate(IocFeature):
 
 	def _evaluate(self, js_file: JsFile):
 		for ioc in js_file.dynamic_results.iocs:
-			if ios['type'] == "FolderCreate":
+			if ioc['type'] == "FolderCreate":
 				return 1		
 		return 0
 
