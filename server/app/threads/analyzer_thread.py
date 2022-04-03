@@ -1,9 +1,9 @@
 
+import itertools
 import threading
 import time
 from collections import deque
 from typing import List
-import itertools
 
 from analyzer.controllers.analysis_controller import AnalysisController
 from analyzer.controllers.features_controller import FeaturesController
@@ -22,7 +22,6 @@ class AnalyzerThread(threading.Thread):
 
 		self._page_controller 		= PageController()
 		self._features_controller 	= FeaturesController()
-		self._analysis_controller  	= AnalysisController()	
 
 	def run(self):
 		print("started analyzer thread")
@@ -35,21 +34,27 @@ class AnalyzerThread(threading.Thread):
 				self._page_controller.crawl_details(page)
 				self._page_controller.save_js_file(page)
 
-				self._analysis_controller.analyze_page_js_files(page)
+				with AnalysisController() as analysis_controller:
+					analysis_controller.analyze_page_js_files(page)
 
 				for js_file in itertools.chain(page.internal_js_files, page.external_js_files):
 					try:
 						self._features_controller.extract_static_features(js_file)
+						print("Finished static features for {}".format(js_file.src))
 					except Exception as e:
 						print(e)
-
 					try:
 						self._features_controller.extract_dynamic_features(js_file)
+						print("Finished dyanmic features for {}".format(js_file.src))						
 					except Exception as e:
 						print(e)
 
 				# Once finished	then transfer over incase when close app while 
-				self._analyzed_pages = self._pending_pages.popleft()
+				self._analyzed_pages.append(self._pending_pages.popleft())
 
 			print("Sleeping for 5 seconds")
+
+			for page in self._analyzed_pages:
+				for js_file in itertools.chain(page.internal_js_files, page.external_js_files):
+					print(js_file)
 			time.sleep(5) # Repeat check every 5 secs to prevent clogging		
