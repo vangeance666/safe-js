@@ -23,7 +23,7 @@ class AnalysisController:
 	def __exit__(self, type, value, traceback):
 		self._dynamic_analyzer.cleanup()
 
-	def analyze_js_file(self, js_file: JsFile) -> list[bool]:
+	def analyze_js_file(self, js_file: JsFile) -> List[bool]:
 		return [analyzer.run(js_file) for analyzer in self.analyzers]	
 
 	def run_static_analysis(self, js_file: JsFile):
