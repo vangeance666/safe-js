@@ -24,6 +24,7 @@ from analyzer.core.dataset_generator import DatasetGenerator
 from analyzer.datatypes.js_file import JsFile
 from analyzer.datatypes.page import Page
 from app.threads.analyzer_thread import AnalyzerThread
+
 from samples import benign_urls, malign_urls
 
 page_controller = PageController()
@@ -41,78 +42,148 @@ results_controller = ResultsController()
 # platform_controller.save_all()
 # atexit.register(platform_controller.cleanup)
 
-
-class A(threading.Thread):
-	def __init__(self, pending_queue):
-		super().__init__()
-		self._pending_queue = pending_queue
-
-	def run(self):
-
-		for x in self._pending_queue:
-			print(x)
-		return 
-
-
+# To parse those Benign urls
 def analyze_one_url(url) -> Page:
 	page = Page(url)
-	page_controller.crawl_details(page)
+
+	try:
+		page_controller.crawl_details(page)
+	except Exception as e:
+		print("First crawl try: ", e)
+		try:
+			page.url = page.url.replace("http://", "https://")
+			page_controller.crawl_details(page)
+		except Exception as e2:
+			print("Second try still fail, ", e)
+
 	page_controller.save_js_file(page)
 
 	with AnalysisController() as analysis_controller:
-		analysis_controller.analyze_page_js_files(page)
+		for js_file in itertools.chain(page.internal_js_files, page.external_js_files):
+			analysis_controller.run_static_analysis(js_file)
+			analysis_controller.run_dynamic_analysis(js_file)
+			features_controller.extract_all_features(js_file)
 
-	for js_file in itertools.chain(page.internal_js_files, page.external_js_files):
-		try:
-			features_controller.extract_static_features(js_file)
-			print("Finished static features for {}".format(js_file.src))
-		except Exception as e:
-			print(e)
-		try:
-			features_controller.extract_dynamic_features(js_file)
-			print("Finished dyanmic features for {}".format(js_file.src))						
-		except Exception as e:
-			print(e)
+	# 	analysis_controller.analyze_page_js_files(page)
+	# for js_file in itertools.chain(page.internal_js_files, page.external_js_files):
+	# 	try:
+	# 		features_controller.extract_static_features(js_file)
+	# 		print("Finished static features for {}".format(js_file.src))
+	# 	except Exception as e:
+	# 		print(e)
+	# 	try:
+	# 		features_controller.extract_dynamic_features(js_file)
+	# 		print("Finished dyanmic features for {}".format(js_file.src))						
+	# 	except Exception as e:
+	# 		print(e)
 	return page
 
+# To parse those js samples 
+def analyze_one_js_file(index: str, js_file_path) -> JsFile:
+	js_file = JsFile()
+
+	js_file.id = index #Dirty way to not trigger error
+	js_file.page_id = index #Dirty way to not trigger error
+	js_file.is_saved = True	 #Since manual approach not thru normal flow
+
+	js_file.saved_path = js_file_path	
+
+	with open(js_file_path, 'r') as f:
+		js_file.text = f.read()	
+
+	with AnalysisController() as analysis_controller:
+		analysis_controller.run_static_analysis(js_file)
+		analysis_controller.run_dynamic_analysis(js_file)
+		# Must use like that cause analysis controller will delete everything after that 
+		features_controller.extract_all_features(js_file)
+
+	return js_file
 
 
-def do_smth(D):
-	try:
+# def do_smth(D):
+# 	try:
 
-		url = D if D.startswith('http') else ('http://'+D)
+# 		url = D if D.startswith('http') else ('http://'+D)
 
-		r = requests.get(url)
-		# return ' '.join([D, str(r.status_code)])
-		if r.status_code == 200:
-			return str(url)
-		# if r.status_code != 200:
-		# 	return ' '.join([url, str(r.status_code)])
+# 		r = requests.get(url)
+# 		# return ' '.join([D, str(r.status_code)])
+# 		if r.status_code == 200:
+# 			return str(url)
+# 		return None
+# 	except Exception as e:
+# 		return None
+# 		return e
 
-		return None
-	except Exception as e:
-		return None
-		return e
+# def gen_list():
+# 	for x in benign_urls:
+# 		yield x
 
-def gen_list():
-	for x in benign_urls:
-		yield x
+MALWARE_FOLDER = "C:\\Users\\User\\Downloads\\js-malicious-dataset-master\\js-malicious-dataset-master"
+
+def get_benign_urls():
+	with open("benign_ok_urls.txt", 'r') as f:
+		for x in f.readlines():
+			yield x.strip()
 
 if __name__ == "__main__":
 
+	# with open("C:\\Users\\User\\Downloads\\done_ok.txt",'r') as f1:
 
-	ok_files = []
+	# 	with open("replaced.txt", 'w') as f2:
 
-	with Pool(processes=32) as pool:
-		for res in pool.imap_unordered(do_smth, gen_list()):
-			if res is not None:
-				print("ok res: ", res)
-				ok_files.append(res)
+	# 		for x in f1.readlines():
+	# 			f2.write(x.split("ok res:  ")[1])
+
+
+	# with open("replaced.txt", 'r') as f:
+	# 	for x in f.readline():
+	# 		pass
+
+
+	to_put_in_csv: list[Page] = []
+	i= 0
+	for url in get_benign_urls():
+		print("Cycle: ", str(i))
+		print("url: ", url)
+		page = analyze_one_url(url)
+		# for js_file in itertools.chain(page.internal_js_files, page.external_js_files):
+		# print(js_file)
+		to_put_in_csv.append(page)
+		i += 1
+
+	dataset_generator.pages_to_csv(to_put_in_csv, "ok_benign.csv")
+	# from pathlib import Path
+	# paths = sorted(Path("C:\\Users\\User\\Documents\\GitHub\\safe-js\\server").iterdir(), key=os.path.getmtime, reverse=True)
+
+	# for x in paths:
+	# 	print(os.path.basename(x))
+	# 	print(dir(x))
+	# 	print(type(x))
+	# 	print(str(x))
+	# 	break
+	# print("paths: ", paths)
+	# js_file = analyze_one_js_file(1,"C:\\Users\\User\\Downloads\\samples\\test1.js")
+	# print("js_file: ", js_file)
+
+	# print("dynamic_results: ", js_file.dynamic_results)
+	# print("dynamic_features: ", js_file.dynamic_features)
+
+
+
+
+
+	# ok_files = []
+
+	# with Pool(processes=32) as pool:
+	# 	for res in pool.imap_unordered(do_smth, gen_list()):
+	# 		if res is not None:
+	# 			print("ok res: ", res)
+	# 			ok_files.append(res)
 				
 
-	with open("okay_urls.txt", 'w') as f:
-		for file in ok_files:
-			f.write(str(file)+'\n')
+	# with open("okay_urls.txt", 'w') as f:
+	# 	for file in ok_files:
+	# 		f.write(str(file)+'\n')
 
 
 	# path = "C:\\Users\\User\\Documents\\GitHub\\safe-js\\server\\data\\js_dynamic_results"
