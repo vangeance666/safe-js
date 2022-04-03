@@ -43,7 +43,7 @@ class PageParser:
 
 	def _request_url_html(self, obj: Any) -> bool:
 		try:
-			r = requests.get(obj.src, allow_redirects=True)
+			r = requests.get(obj.src)
 			if r.ok and r.text:
 				obj.text = r.text
 
