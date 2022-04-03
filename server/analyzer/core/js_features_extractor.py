@@ -9,21 +9,15 @@ from analyzer.features.javascript.dynamic import (active_url_features,
 from analyzer.features.javascript.static import static_features
 
 from analyzer.core.utils import format_js_file_save
+from analyzer.core import BOX_JS_MAPING, STATIC_MAPPING
 
 class JsFeaturesExtractor:
 
-	BOX_JS_MAPING: list = [
-		{"attr_name": "iocs", "file_name": "IOC.json", "features_dict": ioc_features}
-		, {"attr_name": "urls", "file_name": "urls.json", "features_dict": url_features}
-		, {"attr_name": "active_urls", "file_name": "active_urls.json", "features_dict": active_url_features}
-	]
-
-	STATIC_MAPPING: list = [
-		{"attr_name": "all", "features_dict": static_features}
-	]
-
 	def __init__(self, dynamic_dump_folder: str):
 		self._dynamic_dump_folder = dynamic_dump_folder
+
+		self._box_js_mapping: list = BOX_JS_MAPING
+		self._static_mapping: list = STATIC_MAPPING
 
 	def _parse_features(self, features: dict, js_file: JsFile) -> dict:
 
@@ -38,7 +32,8 @@ class JsFeaturesExtractor:
 			try:
 				ret[attr_name] = (1, feature_obj.extract(js_file))
 			except Exception as e:
-				print(e)
+				raise
+				print("_parse_features error: ", e)
 				ret[attr_name]  = (0,0) # 0 To represent error				
 
 		return ret
@@ -57,7 +52,7 @@ class JsFeaturesExtractor:
 		print("js_file.dynamic_results_folder: ", js_file.dynamic_results_folder)
 
 		# Dunnid to parse the folder again?
-		for mapping in self.BOX_JS_MAPING:
+		for mapping in self._box_js_mapping:
 
 			to_find_file = os.path.join(js_file.dynamic_results_folder, mapping['file_name'])
 
@@ -81,7 +76,7 @@ class JsFeaturesExtractor:
 		if not js_file.text:
 			raise ValueError("Invalid JS text attribute.")
 
-		for mapping in self.STATIC_MAPPING:
+		for mapping in self._static_mapping:
 			js_file.static_features[mapping['attr_name']] = self._parse_features(mapping['features_dict'], js_file)
 
 		js_file.static_features_done = True
