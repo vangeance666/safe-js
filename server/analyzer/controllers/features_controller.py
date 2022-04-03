@@ -21,15 +21,19 @@ class FeaturesController:
 			self._js_features_extractor.extract_static_features(js_file)
 			js_file.static_features_done = True
 		except Exception as e:
-			print("e: ", e)
+			print("extract_static_features error: ", e)
 			js_file.static_features_error = True
+			# raise
+			
 
 	def extract_dynamic_features(self, js_file: JsFile):
 		try:
 			self._js_features_extractor.extract_dynamic_features(js_file)
 		except Exception as e:
-			print("e: ", e)
+			print("extract_dynamic_features error: ", e)
 			js_file.dynamic_features_error = True
+			# raise
+			
 
 	def extract_all_features(self, js_file):
 		self.extract_static_features(js_file)
