@@ -37,9 +37,11 @@ class JsFile:
 
 	static_features: dict = field(default_factory=dict)
 	static_features_done: bool = False
+	static_features_error: bool = False
 
 	dynamic_features: dict = field(default_factory=dict)
 	dynamic_features_done: bool = False
+	dynamic_features_error: bool = False
 
 	model_predicted: bool = False
 	malign_percent: float = 0.0
