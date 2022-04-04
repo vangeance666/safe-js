@@ -11,6 +11,8 @@ class Page:
 	id: int = field(default_factory=count().__next__, init=False)
 	src: str = field(default="")
 	text: str = field(default="")
+	
+	status: str = field(default="pending")
 
 	script_elements: list = field(default_factory=list)
 
