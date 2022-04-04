@@ -28,14 +28,14 @@ class JsFeaturesExtractor:
 			feature_obj = features[key]()
 
 			attr_name = cw2us(features[key].__name__)
-			print("feature_obj: ", feature_obj)
+			# print("feature_obj: ", feature_obj)
 
 			try:
 				ret[attr_name] = (1, feature_obj.extract(js_file))
 			except Exception as e:
-				raise
+				ret[attr_name]  = (0,0) # 0 To represent error
 				print("_parse_features error: ", e)
-				ret[attr_name]  = (0,0) # 0 To represent error				
+				raise								
 
 		return ret
 
