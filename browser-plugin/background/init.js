@@ -6,6 +6,24 @@ browser.contextMenus.create({
 	contexts: ['link']
 });
 
+
+browser.contextMenus.onClicked.addListener(function(info, tab) {
+	console.log("tab: ", tab);
+	console.log("info: ", info);
+  // switch (info.menuItemId) {
+  //   case "log-selection":
+  //     console.log(info.selectionText);
+  //     break;
+  //   ...
+  // }
+})
+
+
+
+// let elem = browser.menus.getTargetElement(targetElementId);
+
+
+
 // browser.contextMenus.create({
 //   id: "log-selection",
 //   title: browser.i18n.getMessage("contextMenuItemSelectionLogger"),
