@@ -27,7 +27,7 @@
   "browser_action": {
     "default_icon": "icons/shield.png",
     "default_title": "Safe-JS",
-    "default_popup": "popup/popup.html"
+    "default_popup": "popup/safejs.html"
   },
     "options_ui": {
     "page": "options/options.html",
