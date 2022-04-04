@@ -12,15 +12,15 @@ from dataclasses import asdict
 
 class DatasetWriter:
 
-	def __init__(self, save_path: str, field_names: list):
+	def __init__(self, save_path: str, mode: str, field_names: list):
 		self._csv_path = save_path
+		self._mode = mode
 		self._field_names = field_names
 
 	def __enter__(self):
-		self.f = open(self._csv_path, 'w', newline='')
-
+		
+		self.f = open(self._csv_path, self._mode, newline='')
 		self.writer = csv.DictWriter(self.f, fieldnames=self._field_names)
-		self.writer.writeheader()
 
 		return self.writer
 
@@ -89,12 +89,23 @@ class DatasetGenerator:
 		return True
 
 	def pages_to_csv(self, pages: List[Page], csv_save_path: str) -> bool:
-		with DatasetWriter(csv_save_path, self._headers) as writer:
+		with DatasetWriter(csv_save_path, 'w', self._headers) as writer:
+			writer.writeheader()
 			for page in pages:
 				for js_file in itertools.chain(page.internal_js_files, page.external_js_files):
 					row_data = self.eval_js_file_row(js_file)
 					writer.writerow(row_data)
-					
+	
+	def write_header_csv(self, csv_save_path: str):
+		with DatasetWriter(csv_save_path, 'w', self._headers) as writer:
+			writer.writeheader()
+
+	def append_pages_to_csv(self, pages: List[Page], csv_save_path: str) -> bool:
+		with DatasetWriter(csv_save_path, 'a',  self._headers) as writer:
+			for page in pages:
+				for js_file in itertools.chain(page.internal_js_files, page.external_js_files):
+					row_data = self.eval_js_file_row(js_file)
+					writer.writerow(row_data)
 					# import sys
 					# sys.exit()
 

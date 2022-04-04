@@ -123,7 +123,7 @@ MALWARE_FOLDER = "C:\\Users\\User\\Downloads\\js-malicious-dataset-master\\js-ma
 def get_benign_urls():
 	with open("benign_ok_urls.txt", 'r') as f:
 		# return f.readlines()[500:1000]
-		for x in f.readlines()[500:1000]:
+		for x in f.readlines()[:1000]:
 			yield x.strip()
 
 if __name__ == "__main__":
@@ -142,7 +142,8 @@ if __name__ == "__main__":
 
 
 	to_put_in_csv = []
-
+	csv_save_path = "ok_benign_pk_laptop.csv"
+	dataset_generator.write_header_csv(csv_save_path)
 	i= 0
 	for url in get_benign_urls():
 		print("Cycle: ", str(i))
@@ -151,9 +152,15 @@ if __name__ == "__main__":
 		# for js_file in itertools.chain(page.internal_js_files, page.external_js_files):
 		# print(js_file)
 		to_put_in_csv.append(page)
+
+		if i % 2 == 0:
+			dataset_generator.append_pages_to_csv(to_put_in_csv, csv_save_path)
+			del to_put_in_csv
+			to_put_in_csv = []
+			
 		i += 1
 
-	# dataset_generator.pages_to_csv(to_put_in_csv, "ok_benign.csv")
+	
 	# from pathlib import Path
 	# paths = sorted(Path("C:\\Users\\User\\Documents\\GitHub\\safe-js\\server").iterdir(), key=os.path.getmtime, reverse=True)
 
