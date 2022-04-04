@@ -10,6 +10,7 @@ router = APIRouter()
 platform_controller = PlatformController()
 # platform_controller.start_threads()
 
+
 # Done
 @router.get("/analysis/statistics/")
 async def get_dashboard_stats():
@@ -45,13 +46,33 @@ async def get_analysis_details(page_id: int, js_file_id: int):
 # use for submitting samples from extension/site
 @router.post("/analysis/run/")
 async def analyze_url(analysis_request: AnalysisRequest = Body(...)):
-    # Add analysis to queue and return analysis id
-    
-    return JSONResponse(content={"status": "ok", "task_id": "1"})
-    # return JSONResponse(content={"status": "ok", "task_id": 1, "url": analysis_request.url, "mode": analysis_request.mode})
+    try:
+        if analysis_request.mode == "single":
+            return JSONResponse(content={"status": "ok"
+                , "page_id": platform_controller.analyze_one_url(analysis_request.url)})
+        else:
+            return JSONResponse(content={"status": "error", "error_message": "Invalid Mode"})    
+    except Exception as e:
+        return JSONResponse(content={"status": "error", "error_message": str(e)})
+
 
 # Used for querying status for both extension/site
 @router.get("/analysis/run/status/")
 async def analysis_status(id: int = 0):
     # Pending|Running|Done
     return JSONResponse(content={"status": "found", "task_status": "Pending", "task_id": 1})
+
+
+@router.get('/analysis/reset/')
+async def clear_all_data():
+    try:
+        if not platform_controller.delete_past_data():
+            return JSONResponse(content={"status": "fail"})
+        return JSONResponse(content={"status": "ok"})
+    except Exception as e:
+        return JSONResponse(content={"status": "error", "error_message": str(e)})
+
+
+
+    
+
