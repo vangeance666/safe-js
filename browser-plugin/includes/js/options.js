@@ -4,34 +4,40 @@ console.log("options.js loaded----");
 function saveOptions(e) {
 	e.preventDefault();
 
-	browser.storage.local.set({
-		"serverDetails": {"urlValue": document.querySelector("#options-server").value}
-	});
+	let ele = document.getElementById("input-api-url");
+
+	if (ele) {
+		console.log("ele: ", ele);
+		var apiDetails = {"url": ele.value}
+		browser.storage.local.set({apiDetails});		
+	}
+
 }
 
 function restoreOptions() {
 
-	function setServerUrl(data) {
-		if (data.serverDetails) {
-			document.querySelector("#options-server").value = data.serverDetails.urlValue || "Nothing";
-		} else {
-			console.log("data server details not set yet.");
+	function setServerUrl(item) {
+		console.log("setServerUrl: ");
+
+		if (!item || !item.apiDetails || !item.apiDetails.url) {
+			console.log("!item || !item.apiDetails || !item.apiDetails.url")
+			return
 		}
+
+		document.querySelector("#input-api-url").value = item.apiDetails.url || "";
 	}
 
 	function onError(error) {
 		console.log(`Error: ${error}`);
 	}
 
-	let getting = browser.storage.local.get("serverDetails");
+	let getting = browser.storage.local.get("apiDetails");
 	getting.then(setServerUrl, onError);
 }
 
-
-$(function() {
+document.addEventListener("DOMContentLoaded", function() {
 	restoreOptions();
-	$("#save-button").click(saveOptions);
-});
-// document.addEventListener("DOMContentLoaded", restoreOptions);
 
-// document.querySelector("#save-button").addEventListener("click", saveOptions);
+	document.querySelector("#save-button").addEventListener("click", saveOptions);
+
+});
