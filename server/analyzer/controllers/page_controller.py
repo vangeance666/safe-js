@@ -53,4 +53,12 @@ class PageController:
 		self._page_parser.extract_page_details(page)
 
 	def extract_pages(self, urls: list) -> List[Page]:
-		return [self._page_parser.extract_page_details(url=url) for url in urls]
+		ret = []
+
+		for url in urls:
+			page = Page(src=url)
+			ret.append(page)
+			self._page_parser.extract_page_details(page)
+
+		return ret
+
