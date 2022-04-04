@@ -73,7 +73,6 @@ class PageParser:
 		counter = 0
 
 		for element in page.script_elements:
-			print("page.script_elements: ", page.script_elements)
 
 			js_file = JsFile()
 
@@ -84,13 +83,15 @@ class PageParser:
 				js_file.success = self._request_url_html(js_file)
 
 				page.external_js_files.append(js_file)
+				# print("page.external_js_files: ", page.external_js_files)
 			else:
 				print("Intenal to request for html")
 				# Internal
 				js_file.src = self._format_internal_js_src(counter)
 				js_file.text = self._preprocess(element.text)
-
+				
 				page.internal_js_files.append(js_file)
+				# print("page.internal_js_files: ", page.internal_js_files)
 
 				counter += 1
 

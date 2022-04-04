@@ -25,7 +25,7 @@ app.include_router(api_v1_0_router, tags=["api"], prefix="/api/v1_0")
 
 @app.get('/heartbeat/')
 async def heartbeat():
-	return JSONResponse(content={"status": "healthy"})
+	return JSONResponse(content={"status": "Healthy"})
 
 @app.get('/')
 async def index(request: Request):

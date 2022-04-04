@@ -19,6 +19,7 @@ class VariablesCount(Feature):
 
 	def _evaluate(self, js_file: JsFile) -> int:
 		return sum(1 for x in esprima.tokenize(js_file.text) if x.type == "Identifier")
+		
 
 	def extract(self, js_file: JsFile):
 		return self._evaluate(js_file)

@@ -37,7 +37,5 @@ function restoreOptions() {
 
 document.addEventListener("DOMContentLoaded", function() {
 	restoreOptions();
-
 	document.querySelector("#save-button").addEventListener("click", saveOptions);
-
 });
