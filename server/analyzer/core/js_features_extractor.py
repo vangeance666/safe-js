@@ -28,6 +28,7 @@ class JsFeaturesExtractor:
 			feature_obj = features[key]()
 
 			attr_name = cw2us(features[key].__name__)
+			print("feature_obj: ", feature_obj)
 
 			try:
 				ret[attr_name] = (1, feature_obj.extract(js_file))

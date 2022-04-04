@@ -2,7 +2,7 @@ import ast
 import json
 import os
 from typing import Any, Union
-from urllib.parse import urlparse
+from urllib.parse import urlparse, urljoin
 
 import jsbeautifier
 import requests
@@ -31,7 +31,7 @@ class PageParser:
 
 	def _get_formated_src(self, page_src, element_src) -> str:
 		if not self._is_url(element_src):
-			return ''.join([self._get_url_root_path(page_src), element_src])
+			return urljoin(self._get_url_root_path(page_src), element_src)
 		return element_src
 
 	def _is_url(self, text):
@@ -39,7 +39,8 @@ class PageParser:
 	
 	def _get_url_root_path(self, url) -> str:
 		parsed_url = urlparse(url)
-		return ''.join([parsed_url.scheme, "://", parsed_url.netloc, "/"])
+		return ''.join([parsed_url.scheme, "://", parsed_url.netloc])
+		# return ''.join([parsed_url.scheme, "://", parsed_url.netloc, "/"])
 
 	def _request_url_html(self, obj: Any) -> bool:
 		try:
@@ -49,7 +50,7 @@ class PageParser:
 
 				return True
 		except requests.exceptions.RequestException as e:
-			print(e)
+			print("_request_url_html: ", e)
 		return False
 		
 	def parse_script_results(self, obj: Any) -> bool:
@@ -57,7 +58,7 @@ class PageParser:
 			obj.script_elements = BeautifulSoup(obj.text, 'html.parser').find_all("script")
 			return True
 		except Exception as e:
-			print(e)
+			print("parse_script_results: ", e)
 		return False
 
 	def _preprocess(self, text) -> str:
@@ -72,16 +73,19 @@ class PageParser:
 		counter = 0
 
 		for element in page.script_elements:
+			print("page.script_elements: ", page.script_elements)
 
 			js_file = JsFile()
 
 			if element.has_attr('src') and element['src']:
+				print("External source try to request for html")
 				# External
 				js_file.src = self._get_formated_src(page.src, element['src'])
 				js_file.success = self._request_url_html(js_file)
 
 				page.external_js_files.append(js_file)
 			else:
+				print("Intenal to request for html")
 				# Internal
 				js_file.src = self._format_internal_js_src(counter)
 				js_file.text = self._preprocess(element.text)
@@ -109,9 +113,9 @@ class PageParser:
 			raise ElementExtractionError("Fail to parse element from page HTML")
 
 		if not page.script_elements:
-			raise ValueError("Invalid extracted elemetns from HTML")
+			raise ValueError("Invalid extracted element from HTML")
 
-		page.extracted = self._extract_js_files(page)
+		page.js_elements_extracted = self._extract_js_files(page)
 
 	def extract_page_details(self, page: Page):
 		self.scrape_page(page)

@@ -19,6 +19,6 @@ class Page:
 
 	crawl_success: bool 		= field(default=False)
 	elements_parsed: bool 		= field(default=False)
-	extracted: bool 	= field(default=False)
+	js_elements_extracted: bool = field(default=False)
 	saved: bool 		= field(default=False)
 	is_analyzed: bool	= field(default=False)

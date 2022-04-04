@@ -14,6 +14,7 @@ from multiprocessing import Pool
 
 import esprima
 import jsbeautifier
+import pandas as pd
 import requests
 import uvicorn
 from analyzer.controllers.analysis_controller import AnalysisController
@@ -21,10 +22,10 @@ from analyzer.controllers.features_controller import FeaturesController
 from analyzer.controllers.page_controller import PageController
 from analyzer.controllers.results_controller import ResultsController
 from analyzer.core.dataset_generator import DatasetGenerator
+from analyzer.core.page_parser import PageParser
 from analyzer.datatypes.js_file import JsFile
 from analyzer.datatypes.page import Page
 from app.threads.analyzer_thread import AnalyzerThread
-
 from samples import benign_urls, malign_urls
 
 page_controller = PageController()
@@ -37,17 +38,38 @@ features_controller = FeaturesController()
 analysis_controller  = AnalysisController()
 results_controller = ResultsController()
 
+page_parser = PageParser()
+
 # from app.platform_controller import PlatformController
 # platform_controller = PlatformController()
 # platform_controller.save_all()
 # atexit.register(platform_controller.cleanup)
 
-def analyze_malign_row(row)
+def analyze_malign_df_row(row):
 	
 	page = Page(row.url.strip())
-	page.text = row.content
+
+	page.text = str(row.content).strip()
 	page.crawl_success = True
-	
+
+	page_parser.parse_page_elements(page)
+
+	try:
+		page_parser.parse_js_content(page)
+
+		page_controller.save_js_file(page)
+
+		with AnalysisController() as analysis_controller:
+			for js_file in itertools.chain(page.internal_js_files, page.external_js_files):
+				analysis_controller.run_static_analysis(js_file)
+				analysis_controller.run_dynamic_analysis(js_file)
+				features_controller.extract_all_features(js_file)
+	except Exception as e:
+		print("analyze_malign_df_row error: ", e)
+
+
+	return page
+
 # To parse those Benign urls
 def analyze_one_url(url) -> Page:
 	page = Page(url)
@@ -142,29 +164,52 @@ if __name__ == "__main__":
 	# 			f2.write(x.split("ok res:  ")[1])
 
 
-	# with open("replaced.txt", 'r') as f:
-	# 	for x in f.readline():
-	# 		pass
+	DATASET_PATH = "C:\\Users\\User\\Downloads\\Dataset of Malicious and Benign Webpages\\testdata\\Webpages_Classification_test_data.csv"
 
+	
+	CSV_SAVE_PATH = "ok_malign_pk_laptop1.csv"
+	dataset_generator.write_header_csv(CSV_SAVE_PATH)
 
+	df = pd.read_csv(DATASET_PATH, names=["index","url","url_len","ip_add","geo_loc","tld","who_is","https","js_len","js_obf_len","content", "label"])
+	df = df.loc[df['label'] == "bad"]
+	
 	to_put_in_csv = []
-	csv_save_path = "ok_benign_pk_laptop.csv"
-	dataset_generator.write_header_csv(csv_save_path)
-	i= 0
-	for url in get_benign_urls():
-		print("Cycle: ", str(i))
-		print("url: ", url)
-		page = analyze_one_url(url)
+	for i, row in df.iloc[1:].iterrows():
+		# print("row: ", row)
+		# print(row.url, row.content, row.label)
+		
+		page = analyze_malign_df_row(row)
+
 		# for js_file in itertools.chain(page.internal_js_files, page.external_js_files):
-		# print(js_file)
+		# 	print(js_file)
 		to_put_in_csv.append(page)
 
 		if i % 2 == 0:
-			dataset_generator.append_pages_to_csv(to_put_in_csv, csv_save_path)
+			dataset_generator.append_pages_to_csv(to_put_in_csv, CSV_SAVE_PATH)
 			del to_put_in_csv
 			to_put_in_csv = []
+
+	print("Finish")
+
+
+	# to_put_in_csv = []
+	# csv_save_path = "ok_malign_pk_laptop.csv"
+	# dataset_generator.write_header_csv(csv_save_path)
+	# i= 0
+	# for url in get_benign_urls():
+	# 	print("Cycle: ", str(i))
+	# 	print("url: ", url)
+	# 	page = analyze_one_url(url)
+	# 	# for js_file in itertools.chain(page.internal_js_files, page.external_js_files):
+	# 	# print(js_file)
+	# 	to_put_in_csv.append(page)
+
+	# 	if i % 2 == 0:
+	# 		dataset_generator.append_pages_to_csv(to_put_in_csv, csv_save_path)
+	# 		del to_put_in_csv
+	# 		to_put_in_csv = []
 			
-		i += 1
+	# 	i += 1
 
 	
 	# from pathlib import Path
