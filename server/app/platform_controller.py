@@ -30,7 +30,7 @@ class PlatformController:
 		self._dataset_generator = DatasetGenerator()
 		self._results_controller = ResultsController()
 
-		self._analyzed_pages: List[Pages] = self._results_controller.load_pages(ANALYZED_PAGES_SAVE_PATH) or []
+		self._analyzed_pages: List[Pages] = self._results_controller.load_pages(self.save_analyzed_path) or []
 
 		self._analysis_queue: deque = deque([])
 
