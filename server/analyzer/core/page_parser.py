@@ -44,7 +44,7 @@ class PageParser:
 
 	def _request_url_html(self, obj: Any) -> bool:
 		try:
-			r = requests.get(obj.src)
+			r = requests.get(obj.src, allow_redirects=True)
 			if r.ok and r.text:
 				obj.text = r.text
 
@@ -89,7 +89,7 @@ class PageParser:
 				# Internal
 				js_file.src = self._format_internal_js_src(counter)
 				js_file.text = self._preprocess(element.text)
-				
+
 				page.internal_js_files.append(js_file)
 				# print("page.internal_js_files: ", page.internal_js_files)
 
