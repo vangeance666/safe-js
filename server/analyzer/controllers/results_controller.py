@@ -13,7 +13,7 @@ class ResultsController:
 
 	def reparse_script_elements(self, pages: List[Page]):
 		for page in pages:
-			page.parsed = self._page_parser.parse_script_results(page)
+			page.elements_parsed = self._page_parser.parse_script_results(page)
 
 	def _pickle_load(self, file_path: str):
 		with open(file_path, 'rb') as f:
