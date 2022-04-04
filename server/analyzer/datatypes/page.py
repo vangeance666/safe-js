@@ -17,7 +17,7 @@ class Page:
 	internal_js_files: List[JsFile] = field(default_factory=list)
 	external_js_files: List[JsFile] = field(default_factory=list)
 
-	success: bool 		= field(default=False)
+	crawl_success: bool 		= field(default=False)
 	parsed: bool 		= field(default=False)
 	extracted: bool 	= field(default=False)
 	saved: bool 		= field(default=False)

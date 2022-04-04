@@ -43,7 +43,7 @@ class FeaturesController:
 
 	# 	for page in pages:
 
-	# 		if not page.success: #Ensure that its successfully scraped
+	# 		if not page.crawl_success: #Ensure that its successfully scraped
 	# 			print("Skiped {} since not success".format(page.src))
 	# 			continue
 

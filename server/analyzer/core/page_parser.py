@@ -92,22 +92,34 @@ class PageParser:
 
 		return True	
 
-	def extract_page_details(self, page: Page):
-
+	def scrape_page(self, page: Page):
 		if not page.src:
 			raise ValueError("Page source URL is invalid")
 
-		page.success = self._request_url_html(page)
+		page.crawl_success = self._request_url_html(page)
 
-		if not page.success:
+	def parse_page_elements(self, page: Page):
+		if not page.crawl_success:
 			raise HTMLContentError("Page HTML not retrieved")
 
 		page.parsed = self.parse_script_results(page)
 
+	def parse_js_content(self, page: Page):
 		if not page.parsed:
 			raise ElementExtractionError("Fail to parse element from page HTML")
 
 		if not page.script_elements:
 			raise ValueError("Invalid extracted elemetns from HTML")
-
+			
 		page.extracted = self._extract_js_files(page)
+
+
+	def extract_page_details(self, page: Page):
+
+		self.scrape_page(page)
+		self.parse_page_elements(page)
+		self.parse_js_content(page)
+
+
+		
+

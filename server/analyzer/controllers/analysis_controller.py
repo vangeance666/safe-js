@@ -42,7 +42,7 @@ class AnalysisController:
 	# New
 	# def analyze_page_js_files(self, page: Page) -> bool:
 
-	# 	if not page.success:
+	# 	if not page.crawl_success:
 	# 		return False
 
 	# 	for js_file in itertools.chain(page.internal_js_files, page.external_js_files):
@@ -59,7 +59,7 @@ class AnalysisController:
 	# def analyze_pages_js_files(self, pages: List[Page]) -> bool:
 	# 	for page in pages:
 
-	# 		if not page.success: #Ensure that its successfully scraped
+	# 		if not page.crawl_success: #Ensure that its successfully scraped
 	# 			print("Skiped {} since not success".format(page.src))
 	# 			continue
 

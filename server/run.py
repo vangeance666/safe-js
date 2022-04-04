@@ -42,6 +42,12 @@ results_controller = ResultsController()
 # platform_controller.save_all()
 # atexit.register(platform_controller.cleanup)
 
+def analyze_malign_row(row)
+	
+	page = Page(row.url.strip())
+	page.text = row.content
+	page.crawl_success = True
+	
 # To parse those Benign urls
 def analyze_one_url(url) -> Page:
 	page = Page(url)
