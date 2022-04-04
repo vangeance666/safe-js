@@ -1,12 +1,35 @@
 body {
-  background: var(--color-primary);
-  color: var(--color-text);
+  /*background-color: #747272 !important;*/
+  /*color: var(--color-text);*/
   direction: ltr;
 	font-family: Helvetica, Arial, sans-serif;
   font-size: .9rem;
   line-height: 1.5rem;
 	margin: 0;
   overflow: hidden;
+  font-family: 'Poppins', sans-serif;
+}
+
+
+.unselectable {
+   -moz-user-select: -moz-none;
+   -khtml-user-select: none;
+   -webkit-user-select: none;
+
+   /*
+     Introduced in IE 10.
+     See http://ie.microsoft.com/testdrive/HTML5/msUserSelect/
+   */
+   -ms-user-select: none;
+   user-select: none;
+}
+
+#settings-btn {
+  cursor: pointer;
+}
+
+.root {
+  background-color: #C6C5C5 !important;
 }
 
 .tabs {
@@ -25,5 +48,15 @@ body {
   height: 4.5rem;
   justify-content: space-between;
   padding: 0 1.5rem;
+}
+
+
+
+.bg-purple {
+  background-color: #6610f2;
+}
+
+.text-purple {
+
 }
 
