@@ -43,6 +43,7 @@ class JsFile:
 	dynamic_features_done: bool = False
 	dynamic_features_error: bool = False
 
+	model_used: str = ""
 	model_predicted: bool = False
 	malign_percent: float = 0.0
 
