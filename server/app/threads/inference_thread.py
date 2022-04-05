@@ -35,6 +35,7 @@ class InferenceThread(Worker):
 
 							print("InferenceThread Predicting ")
 							self._inference_controller.predict(js_file)
+						page.is_predicted = True
 						page.status = ProcessingStatus.DONE
 					except Exception as e:
 						page.error_reason = str(e)
