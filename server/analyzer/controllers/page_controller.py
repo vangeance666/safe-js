@@ -12,7 +12,8 @@ class PageController:
 	def __init__(self):
 		self._page_parser = PageParser()
 		self._save_fldr = PAGE_SAVE_FLDR # os.path.join(os.getcwd(), "data", "js_dynamic_results")
-		
+
+
 	def save_js_files(self, pages: List[Page]) -> bool:
 		for page in pages:
 			

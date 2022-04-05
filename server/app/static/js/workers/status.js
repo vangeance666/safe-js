@@ -8,19 +8,22 @@ worker.status = (function() {
 	        	type: 'GET'
 	        })
 	        .done(function(e) {
-	        	if (e.status === "healthy") {
+	        	// console.log("Done e: ", e);
+	        	if (e.status === "Healthy") {
 	        		queryServerStatus();  // Repeat this function again.
 	        	}
 				else 
 					layout.pages.error.display()
 	        })
 	        .fail(function(e) {
+	        	// console.log("Fail e: ", e);
+
 	        	
 	        	
 	        	layout.pages.error.display();
 	        });
 
-	    }, 30000);
+	    }, 5000);
 	}
 
 	self.start = function() {

@@ -24,8 +24,7 @@ class FeaturesController:
 			# raise
 			print("extract_static_features error: ", e)
 			js_file.static_features_error = True
-			# raise
-			
+			# raise			
 
 	def extract_dynamic_features(self, js_file: JsFile):
 		try:

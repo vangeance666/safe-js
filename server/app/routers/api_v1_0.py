@@ -8,7 +8,7 @@ from app.platform_controller import PlatformController
 router = APIRouter()
 
 platform_controller = PlatformController()
-# platform_controller.start_threads()
+platform_controller.start_threads()
 
 
 # Done
@@ -48,6 +48,7 @@ async def get_analysis_details(page_id: int, js_file_id: int):
 async def analyze_url(analysis_request: AnalysisRequest = Body(...)):
     try:
         if analysis_request.mode == "single":
+            print("yes its single")
             return JSONResponse(content={"status": "ok"
                 , "page_id": platform_controller.analyze_one_url(analysis_request.url)})
         else:
