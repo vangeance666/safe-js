@@ -27,11 +27,6 @@ app.mount("/static", StaticFiles(directory="app/static"), name="static")
 
 app.include_router(api_v1_0_router, tags=["api"], prefix="/api/v1_0")
 
-# @app.on_event("shutdown")
-# def shutdown_event():
-# 	print("shutdown_event----")
-# 	platform_controller.cleanup()
-
 
 @app.get('/heartbeat/')
 async def heartbeat():

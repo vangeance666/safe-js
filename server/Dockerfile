@@ -1,7 +1,15 @@
-FROM python:3.8-slim-buster
+FROM nikolaik/python-nodejs:latest
 
-# WORKDIR /app
+WORKDIR /safe-js
+COPY . .
 
-# COPY requirements.txt requirements.txt
+RUN pip3 install -r requirements.txt
 
-# RUN pip3 install -r requirements.txt
+RUN npm install box-js --global
+
+CMD ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "80"]
+
+# CMD ['/bin/bash']
+
+
+
