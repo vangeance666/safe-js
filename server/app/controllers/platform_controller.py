@@ -12,6 +12,7 @@ from analyzer.datatypes.page import Page
 from app.threads.analyzer_thread import AnalyzerThread
 from app.threads.cleaner_thread import CleanerThread
 from app.threads.crawler_thread import CrawlerThread
+from app.threads.inference_thread import InferenceThread
 from config import DONE_PAGES_SAVE_PATH, PENDING_PAGES_SAVE_PATH
 
 
@@ -166,13 +167,18 @@ class PlatformController:
 		self._save_all()
 
 		return True
-
-
+		
 	def _save_all(self) -> bool:
 		return self._results_controller.save_pages(self._done_pages
 			, self.save_done_path) and self._results_controller.save_pages(
 			self._analysis_queue, self.save_pending_path)    
 
+	def __exit__(self):
+		self.cleanup()
+
 	def cleanup(self):
+		print("Saving all stuff at cleanup platform controller")
 		self._platform_running = False  # to Stop all thteads
 		self._save_all()
+
+# platform_controller = PlatformController()
