@@ -19,6 +19,7 @@ class Page:
 	internal_js_files: List[JsFile] = field(default_factory=list)
 	external_js_files: List[JsFile] = field(default_factory=list)
 
+	error_reason: str = field(default="")
 	
 	crawl_success: bool 		= field(default=False)
 	elements_parsed: bool 		= field(default=False)
