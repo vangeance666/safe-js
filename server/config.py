@@ -11,3 +11,6 @@ PENDING_PAGES_SAVE_PATH = os.path.join(os.getcwd(), "save", "pending.pickle")
 
 
 ERROR_DUMP_PATH = os.path.join(os.getcwd(), "save", "errors")
+
+
+NET_MODELS_FOLDER = os.path.join(os.getcwd(), "analyzer", "net", "checkpoints.kn")
