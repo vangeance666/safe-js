@@ -23,7 +23,7 @@ class CleanerThread(Worker):
 				if page.status == ProcessingStatus.ERROR or page.status == ProcessingStatus.DONE:
 					del self._pending_pages[i]
 					self._done_pages.append(page)
-					self._results_controller.save_pages(self._done_pages, self.DONE_PAGES_SAVE_PATH)
+					self._results_controller.save_pages(self._done_pages, DONE_PAGES_SAVE_PATH)
 					self._results_controller.save_pages(self._pending_pages, PENDING_PAGES_SAVE_PATH)
 					break
 			self._thread_lock.release()

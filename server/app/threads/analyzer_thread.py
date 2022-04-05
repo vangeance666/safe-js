@@ -22,7 +22,7 @@ class AnalyzerThread(Worker):
 		while self._do_run:
 			self._thread_lock.acquire()
 			for page in self._pending_pages:
-				if page.status == ProcessingStatus.CRAWLING \
+				if page.status == ProcessingStatus.CRAWLED \
 					and page.crawl_success \
 					and not page.is_analyzed:
 
@@ -39,17 +39,15 @@ class AnalyzerThread(Worker):
 							self._features_controller.extract_all_features(js_file)
 							self._analysis_controller.cleanup()
 
-
 						page.is_analyzed = True
 						page.features_extracted = True
 
-						page.status = ProcessingStatus.DONE #Trigger cleanup
+						page.status = ProcessingStatus.ANALYZED #Trigger cleanup
 					except Exception as e:
 						print("AnalyzerThread error: ", e)
+						page.error_reason = str(e)
 						page.status = ProcessingStatus.ERROR
-						# raise
 
-				# self._done_pages.append(self._pending_pages.popleft())
 			self._thread_lock.release()
 
 			print("AnalyzerThread sleeping for 5 seconds")
