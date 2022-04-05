@@ -36,6 +36,7 @@ const eleIds = {
 	"rootBodyMain": "root-body-main",
 
 	"navMenuDashboardItem": "nav-menu-dashboard-item",
+	"navMenuPendingItem": "nav-menu-pending-item",
 	"navMenuRecentItem": "nav-menu-recent-item",
 	"navMenuAnalysisItem": "nav-menu-analysis-item",
 	"navMenuSystemItem": "nav-menu-system-item",
@@ -43,6 +44,13 @@ const eleIds = {
 	"dashboardPagesAnalysed" : "dashboard-pages-analysed" ,
 	"dashboardJsFilesAnalysed": "dashboardjs-files-analysed",
 	"dashboardFlaggedFiles": "dashboard-flagged-files",
+	"dashboardPagesWithError": "dashboard-pages-with-error",
+	"dashboardPagePendingCount": "dashboard-page-pending-count",
+	"dashboardJsfileErrorCount": "dashboard-jsfile-error-count",
+
+	"pendingTableMain": "pending-table-main",
+	"pendingTableHeader": "pending-table-header",
+	"pendingTableBody": 	"pending-table-body",
 
 	"recentTableMain": "recent-table-main",
 	"recentTableHeader": "recent-table-header",
