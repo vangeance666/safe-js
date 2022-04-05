@@ -1,13 +1,12 @@
 import requests
-from urllib.parse import urlparse, auto
-
-from enum import Enum
+from urllib.parse import urlparse
 
 
-class UrlStatus(Enum):
-	WRONG_FORMAT = auto()
-	CONNECTION_FAIL = auto()
-	OK = auto()
+class FormatError(Exception):
+	pass
+
+class ConnectionError(Exception):
+	pass
 
 class UrlValidator:
 
@@ -15,27 +14,25 @@ class UrlValidator:
 	def __init__(self):
 		pass
 
-	def _check_format(self, url) -> bool:
-	    try:
-	        result = urlparse(x)
-	        return all([result.scheme, result.netloc])
-	    except:
-	        return False
-
-	def _test_connection(self, url) -> bool:
+	def _check_format(self, url):
 		try:
-			r = requests.head(url)
-			print(r.text)
-			return r.ok and r.status_c
-		except:
-			return False
+			result = urlparse(url)
+			print("result: ", result)
+			return all([result.scheme, result.netloc])
+		except Exception as e:
+			raise e
+
+	def _test_connection(self, url):
+		try:
+			r = requests.get(url, allow_redirects=True)
+			return r.ok and r.status_code == 200
+		except Exception as e:
+			raise e
 
 	def check(self, url):
-
 		if not self._check_format(url):
-			raise FormatError("Invalid URL format")
+			raise FormatError("Invalid URL format, ensure proper scheme and netloc")
 
 		if not self._test_connection(url):
-			raise ConnectionError("Connection failure error for {}".format(url))
-
+			raise ConnectionError("Connection failure error for {}".format(url))		
 		return True
