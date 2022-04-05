@@ -30,6 +30,7 @@ class AnalyzerThread(Worker):
 
 							self._analysis_controller.run_static_analysis(js_file)
 							self._analysis_controller.run_dynamic_analysis(js_file)
+							page.status = "extracting features"
 							self._features_controller.extract_all_features(js_file)
 							self._analysis_controller.cleanup()
 
