@@ -10,21 +10,20 @@
 
 1. Build image
 ```
-➜ docker build -t <image-tag> .
+➜ docker build -t safe-js .
 ```
 
 2. Run container
 ```
-➜ docker run -it -rm -p <desired_port>:80 --name <container-name> <image-tag>
+➜ docker run -d --rm -p <desired_port>:80 --name <container-name> safe-js
 ```
 
 2. Run container (With persistent storage using volume mount)
 ```
-➜ docker run -it -rm -p <desired_port>:80 -v <your-mount-point>:/safe-js/save --name <container-name> <image-tag>
+➜ docker run -d -rm -p <desired_port>:80 -v <your-mount-point>:/safe-js/save --name <container-name> safe-js
 ```
 
-
-### Without Docker
+### Manual
 
 0. Download and install Node.js `https://nodejs.org/en/`
 
@@ -45,5 +44,7 @@
 ```
 
 ### Submit using firefox extension
+
+
 
 ## Configurations
