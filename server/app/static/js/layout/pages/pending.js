@@ -2,7 +2,7 @@ layout.pages.pending = (function() {
 	let self = {};
 
 
-	const pendingTableHeaders = ["ID", "Page URL", "Static analysis Status", "Dynamic analysis Status", "JS Files"]
+	const pendingTableHeaders = ["ID","Page URL","Status","Error Reason","Crawled","Parsed","Elements Extracted","Analyzed","Features Extracted", "Predicted", "JS Files"]
 
 	const attachJsFileHrefEvent = function() {
 		$('.js-file-link').click(function(e){
@@ -25,11 +25,23 @@ layout.pages.pending = (function() {
 	        }
 
 		let mainRow =  ['tr', 
+
 			layout.helper.genNormalTd(rowDict['id']),
 			layout.helper.genNormalTd(rowDict['page_url']),
-			layout.helper.genNormalTd(rowDict['static_done']),
-			layout.helper.genNormalTd(rowDict['dynamic_done']),
-			layout.helper.genNormalTdWithProp(collapseProperty, rowDict['js_file_details'] ? "+" : "")			
+			layout.helper.genNormalTd(rowDict['status']),
+			layout.helper.genNormalTd(rowDict['error_reason']),
+			layout.helper.genNormalTd(rowDict['crawl_success'] ? "✔" : "❌"),
+			layout.helper.genNormalTd(rowDict['elements_parsed'] ? "✔" : "❌"),
+			layout.helper.genNormalTd(rowDict['js_elements_extracted'] ? "✔" : "❌"),
+			layout.helper.genNormalTd(rowDict['is_analyzed'] ? "✔" : "❌"),
+			layout.helper.genNormalTd(rowDict['features_extracted'] ? "✔" : "❌"),
+			layout.helper.genNormalTd(rowDict['predicted'] ? "✔" : "❌"),
+
+			// layout.helper.genNormalTd(rowDict['id']),
+			// layout.helper.genNormalTd(rowDict['page_url']),
+			// layout.helper.genNormalTd(rowDict['static_done']),
+			// layout.helper.genNormalTd(rowDict['dynamic_done']),
+			layout.helper.genNormalTdWithProp(collapseProperty, rowDict['js_file_details'] ? "➕" : "")			
 			// layout.helper.genNormalTd(rowDict['js_file_details'] ? "+" : "")			
 		]
 
@@ -92,7 +104,7 @@ layout.pages.pending = (function() {
 
 		console.log("loadTableData");
 
-		var requestResult = $.getJSON("api/v1_0/analysis/overview/", function() {
+		var requestResult = $.getJSON("api/v1_0/analysis/pending/", function() {
 			console.log( "success" );
 			console.log("requestResult: ", requestResult);
 
@@ -131,8 +143,8 @@ layout.pages.pending = (function() {
 
 	var initEvents = function() {
 		layout.banner.setBannerPath(["Page", "pending"])
-		layout.banner.setBannerHeader("pending Analysis")
-		layout.banner.setBannerDescription("Summary of past submissions")
+		layout.banner.setBannerHeader("Pending Analysis")
+		layout.banner.setBannerDescription("Summary of submissions which are pending")
 		layout.banner.setActionRightButton("")
 
 	}
