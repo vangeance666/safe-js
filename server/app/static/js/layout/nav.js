@@ -129,7 +129,7 @@ layout.nav = (function() {
             	"", "#/dashboard", "0 0 20 20", dashboardPathCtx, "Dashboard"),
 
             genSideMenuSingleItem(eleIds['navMenuPendingItem'],
-            	"", "#/recent", "0 0 24 28", pendingPathCtx, "Pending"),
+            	"", "#/pending", "0 0 24 28", pendingPathCtx, "Pending"),
             
 
             genSideMenuSingleItem(eleIds['navMenuRecentItem'],
