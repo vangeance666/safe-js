@@ -7,6 +7,11 @@ layout.nav = (function() {
 	    }
 	]
 
+	const pendingPathCtx = ["path", {
+	        "d": "M22 2c0 5.781-2.766 9.969-5.828 12 3.063 2.031 5.828 6.219 5.828 12h1.5c0.281 0 0.5 0.219 0.5 0.5v1c0 0.281-0.219 0.5-0.5 0.5h-23c-0.281 0-0.5-0.219-0.5-0.5v-1c0-0.281 0.219-0.5 0.5-0.5h1.5c0-5.781 2.766-9.969 5.828-12-3.063-2.031-5.828-6.219-5.828-12h-1.5c-0.281 0-0.5-0.219-0.5-0.5v-1c0-0.281 0.219-0.5 0.5-0.5h23c0.281 0 0.5 0.219 0.5 0.5v1c0 0.281-0.219 0.5-0.5 0.5h-1.5zM20 2h-16c0 2.281 0.516 4.297 1.328 6h13.344c0.812-1.703 1.328-3.719 1.328-6zM19.109 21c-1.156-3.016-3.234-5.156-5.313-6h-3.594c-2.078 0.844-4.156 2.984-5.313 6h14.219z"
+	    }
+	]
+
 	const recentPathCtx = ["path", {
 	        "d": "M10 14v8h-4v-8h4zM16 6v16h-4v-16h4zM32 24v2h-32v-24h2v22h30zM22 10v12h-4v-12h4zM28 4v18h-4v-18h4z"
 	    }
@@ -122,6 +127,10 @@ layout.nav = (function() {
             // (itemId, clsAdd, itemHref, viewBox, iconPathCtx, labelName)             
             genSideMenuSingleItem(eleIds['navMenuDashboardItem'],
             	"", "#/dashboard", "0 0 20 20", dashboardPathCtx, "Dashboard"),
+
+            genSideMenuSingleItem(eleIds['navMenuPendingItem'],
+            	"", "#/recent", "0 0 24 28", pendingPathCtx, "Pending"),
+            
 
             genSideMenuSingleItem(eleIds['navMenuRecentItem'],
             	"", "#/recent", "0 0 20 20", recentPathCtx, "Recent"),
