@@ -1,4 +1,6 @@
-
+function open(url, active = true) {
+    chrome.tabs.create({ url, active })
+}
 
 function setApiUrlStatus() {
 	console.log("setApiUrlStatus");
@@ -74,8 +76,29 @@ document.addEventListener("DOMContentLoaded", function() {
 	});
 
 	goResultsBtn.addEventListener("click", function(e) {
+
+		function redirectToSettings(item) {
+			console.log("item: ", item);
+			if (!item || !item.apiDetails || !item.apiDetails.url) {
+				console.log("!item || !item.apiDetails || !item.apiDetails.url")
+				return	
+			}
+			console.log("Before open")
+			open(item.apiDetails.url)
+		}
+
+		function onError(e) {
+			console.log(`Error: ${e}`);
+		}
+
 		e.preventDefault();
-		window.open("https://www.w3schools.com");
+		let getting = browser.storage.local.get("apiDetails");
+		console.log("getting: ", getting);
+
+
+		getting.then(redirectToSettings, onError);
+
+		// window.open("https://www.w3schools.com");
 
 	});
 

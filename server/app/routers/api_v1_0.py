@@ -1,11 +1,10 @@
 import atexit
 import signal
-from fastapi import APIRouter, Body
-from fastapi.responses import JSONResponse
-
-from app.models.analysis_request import AnalysisRequest
 
 from app.controllers import platform_controller
+from app.models.analysis_request import AnalysisRequest
+from fastapi import APIRouter, Body
+from fastapi.responses import JSONResponse
 
 router = APIRouter()
 
@@ -85,7 +84,7 @@ async def clear_all_data():
 
 
 @router.get('/analysis/save/')
-async def clear_all_data():
+async def save_data():
     try:
         platform_controller.cleanup()
         return JSONResponse(content={"status": "ok"})

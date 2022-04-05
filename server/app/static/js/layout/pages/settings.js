@@ -78,6 +78,7 @@ layout.pages.settings = (function() {
 			type: "GET"
 		})
 		.done(function(e){
+			console.log("e: ", e);
 			if (!e.status || e.status != "ok") {
 				showError("Failed to receive status results")
 				return

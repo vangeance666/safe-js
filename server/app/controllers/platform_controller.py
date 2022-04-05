@@ -139,7 +139,7 @@ class PlatformController:
 														   for i, item in enumerate(js_file.dynamic_features['iocs'].items())]
 
 						ret['model_predicted'] = js_file.model_predicted
-						ret['malign_percent'] = js_file.malign_percent
+						ret['malign_percent'] = js_file.malign_percent #- 0.3
 						return ret
 		return None
 
@@ -159,13 +159,13 @@ class PlatformController:
 
 
 	def delete_past_data(self) -> bool:
-		temp = self.self._done_pages
+		# temp = self._done_pages
 		self._done_pages = []
-		del temp
+		# del temp
 
-		temp = self._analysis_queue
+		# temp = self._analysis_queue
 		self._analysis_queue = []
-		del temp
+		# del temp
 
 		self._save_all()
 
