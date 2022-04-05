@@ -1,11 +1,12 @@
 import os
+import shutil
 from typing import List
 
 from analyzer.core.page_parser import PageParser
-from analyzer.core.utils import save_file, sha_256_str, format_js_file_save
+from analyzer.core.utils import format_js_file_save, save_file, sha_256_str
 from analyzer.datatypes.page import Page
-
 from config import PAGE_SAVE_FLDR
+
 
 class PageController:
 	
@@ -13,6 +14,9 @@ class PageController:
 		self._page_parser = PageParser()
 		self._save_fldr = PAGE_SAVE_FLDR # os.path.join(os.getcwd(), "data", "js_dynamic_results")
 
+	def cleanup(self) -> bool:
+		if os.path.exists((self._dump_folder)):
+			shutil.rmtree(self._dump_folder, ignore_errors=False)
 
 	def save_js_files(self, pages: List[Page]) -> bool:
 		for page in pages:
@@ -62,4 +66,3 @@ class PageController:
 			self._page_parser.extract_page_details(page)
 
 		return ret
-
