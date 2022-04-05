@@ -3,6 +3,7 @@ from itertools import count
 from typing import List, Optional
 
 from analyzer.datatypes.js_file import JsFile
+from app.models.processing_status import ProcessingStatus
 from bs4 import ResultSet
 
 
@@ -12,14 +13,14 @@ class Page:
 	src: str = field(default="")
 	text: str = field(default="")
 	
-	status: str = field(default="pending")
+	status: ProcessingStatus = field(default=ProcessingStatus.PENDING)
 
 	script_elements: list = field(default_factory=list)
 
 	internal_js_files: List[JsFile] = field(default_factory=list)
 	external_js_files: List[JsFile] = field(default_factory=list)
 
-	error_reason: str = field(default="")
+	error_reason: str = field(default="-")
 	
 	crawl_success: bool 		= field(default=False)
 	elements_parsed: bool 		= field(default=False)
@@ -27,3 +28,4 @@ class Page:
 	saved: bool 				= field(default=False)
 	is_analyzed: bool			= field(default=False)
 	features_extracted: bool 	= field(default=False)
+	is_predicted: bool 			= field(default=False)
