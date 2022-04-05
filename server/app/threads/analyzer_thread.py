@@ -1,60 +1,50 @@
 
 import itertools
-import threading
 import time
 from collections import deque
 from typing import List
 
+from app.threads.worker import Worker
 from analyzer.controllers.analysis_controller import AnalysisController
 from analyzer.controllers.features_controller import FeaturesController
-from analyzer.controllers.page_controller import PageController
 
-
-class AnalyzerThread(threading.Thread):
+class AnalyzerThread(Worker):
 	
-	def __init__(self, pending_queue, analyzed_pages, platform_running):
-		super().__init__()
+	def __init__(self, thread_lock, pending_queue, analyzed_pages, platform_running):
+		super().__init__(thread_lock, pending_queue, analyzed_pages, platform_running)
 
-		self._pending_pages: deque = pending_queue
-		self._analyzed_pages: List[Page] = analyzed_pages
-
-		self._do_run: bool = platform_running
-
-		self._page_controller 		= PageController()
-		self._features_controller 	= FeaturesController()
+		self._analysis_controller = AnalysisController()
+		self._features_controller = FeaturesController()
 
 	def run(self):
-		print("started analyzer thread")
+		print("---started analyzer thread---")
 		while self._do_run:
-			if len(self._pending_pages) > 0:
-
-				page = self._pending_pages[0] # dont remove from queue first
-				print("Found one in analysis queue {}", page.src)
-
-				self._page_controller.crawl_details(page)
-				self._page_controller.save_js_file(page)
-
-				with AnalysisController() as analysis_controller:
-					analysis_controller.analyze_page_js_files(page)
-
-				for js_file in itertools.chain(page.internal_js_files, page.external_js_files):
+			self._thread_lock.acquire()
+			for page in self._pending_pages:
+				if page.status == "crawling" and page.crawl_success and not page.is_analyzed:
+					print("Analyzer found one page", page.src)
 					try:
-						self._features_controller.extract_static_features(js_file)
-						print("Finished static features for {}".format(js_file.src))
+						page.status = "analyzing"
+						for js_file in itertools.chain(page.internal_js_files, page.external_js_files):
+							print("analyzing js file", js_file.src)
+
+							self._analysis_controller.run_static_analysis(js_file)
+							self._analysis_controller.run_dynamic_analysis(js_file)
+							self._features_controller.extract_all_features(js_file)
+							self._analysis_controller.cleanup()
+
+						page.is_analyzed = True
+						page.features_extracted = True
+						page.status = "done"
 					except Exception as e:
-						print(e)
-					try:
-						self._features_controller.extract_dynamic_features(js_file)
-						print("Finished dyanmic features for {}".format(js_file.src))						
-					except Exception as e:
-						print(e)
+						print("AnalyzerThread error: ", e)
+						page.status = "error"
+						# raise
 
-				# Once finished	then transfer over incase when close app while 
-				self._analyzed_pages.append(self._pending_pages.popleft())
+				# self._analyzed_pages.append(self._pending_pages.popleft())
+			self._thread_lock.release()
 
-			print("Sleeping for 5 seconds")
+			print("AnalyzerThread sleeping for 5 seconds")
+			print("AnalyzerThread page.status: ", page.status)
 
-			for page in self._analyzed_pages:
-				for js_file in itertools.chain(page.internal_js_files, page.external_js_files):
-					print(js_file)
-			time.sleep(5) # Repeat check every 5 secs to prevent clogging		
+			time.sleep(5)	
