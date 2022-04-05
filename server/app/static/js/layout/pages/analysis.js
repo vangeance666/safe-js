@@ -1,6 +1,11 @@
 layout.pages.analysis = (function() {
 	let self = {};
 
+
+	const ajaxApiAnalyzeUrl = "api/v1_0/analysis/run/"
+
+	const ajaxApiDetailsUrl = "api/v1_0/analysis/details/"
+
 	const submitUrlBtnPath = ["path", {
 	        "d": "M14 18h4v-8h6l-8-8-8 8h6zM20 13.5v3.085l9.158 3.415-13.158 4.907-13.158-4.907 9.158-3.415v-3.085l-12 4.5v8l16 6 16-6v-8z"
 	    }
@@ -47,7 +52,7 @@ layout.pages.analysis = (function() {
 	                                "type": "text",
 	                                "id": eleIds['analysisSubmitUrlFormText'],
 	                                "class": "me-sm-1 mb-sm-0 form-control form-control-lg",
-	                                "placeholder": "www.facebook.com"
+	                                "placeholder": "http://xsite.singaporetech.edu.sg"
 	                            }
 	                        ],
 	                        ["div",
@@ -79,7 +84,7 @@ layout.pages.analysis = (function() {
 		console.log("urlText: ", urlText);
 
 		$.ajax({
-			url: "api/v1_0/analysis/run/",
+			url: ajaxApiAnalyzeUrl,
 			contentType: 'application/json',
 			type: 'POST',
 			data: JSON.stringify({url: urlText}),
@@ -157,7 +162,7 @@ layout.pages.analysis = (function() {
 		
 
 		$.ajax({
-			url: "api/v1_0/analysis/details/",
+			url: ajaxApiDetailsUrl,
         	type: 'GET',
         	data: {page_id: pageId
         		, js_file_id: jsFileId
@@ -177,9 +182,11 @@ layout.pages.analysis = (function() {
 			let staticFeaturesHeaders = e.details.static_features.headers
 			let dynamicFeaturesHeaders = e.details.dynamic_features.headers
 
-			if (e.details.model_predicted === true) {
-				setPredictCardValues("Malign scale", "0.65")
-				setPredictBarValues("Malign Percentage", "0.65", "65")
+			if (e.details.model_predicted === true && e.details.malign_percent) {
+				setPredictCardValues("Malign scale", e.details.malign_percent)
+				setPredictBarValues("Malign Percentage",
+				 e.details.malign_percent,
+				  e.details.malign_percent * 100)
 			} 
 
 			if (staticFeaturesHeaders){
