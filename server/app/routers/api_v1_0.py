@@ -1,3 +1,5 @@
+import atexit
+import signal
 from fastapi import APIRouter, Body
 from fastapi.responses import JSONResponse
 
@@ -10,6 +12,9 @@ router = APIRouter()
 platform_controller = PlatformController()
 platform_controller.start_threads()
 
+atexit.register(platform_controller.cleanup)
+signal.signal(signal.SIGTERM, platform_controller.cleanup)
+signal.signal(signal.SIGINT, platform_controller.cleanup)
 
 # Done
 @router.get("/analysis/statistics/")
@@ -20,6 +25,14 @@ async def get_dashboard_stats():
     except Exception as e:
         return JSONResponse(content={"status": "error", "error_message": str(e)})
 
+@router.get("/analysis/pending/")
+async def get_analysis_pending():
+    try:
+        return JSONResponse(content={"status": "ok"
+            , "details": platform_controller.fetch_pending_details()})
+    except Exception as e:
+        return JSONResponse(content={"status": "error", "error_message": str(e)}) 
+
 # Used for recent view
 @router.get("/analysis/overview/")
 async def get_analysis_overview():
@@ -28,19 +41,6 @@ async def get_analysis_overview():
             , "details": platform_controller.fetch_all_pages_details()})
     except Exception as e:
         return JSONResponse(content={"status": "error", "error_message": str(e)})        
-
-
-@router.get("/analysis/pending/")
-async def get_analysis_pending(page_id: int, js_file_id: int):
-    try:
-        js_file_details = platform_controller.fetch_js_file_details(page_id, js_file_id)
-        if not js_file_details:
-            return JSONResponse(content={"status": "no-record"})
-
-        return JSONResponse(content={"status": "ok", "details": js_file_details})
-    except Exception as e:
-        return JSONResponse(content={"status": "error", "error_message": str(e)})
-
 
 # Done
 @router.get("/analysis/details/")
@@ -61,13 +61,16 @@ async def get_analysis_details(page_id: int, js_file_id: int):
 async def analyze_url(analysis_request: AnalysisRequest = Body(...)):
     try:
         if analysis_request.mode == "single":
-            print("yes its single")
+            print("API Executing single mode")
             return JSONResponse(content={"status": "ok"
-                , "page_id": platform_controller.analyze_one_url(analysis_request.url)})
-        else:
-            return JSONResponse(content={"status": "error", "error_message": "Invalid Mode"})    
+                , "page_id": platform_controller.analyze_one_url(analysis_request.url)
+                , "url": analysis_request.url})
+        
+        return JSONResponse(content={"status": "error"
+                , "error_message": "Invalid Mode"})    
     except Exception as e:
-        return JSONResponse(content={"status": "error", "error_message": str(e)})
+        return JSONResponse(content={"status": "error"
+            , "error_message": str(e)})
 
 
 # Used for querying status for both extension/site

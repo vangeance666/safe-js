@@ -13,8 +13,8 @@ from app.threads.worker import Worker
 
 class InferenceThread(Worker):
 	
-	def __init__(self, thread_lock, pending_queue, analyzed_pages, platform_running):
-		super().__init__(thread_lock, pending_queue, analyzed_pages, platform_running)
+	def __init__(self, thread_lock, pending_pages, done_pages, platform_running):
+		super().__init__(thread_lock, pending_pages, done_pages, platform_running)
 
 		# self._analysis_controller = AnalysisController()
 		# self._features_controller = FeaturesController()
@@ -35,7 +35,7 @@ class InferenceThread(Worker):
 						page.status = ProcessingStatus.ERROR
 
 
-				# self._analyzed_pages.append(self._pending_pages.popleft())
+				# self._done_pages.append(self._pending_pages.popleft())
 			self._thread_lock.release()
 
 			print("AnalyzerThread sleeping for 5 seconds")

@@ -11,8 +11,8 @@ from app.threads.worker import Worker
 
 class CrawlerThread(Worker):
 
-	def __init__(self, thread_lock, pending_queue, analyzed_pages, platform_running):
-		super().__init__(thread_lock, pending_queue, analyzed_pages, platform_running)
+	def __init__(self, thread_lock, pending_pages, done_pages, platform_running):
+		super().__init__(thread_lock, pending_pages, done_pages, platform_running)
 		self._page_controller = PageController()
 
 	def run(self):

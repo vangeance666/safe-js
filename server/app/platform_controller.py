@@ -12,7 +12,7 @@ from analyzer.datatypes.page import Page
 from app.threads.analyzer_thread import AnalyzerThread
 from app.threads.cleaner_thread import CleanerThread
 from app.threads.crawler_thread import CrawlerThread
-from config import ANALYZED_PAGES_SAVE_PATH, PENDING_PAGES_SAVE_PATH
+from config import DONE_PAGES_SAVE_PATH, PENDING_PAGES_SAVE_PATH
 
 
 class NotFoundDetails(Exception):
@@ -26,14 +26,14 @@ class PlatformController:
 
 		self._platform_running: bool = True
 
-		self.save_analyzed_path = ANALYZED_PAGES_SAVE_PATH
+		self.save_done_path = DONE_PAGES_SAVE_PATH
 		self.save_pending_path = PENDING_PAGES_SAVE_PATH
 
 		# self._dataset_generator = DatasetGenerator()
 		self._results_controller = ResultsController()
 
-		self._analyzed_pages: List[Pages] = self._results_controller.load_pages(
-			self.save_analyzed_path) or []
+		self._done_pages: List[Pages] = self._results_controller.load_pages(
+			self.save_done_path) or []
 
 		self._analysis_queue: deque = deque([])
 
@@ -51,7 +51,7 @@ class PlatformController:
 
 			thread_obj = thread(self._thread_lock
 				, self._analysis_queue
-				, self._analyzed_pages
+				, self._done_pages
 				, self._platform_running)
 
 			thread_obj.start()
@@ -68,7 +68,7 @@ class PlatformController:
 			, "js_file_error_count" : 0 # count in loop
 		}
 
-		for page in self._analyzed_pages:
+		for page in self._done_pages:
 			ret['pages_analyzed'] += 1
 			ret['pages_with_error'] += int(page.status == "error")
 			for js_file in itertools.chain(page.internal_js_files
@@ -86,7 +86,7 @@ class PlatformController:
 
 	# ok for recent view
 	def fetch_all_pages_details(self) -> list:
-		return self._get_pages_details(self._analyzed_pages)
+		return self._get_pages_details(self._done_pages)
 
 	def _get_pages_details(self, pages) -> list:
 		ret = []
@@ -125,7 +125,7 @@ class PlatformController:
 			"static_features": {}, "dynamic_features": {}, "predict_malign": ""
 		}
 
-		for page in self._analyzed_pages:
+		for page in self._done_pages:
 			if page.id == page_id:
 				for js_file in itertools.chain(page.internal_js_files, page.external_js_files):
 					if js_file.id == js_file_id:
@@ -148,7 +148,7 @@ class PlatformController:
 		self._url_validator.check(url.strip())
 		
 		page = Page(src=url if url.startswith('http') else "http://"+url)
-		page.id = max([P.id for P in self._analyzed_pages]+[P.id for P in self._analysis_queue], default=0)	+ 1	
+		page.id = max([P.id for P in self._done_pages]+[P.id for P in self._analysis_queue], default=0)	+ 1	
 
 		self._analysis_queue.append(page)
 
@@ -157,8 +157,8 @@ class PlatformController:
 
 	def delete_past_data(self) -> bool:
 		
-		del self._analyzed_pages
-		self._analyzed_pages = []
+		del self._done_pages
+		self._done_pages = []
 
 		del self._analysis_queue
 		self._analysis_queue = []
@@ -169,8 +169,8 @@ class PlatformController:
 
 
 	def _save_all(self) -> bool:
-		return self._results_controller.save_pages(self._analyzed_pages
-			, self.save_analyzed_path) and self._results_controller.save_pages(
+		return self._results_controller.save_pages(self._done_pages
+			, self.save_done_path) and self._results_controller.save_pages(
 			self._analysis_queue, self.save_pending_path)    
 
 	def cleanup(self):
