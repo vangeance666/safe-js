@@ -29,7 +29,6 @@ class AnalyzerThread(Worker):
 					page.status = ProcessingStatus.ANALYZING
 					print("Analyzer found one page", page.src)
 					try:
-						page.status = "analyzing"
 						for js_file in itertools.chain(page.internal_js_files
 							, page.external_js_files):
 							print("analyzing js file", js_file.src)
@@ -43,11 +42,11 @@ class AnalyzerThread(Worker):
 
 						page.is_analyzed = True
 						page.features_extracted = True
-						
-						# page.status = ProcessingStatus.DONE #Trigger cleanup
+
+						page.status = ProcessingStatus.DONE #Trigger cleanup
 					except Exception as e:
 						print("AnalyzerThread error: ", e)
-						page.status = "error"
+						page.status = ProcessingStatus.ERROR
 						# raise
 
 				# self._analyzed_pages.append(self._pending_pages.popleft())

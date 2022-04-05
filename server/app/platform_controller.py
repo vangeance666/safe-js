@@ -94,7 +94,9 @@ class PlatformController:
 			row = {}
 			row['id'] = page.id
 			row['page_url'] = page.src
+			print("page.status: ", page.status)
 			row['status'] = page.status.name
+			
 			row['error_reason'] = page.error_reason
 			row['crawl_success'] = page.crawl_success
 			row['elements_parsed'] = page.elements_parsed
