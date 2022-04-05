@@ -106,7 +106,7 @@ layout.pages.dashboard = (function() {
             }
 
             $('#dashboard-pages-analysed')
-            $('#'+eleIds['dashboardPagesAnalysed']+" .results-value").text(jsonData.details.pages_analysed)
+            $('#'+eleIds['dashboardPagesAnalysed']+" .results-value").text(jsonData.details.pages_analyzed)
             $('#'+eleIds['dashboardJsFilesAnalysed']+" .results-value").text(jsonData.details.js_file_analysed)
             $('#'+eleIds['dashboardFlaggedFiles']+" .results-value").text(jsonData.details.predict_flagged_files)
 
