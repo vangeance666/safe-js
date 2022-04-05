@@ -5,6 +5,7 @@ import json
 import os
 import pickle
 import shutil
+import signal
 import sys
 import threading
 import time
@@ -19,13 +20,19 @@ import requests
 import uvicorn
 from analyzer.controllers.analysis_controller import AnalysisController
 from analyzer.controllers.features_controller import FeaturesController
+from analyzer.controllers.inference_controller import InferenceController
 from analyzer.controllers.page_controller import PageController
 from analyzer.controllers.results_controller import ResultsController
 from analyzer.core.dataset_generator import DatasetGenerator
 from analyzer.core.page_parser import PageParser
+from analyzer.core.url_validator import UrlValidator
 from analyzer.datatypes.js_file import JsFile
 from analyzer.datatypes.page import Page
 from app.threads.analyzer_thread import AnalyzerThread
+from app.threads.cleaner_thread import CleanerThread
+from app.threads.crawler_thread import CrawlerThread
+from app.threads.inference_thread import InferenceThread
+from config import DONE_PAGES_SAVE_PATH
 from samples import benign_urls, malign_urls
 
 page_controller = PageController()
@@ -38,20 +45,19 @@ features_controller = FeaturesController()
 analysis_controller  = AnalysisController()
 results_controller = ResultsController()
 
+inference_controller = InferenceController()
+
+url_validator = UrlValidator()
 page_parser = PageParser()
 
 # from app.platform_controller import PlatformController
 # platform_controller = PlatformController()
 # platform_controller.save_all()
-# atexit.register(platform_controller.cleanup)
 
 def analyze_malign_df_row(row):
-	
 	page = Page(row.url.strip())
-
 	page.text = str(row.content).strip()
 	page.crawl_success = True
-
 	page_parser.parse_page_elements(page)
 
 	try:
@@ -128,33 +134,58 @@ def analyze_one_js_file(index: str, js_file_path) -> JsFile:
 	return js_file
 
 
-# def do_smth(D):
-# 	try:
-
-# 		url = D if D.startswith('http') else ('http://'+D)
-
-# 		r = requests.get(url)
-# 		# return ' '.join([D, str(r.status_code)])
-# 		if r.status_code == 200:
-# 			return str(url)
-# 		return None
-# 	except Exception as e:
-# 		return None
-# 		return e
-
-# def gen_list():
-# 	for x in benign_urls:
-# 		yield x
-
 MALWARE_FOLDER = "C:\\Users\\User\\Downloads\\js-malicious-dataset-master\\js-malicious-dataset-master"
 
-def get_benign_urls():
-	with open("benign_ok_urls.txt", 'r') as f:
-		# return f.readlines()[500:1000]
-		for x in f.readlines()[:1000]:
-			yield x.strip()
+# atexit.register(save_pages_info)
+# signal.signal(signal.SIGTERM, save_pages_info)
+# signal.signal(signal.SIGINT, save_pages_info)
+
+def test_threads_url():
+	analyzed = []
+	pending_pages = deque([])	
+	pending_pages.append(Page("http://xsite.singaporetech.edu.sg"))
+	# pending_pages.append(Page("https://stackoverflow.com/questions/66770132/python-uniqe-integer-for-dataclass"))
+	to_run = True
+	thead_lock = threading.Lock()
+
+	crawler_thread = CrawlerThread(thead_lock, pending_pages,analyzed, to_run)
+	analyzer_thread = AnalyzerThread(thead_lock, pending_pages, analyzed, to_run)
+	cleaner_thread = CleanerThread(thead_lock, pending_pages,analyzed,  to_run)
+	inference_thread = InferenceThread(thead_lock, pending_pages,analyzed,  to_run)
+
+	crawler_thread.start()
+	analyzer_thread.start()
+	cleaner_thread.start()
+	inference_thread.start()
 
 if __name__ == "__main__":
+	# test_threads_url()
+	uvicorn.run("app.main:app", host="0.0.0.0", port=8090, reload="True") 
+
+	# js_file = analyze_one_js_file(1, "C:\\Users\\User\\Documents\\GitHub\\safe-js\\server\\careful.txt")
+
+	# with open("js_file_temp.pickle", 'wb') as f:
+	# 	pickle.dump(js_file, f)
+
+	# with open()
+	# inference_controller.predict("c-7.npz", js_file)
+	# print("js_file: ", js_file)
+
+	# a = A("hehe")
+	# b = A("haha")
+	# c = A("yo")
+	# d = deque([a,b,c])
+
+	# print("d: ", d)
+
+	# for i, x in enumerate(d):
+	# 	if x.name == "haha":
+	# 		del d[i]
+	# 		break
+	
+	# print(b.name)
+
+	# print(url_validator.check("xsite.singaporetech.edu.sg"))
 
 	# with open("C:\\Users\\User\\Downloads\\done_ok.txt",'r') as f1:
 
@@ -164,32 +195,32 @@ if __name__ == "__main__":
 	# 			f2.write(x.split("ok res:  ")[1])
 
 
-	DATASET_PATH = "C:\\Users\\User\\Downloads\\Dataset of Malicious and Benign Webpages\\testdata\\Webpages_Classification_test_data.csv"
+	# DATASET_PATH = "C:\\Users\\User\\Downloads\\Dataset of Malicious and Benign Webpages\\testdata\\Webpages_Classification_test_data.csv"
 
 	
-	CSV_SAVE_PATH = "ok_malign_pk_laptop1.csv"
-	dataset_generator.write_header_csv(CSV_SAVE_PATH)
+	# CSV_SAVE_PATH = "ok_malign_pk_laptop1.csv"
+	# dataset_generator.write_header_csv(CSV_SAVE_PATH)
 
-	df = pd.read_csv(DATASET_PATH, names=["index","url","url_len","ip_add","geo_loc","tld","who_is","https","js_len","js_obf_len","content", "label"])
-	df = df.loc[df['label'] == "bad"]
+	# df = pd.read_csv(DATASET_PATH, names=["index","url","url_len","ip_add","geo_loc","tld","who_is","https","js_len","js_obf_len","content", "label"])
+	# df = df.loc[df['label'] == "bad"]
 	
-	to_put_in_csv = []
-	for i, row in df.iloc[1:].iterrows():
-		# print("row: ", row)
-		# print(row.url, row.content, row.label)
+	# to_put_in_csv = []
+	# for i, row in df.iloc[1:].iterrows():
+	# 	# print("row: ", row)
+	# 	# print(row.url, row.content, row.label)
 		
-		page = analyze_malign_df_row(row)
+	# 	page = analyze_malign_df_row(row)
 
-		# for js_file in itertools.chain(page.internal_js_files, page.external_js_files):
-		# 	print(js_file)
-		to_put_in_csv.append(page)
+	# 	# for js_file in itertools.chain(page.internal_js_files, page.external_js_files):
+	# 	# 	print(js_file)
+	# 	to_put_in_csv.append(page)
 
-		if i % 2 == 0:
-			dataset_generator.append_pages_to_csv(to_put_in_csv, CSV_SAVE_PATH)
-			del to_put_in_csv
-			to_put_in_csv = []
+	# 	if i % 2 == 0:
+	# 		dataset_generator.append_pages_to_csv(to_put_in_csv, CSV_SAVE_PATH)
+	# 		del to_put_in_csv
+	# 		to_put_in_csv = []
 
-	print("Finish")
+	# print("Finish")
 
 
 	# to_put_in_csv = []
@@ -249,15 +280,10 @@ if __name__ == "__main__":
 	# path = "C:\\Users\\User\\Documents\\GitHub\\safe-js\\server\\data\\js_dynamic_results"
 	# if os.path.exists(path):
 	# #     shutil.rmtree(path)
-
-	# analyzed = []
-	# pending = deque([])
 	
-	# pending.append(Page("https://stackoverflow.com/questions/66770132/python-uniqe-integer-for-dataclass"))
+	# #####################
+	
 
-	# w = AnalyzerThread(pending, analyzed, "True")
-
-	# w.start()
 
 	# x = {"settings":{"userProfile":{"openGraphAPIKey":"4a307e43-b625-49bb-af15-ffadf2bda017"},"userMessaging":{"showNewFeatureNotice":""},"tags":{},"subscriptions":{"defaultBasicMaxTrueUpSeats":250,"defaultFreemiumMaxTrueUpSeats":50,"defaultMaxTrueUpSeats":1000},"snippets":{"renderDomain":"stacksnippets.net","snippetsEnabled":""},"site":{"allowImageUploads":"","enableImgurHttps":"","enableUserHovercards":"","forceHttpsImages":"","styleCode":""},"questions":{"enableQuestionTitleLengthLiveWarning":"","maxTitleSize":150,"questionTitleLengthStartLiveWarningChars":50},"intercom":{"appId":"inf0secd","hostBaseUrl":"https://stacksnippets.net"},"paths":{},"monitoring":{"clientTimingsAbsoluteTimeout":30000,"clientTimingsDebounceTimeout":1000},"mentions":{"maxNumUsersInDropdown":50},"markdown":{"enableTables":""},"legal":{"oneTrustConfigId":"c3d9f1e3-55f3-4eba-b268-46cee4c6789c"},"flags":{"allowRetractingCommentFlags":"","allowRetractingFlags":""},"elections":{"opaVoteResultsBaseUrl":"https://www.opavote.com/results/"},"comments":{},"accounts":{"currentPasswordRequiredForChangingStackIdPassword":""}}}
 	# x = str(x)
@@ -285,14 +311,15 @@ if __name__ == "__main__":
 	# pass
 	
 	# for i in range(3):
-	#   a = A(pending_queue=[str(i) for i in range(100)])
+	#   a = A(pending_pages=[str(i) for i in range(100)])
 	#   print(dir(a))
 		# a.start()
 	# results = platform_controller.fetch_js_file_details(0, 1)
-
 	# print(platform_controller.fetch_dashboard_details())
 
-	# uvicorn.run("app.main:app", host="0.0.0.0", port=8090, reload="True") 
+	# max_val = max([1,2,3,4,56,7,]+[1,5,5,7,5,1],  default=0)
+	# print("max_val: ", max_val)
+	# uvicorn.run("app.main:app", host="0.0.0.0", port=8090, reload="False") 
 
 	# pages = results_controller.load_pages()
 
@@ -325,9 +352,12 @@ if __name__ == "__main__":
 	# page_controller.save_js_files(pages)
 
 	# # with AnalysisController() as analysis_controller:
-	# analysis_controller.analyze_pages_js_files(pages)
-	# # with FeaturesController() as features_controller:
-	# features_controller.extract_pages_features(pages)
+	# for page in pages:
+	# 	for js_file in itertools.chain(page.internal_js_files, page.external_js_files):
+	# 		with AnalysisController() as analysis_controller:
+	# 			analysis_controller.run_static_analysis(js_file)
+	# 			analysis_controller.run_dynamic_analysis(js_file)
+	# 			features_controller.extract_all_features(js_file)
 		
 
 	# for p in pages:
@@ -340,4 +370,4 @@ if __name__ == "__main__":
 	#       print(j.dynamic_features)
 
 	# print('---saving pages---')
-	# results_controller.save_pages(pages)
+	# results_controller.save_pages(pages, DONE_PAGES_SAVE_PATH)
