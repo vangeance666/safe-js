@@ -76,34 +76,31 @@ layout.pages.analysis = (function() {
 	}
 
 	const postUrlForAnalysis = function(urlText) {
-		
-
-		let postData = {}
+		console.log("urlText: ", urlText);
 
 		$.ajax({
 			url: "api/v1_0/analysis/run/",
 			contentType: 'application/json',
 			type: 'POST',
-			data: JSON.stringify({url: "google.com"}),
-			dataType: "json",
-			
+			data: JSON.stringify({url: urlText}),
+			dataType: "json"			
 		})
 		.done(function(e) {
-			
-			if (e.status !== "ok") {
-				showError("Failed to send URL for analysis");
+			console.log("postUrlForAnalysis e: ", e);
+
+			if (!e.status){
+				showError("Server not replying status value")
 				return
 			}
-
-			jsonData = JSON.parse(e.responseText)
-
-			if (jsonData.status === "error") {
-				showError("Server error: "+jsonData.error_message)
+			if (e.status === "error") {
+				showError("Server error: "+e.error_message)
 				return
 			}
-
-			
-			showSucess(jsonData)
+			if (!e.page_id) {
+				showError("No Page ID returned")
+				return
+			}
+			showSuccess(`Successfully added ${e.url} for analysis`)
 
 		})
 		.fail(function(e) {
