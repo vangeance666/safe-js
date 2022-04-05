@@ -60,6 +60,8 @@ class DatasetGenerator:
 	def default_vals(self, col_names: list) -> dict:
 		return { col_name:0 for col_name in col_names }
 
+	def eval_net_inputs(self, js_file: JsFile):
+		pass
 	# Use for one single js file too before inference later on.
 	def eval_js_file_row(self, js_file: JsFile) -> dict:
 		static_default = self.default_vals(self._eval_static_features_headers())

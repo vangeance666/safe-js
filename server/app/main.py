@@ -8,7 +8,7 @@ from fastapi.responses import HTMLResponse, JSONResponse
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
 
-from app.controllers import platform_controller
+# from app.controllers import platform_controller
 
 app = FastAPI()
 
@@ -27,10 +27,10 @@ app.mount("/static", StaticFiles(directory="app/static"), name="static")
 
 app.include_router(api_v1_0_router, tags=["api"], prefix="/api/v1_0")
 
-@app.on_event("shutdown")
-def shutdown_event():
-	print("shutdown_event----")
-	platform_controller.cleanup()
+# @app.on_event("shutdown")
+# def shutdown_event():
+# 	print("shutdown_event----")
+# 	platform_controller.cleanup()
 
 
 @app.get('/heartbeat/')
