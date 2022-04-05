@@ -9,6 +9,7 @@ from analyzer.core.dataset_generator import DatasetGenerator
 from analyzer.core.url_validator import UrlValidator
 from analyzer.datatypes.js_file import JsFile
 from analyzer.datatypes.page import Page
+from app.models.processing_status import ProcessingStatus
 from app.threads.analyzer_thread import AnalyzerThread
 from app.threads.cleaner_thread import CleanerThread
 from app.threads.crawler_thread import CrawlerThread
@@ -43,6 +44,7 @@ class PlatformController:
 		self._threads = [AnalyzerThread
 			, CleanerThread
 			, CrawlerThread
+			, InferenceThread
 		]
 
 		self._thread_lock = threading.Lock()
@@ -71,14 +73,14 @@ class PlatformController:
 
 		for page in self._done_pages:
 			ret['pages_analyzed'] += 1
-			ret['pages_with_error'] += int(page.status == "error")
+			ret['pages_with_error'] += int(page.status == ProcessingStatus.ERROR)
 			for js_file in itertools.chain(page.internal_js_files
 				, page.external_js_files):
 				ret['js_file_analysed'] += 1
 				if js_file.static_run_error or js_file.dynamic_run_error:
 					ret['js_file_error_count'] += 1
 					continue
-				if js_file.model_predicted and js_file.malign_percent > 0.5:
+				if js_file.model_predicted and js_file.malign_percent > 0.76:
 					ret['predict_flagged_files'] += 1
 		return ret
 
@@ -108,13 +110,11 @@ class PlatformController:
 
 			js_files = list(itertools.chain(
 				page.internal_js_files, page.external_js_files))
-			# row['static_done'] = all(
-			# 	[js_file.static_done for js_file in js_files])
-			# row['dynamic_done'] = all(
-			# 	[js_file.dynamic_done for js_file in js_files])
 
 			row['js_file_details'] = [{
-				"id": js_file.id, "src": js_file.src, "static_features_done": js_file.static_features_done, "dynamic_features_done": js_file.dynamic_features_done
+				"id": js_file.id, "src": js_file.src
+				, "static_features_done": js_file.static_features_done
+				, "dynamic_features_done": js_file.dynamic_features_done
 			} for js_file in js_files]
 
 			ret.append(row)
@@ -137,7 +137,9 @@ class PlatformController:
 						ret['dynamic_features']['headers'] = self.FEATURE_HEADERS
 						ret['dynamic_features']['data'] = [[i, item[0], item[1][0], item[1][1]]
 														   for i, item in enumerate(js_file.dynamic_features['iocs'].items())]
-						ret['predict_malign'] = js_file.malign_percent
+
+						ret['model_predicted'] = js_file.model_predicted
+						ret['malign_percent'] = js_file.malign_percent
 						return ret
 		return None
 
@@ -157,12 +159,13 @@ class PlatformController:
 
 
 	def delete_past_data(self) -> bool:
-		
-		del self._done_pages
+		temp = self.self._done_pages
 		self._done_pages = []
+		del temp
 
-		del self._analysis_queue
+		temp = self._analysis_queue
 		self._analysis_queue = []
+		del temp
 
 		self._save_all()
 
