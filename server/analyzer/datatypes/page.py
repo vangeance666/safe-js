@@ -19,8 +19,10 @@ class Page:
 	internal_js_files: List[JsFile] = field(default_factory=list)
 	external_js_files: List[JsFile] = field(default_factory=list)
 
+	
 	crawl_success: bool 		= field(default=False)
 	elements_parsed: bool 		= field(default=False)
 	js_elements_extracted: bool = field(default=False)
-	saved: bool 		= field(default=False)
-	is_analyzed: bool	= field(default=False)
+	saved: bool 				= field(default=False)
+	is_analyzed: bool			= field(default=False)
+	features_extracted: bool 	= field(default=False)
