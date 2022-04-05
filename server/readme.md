@@ -15,12 +15,12 @@
 
 2. Run container
 ```
-➜ docker run -it -rm -p 80:8090 --name <container-name> <image-tag>
+➜ docker run -it -rm -p <desired_port>:80 --name <container-name> <image-tag>
 ```
 
 2. Run container (With persistent storage using volume mount)
 ```
-➜ docker run -it -rm -p 80:8090 -v <your-mount-point>:/safe-js/save --name <container-name> <image-tag>
+➜ docker run -it -rm -p <desired_port>:80 -v <your-mount-point>:/safe-js/save --name <container-name> <image-tag>
 ```
 docker run -it -p 8090:80 -v c:/Users/user/Desktop/save:/safe-js/save --name mybox safe-js
 
