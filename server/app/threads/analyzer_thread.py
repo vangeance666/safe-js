@@ -45,6 +45,4 @@ class AnalyzerThread(Worker):
 			self._thread_lock.release()
 
 			print("AnalyzerThread sleeping for 5 seconds")
-			print("AnalyzerThread page.status: ", page.status)
-
 			time.sleep(5)	
