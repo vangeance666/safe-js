@@ -81,20 +81,34 @@ class PlatformController:
 					ret['predict_flagged_files'] += 1
 		return ret
 
+	def fetch_pending_details(self) -> list:
+		return self._get_pages_details(self._analysis_queue)	
+
 	# ok for recent view
 	def fetch_all_pages_details(self) -> list:
+		return self._get_pages_details(self._analyzed_pages)
 
+	def _get_pages_details(self, pages) -> list:
 		ret = []
-		for page in self._analyzed_pages:
+		for page in pages:
 			row = {}
 			row['id'] = page.id
 			row['page_url'] = page.src
+			row['status'] = page.status.name
+			row['error_reason'] = page.error_reason
+			row['crawl_success'] = page.crawl_success
+			row['elements_parsed'] = page.elements_parsed
+			row['js_elements_extracted'] = page.js_elements_extracted
+			row['is_analyzed'] = page.is_analyzed
+			row['features_extracted'] = page.features_extracted
+			row['predicted'] = page.is_predicted
+
 			js_files = list(itertools.chain(
 				page.internal_js_files, page.external_js_files))
-			row['static_done'] = all(
-				[js_file.static_done for js_file in js_files])
-			row['dynamic_done'] = all(
-				[js_file.dynamic_done for js_file in js_files])
+			# row['static_done'] = all(
+			# 	[js_file.static_done for js_file in js_files])
+			# row['dynamic_done'] = all(
+			# 	[js_file.dynamic_done for js_file in js_files])
 
 			row['js_file_details'] = [{
 				"id": js_file.id, "src": js_file.src, "static_features_done": js_file.static_features_done, "dynamic_features_done": js_file.dynamic_features_done
@@ -102,7 +116,6 @@ class PlatformController:
 
 			ret.append(row)
 		return ret
-
 	# For analysis view
 	def fetch_js_file_details(self, page_id: int, js_file_id: int) -> dict:
 
