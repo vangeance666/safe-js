@@ -1,6 +1,8 @@
 layout.pages.settings = (function() {
 	let self = {};
 
+	const ajaxApiDeleteUrl = "api/v1_0/analysis/reset/"
+
 
 	const areYouSureCtx = ["div", {
 	        "class": "modal fade",
@@ -72,13 +74,20 @@ layout.pages.settings = (function() {
 		console.log("send delete data request");
 
 		$.ajax({
-
+			url: ajaxApiDeleteUrl,
+			type: "GET"
 		})
 		.done(function(e){
-
+			if (!e.status || e.status != "ok") {
+				showError("Failed to receive status results")
+				return
+			}
+			console.log("Done sendDeleteRequest e: ", e);
+			showSuccess("Successfully deleted data")
 		})
 		.fail(function(e) {
-
+			console.log("Fail sendDeleteRequest e: ", e);
+			showError(`Error message: ${e}`)			
 		});
 	}
 
