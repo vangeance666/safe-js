@@ -22,7 +22,6 @@
 ```
 ➜ docker run -it -rm -p <desired_port>:80 -v <your-mount-point>:/safe-js/save --name <container-name> <image-tag>
 ```
-docker run -it -p 8090:80 -v c:/Users/user/Desktop/save:/safe-js/save --name mybox safe-js
 
 
 ### Without Docker
