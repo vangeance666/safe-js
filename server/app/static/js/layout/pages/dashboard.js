@@ -35,9 +35,13 @@ layout.pages.dashboard = (function() {
 	}
 
 	const rowOneCtx = ["div", {"class": "row"},
-		genCardCtx(eleIds['dashboardPagesAnalysed'], "icon-shape-success", "/static/img/pages.svg", "Pages Analysed", "0"),
-		genCardCtx(eleIds['dashboardJsFilesAnalysed'], "icon-shape-secondary", "/static/img/js_file.svg", "JS Files Analysed", "2"),
-		genCardCtx(eleIds['dashboardFlaggedFiles'], "icon-shape-danger", "/static/img/danger2.svg", "Flagged Files", "1")
+		genCardCtx(eleIds['dashboardPagesAnalysed'], "icon-shape-success", "/static/img/dashboard-pages.svg", "Pages Analysed", "0"),
+		genCardCtx(eleIds['dashboardJsFilesAnalysed'], "icon-shape-secondary", "/static/img/dashboard-js_file.svg", "JS Files Analysed", "2"),
+        genCardCtx(eleIds['dashboardFlaggedFiles'], "icon-shape-danger", "/static/img/dashboard-danger2.svg", "Flagged Files", "0"),
+
+		genCardCtx(eleIds['dashboardPagesWithError'], "icon-shape-tertiary", "/static/img/dashboard-page-error.svg", "Pages with Error", "0"),
+        genCardCtx(eleIds['dashboardPagePendingCount'], "icon-shape-info", "/static/img/dashboard-page-pending.svg", "Pending Pages", "0"),
+        genCardCtx(eleIds['dashboardJsfileErrorCount'], "icon-shape-purple", "/static/img/dashboard-js-error.svg", "JS Files with Error", "0")
     ]
 
     const rowTwoCtx = 
@@ -105,11 +109,15 @@ layout.pages.dashboard = (function() {
                 return
             }
 
-            $('#dashboard-pages-analysed')
+            console.log("jsonData.details: ", jsonData.details);
+
             $('#'+eleIds['dashboardPagesAnalysed']+" .results-value").text(jsonData.details.pages_analyzed)
             $('#'+eleIds['dashboardJsFilesAnalysed']+" .results-value").text(jsonData.details.js_file_analysed)
             $('#'+eleIds['dashboardFlaggedFiles']+" .results-value").text(jsonData.details.predict_flagged_files)
 
+            $('#'+eleIds['dashboardPagesWithError']+" .results-value").text(jsonData.details.pages_with_error)
+            $('#'+eleIds['dashboardPagePendingCount']+" .results-value").text(jsonData.details.page_pending_count)
+            $('#'+eleIds['dashboardJsfileErrorCount']+" .results-value").text(jsonData.details.js_file_error_count)
 
         })
     }
