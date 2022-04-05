@@ -32,6 +32,7 @@ class AnalysisController:
 	def run_static_analysis(self, js_file: JsFile):
 		try:
 			self._static_analyzer.run(js_file)
+			js_file.static_features_done = True
 		except Exception as e:
 			print("e: ", e)
 			js_file.static_run_error = True
@@ -39,6 +40,7 @@ class AnalysisController:
 	def run_dynamic_analysis(self, js_file: JsFile):
 		try:
 			self._dynamic_analyzer.run(js_file)
+			js_file.dynamic_features_done = True
 		except Exception as e:
 			print("e: ", e)
 			js_file.dynamic_run_error = True
