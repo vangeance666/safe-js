@@ -21,6 +21,7 @@ $(function(){
 		
 	// HTML.route("", layout.pages.dashboard.display);
 	HTML.route("dashboard", layout.pages.dashboard.display);
+	HTML.route("pending", layout.pages.pending.display);
 	HTML.route("recent", layout.pages.recent.display);
 	HTML.route("analysis", layout.pages.analysis.display);
 	HTML.route("settings", layout.pages.settings.display);

@@ -29,10 +29,11 @@ class PlatformController:
 		self.save_analyzed_path = ANALYZED_PAGES_SAVE_PATH
 		self.save_pending_path = PENDING_PAGES_SAVE_PATH
 
-		self._dataset_generator = DatasetGenerator()
+		# self._dataset_generator = DatasetGenerator()
 		self._results_controller = ResultsController()
 
-		self._analyzed_pages: List[Pages] = self._results_controller.load_pages(self.save_analyzed_path) or []
+		self._analyzed_pages: List[Pages] = self._results_controller.load_pages(
+			self.save_analyzed_path) or []
 
 		self._analysis_queue: deque = deque([])
 
@@ -48,12 +49,12 @@ class PlatformController:
 	def start_threads(self):
 		for thread in self._threads:
 
-			thread_obj = thead(self._thread_lock
+			thread_obj = thread(self._thread_lock
 				, self._analysis_queue
 				, self._analyzed_pages
 				, self._platform_running)
 
-			thread.start()
+			thread_obj.start()
 
 	def fetch_dashboard_details(self) -> dict:
 
@@ -70,9 +71,10 @@ class PlatformController:
 		for page in self._analyzed_pages:
 			ret['pages_analyzed'] += 1
 			ret['pages_with_error'] += int(page.status == "error")
-			for js_file in itertools.chain(page.internal_js_files, page.external_js_files):
+			for js_file in itertools.chain(page.internal_js_files
+				, page.external_js_files):
 				ret['js_file_analysed'] += 1
-				if js_file.status_run_error or js_file.dynamic_run_error:
+				if js_file.static_run_error or js_file.dynamic_run_error:
 					ret['js_file_error_count'] += 1
 					continue
 				if js_file.model_predicted and js_file.malign_percent > 0.5:
@@ -127,26 +129,29 @@ class PlatformController:
 	def analyze_one_url(self, url: str) -> int:
 		print("url: ", url)
 		# Returns page ID that the url is assigned to.
-
+		
 		self._url_validator.check(url.strip())
-
+		
 		page = Page(src=url if url.startswith('http') else "http://"+url)
-
-		# page_controller.crawl_details(page)
-		# page_controller.save_js_file(page)
+		page.id = max([P.id for P in self._analyzed_pages]+[P.id for P in self._analysis_queue], default=0)	+ 1	
 
 		self._analysis_queue.append(page)
 
 		return page.id
 
+
 	def delete_past_data(self) -> bool:
+		
 		del self._analyzed_pages
 		self._analyzed_pages = []
 
 		del self._analysis_queue
 		self._analysis_queue = []
 
-		self._save_all()        
+		self._save_all()
+
+		return True
+
 
 	def _save_all(self) -> bool:
 		return self._results_controller.save_pages(self._analyzed_pages

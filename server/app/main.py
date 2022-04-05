@@ -1,4 +1,3 @@
-
 from app.routers.api_v1_0 import router as api_v1_0_router
 from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
@@ -30,4 +29,3 @@ async def heartbeat():
 @app.get('/')
 async def index(request: Request):
     return templates.TemplateResponse("index.html", {"request": request})
-
