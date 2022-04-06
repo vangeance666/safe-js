@@ -3,7 +3,7 @@
 ## Setup
 ### Docker
 0. Install Docker for your operating system
-[Link](`https://docs.docker.com/engine/install/`)__
+[Link](https://docs.docker.com/engine/install/)
 
 1. Build image
 ```
@@ -23,7 +23,7 @@
 ### Manual
 
 0. Download and install Node.js 
-[Link](`https://nodejs.org/en/`)
+[Link](https://nodejs.org/en/)
 
 1. Install Box-JS with npm
 ```
@@ -31,7 +31,7 @@
 ```
 
 2. Install Python 3.8 and above
-[Link](`https://www.python.org/downloads/`)
+[Link](https://www.python.org/downloads/)
 
 3. Install dependencies
 ```
