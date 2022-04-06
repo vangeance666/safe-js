@@ -1,11 +1,7 @@
 # Safe-JS
 
-## What is this?
-- 
-
 ## Running
 ### Docker
-
 0. Install Docker for your operating system. Ref: `https://docs.docker.com/engine/install/` 
 
 1. Build image
@@ -43,7 +39,9 @@
 ➜ python run.py
 ```
 
-### Submit using firefox extension
+### Submit samples from your Browser
+
+[Download Firefox extension here](https://github.com/vangeance666/safe-js-extension)
 
 
 
