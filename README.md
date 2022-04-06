@@ -1,8 +1,9 @@
 # Safe-JS
 
-## Running
+## Setup
 ### Docker
-0. Install Docker for your operating system. Ref: `https://docs.docker.com/engine/install/` 
+0. Install Docker for your operating system
+[Link](`https://docs.docker.com/engine/install/`)__
 
 1. Build image
 ```
@@ -21,14 +22,16 @@
 
 ### Manual
 
-0. Download and install Node.js `https://nodejs.org/en/`
+0. Download and install Node.js 
+[Link](`https://nodejs.org/en/`)
 
 1. Install Box-JS with npm
 ```
 ➜ npm install box-js --global
 ```
 
-2. Install Python 3.8 and above `https://www.python.org/downloads/`
+2. Install Python 3.8 and above
+[Link](`https://www.python.org/downloads/`)
 
 3. Install dependencies
 ```
