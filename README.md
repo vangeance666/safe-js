@@ -45,7 +45,3 @@
 ### Submit samples from your Browser
 
 [Download Firefox extension here](https://github.com/vangeance666/safe-js-extension)
-
-
-
-## Configurations
