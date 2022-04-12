@@ -40,7 +40,6 @@ class PageParser:
 	def _get_url_root_path(self, url) -> str:
 		parsed_url = urlparse(url)
 		return ''.join([parsed_url.scheme, "://", parsed_url.netloc])
-		# return ''.join([parsed_url.scheme, "://", parsed_url.netloc, "/"])
 
 	def _request_url_html(self, obj: Any) -> bool:
 		try:
@@ -83,7 +82,6 @@ class PageParser:
 				js_file.success = self._request_url_html(js_file)
 
 				page.external_js_files.append(js_file)
-				# print("page.external_js_files: ", page.external_js_files)
 			else:
 				print("Intenal to request for html")
 				# Internal
@@ -91,7 +89,6 @@ class PageParser:
 				js_file.text = self._preprocess(element.text)
 
 				page.internal_js_files.append(js_file)
-				# print("page.internal_js_files: ", page.internal_js_files)
 
 				counter += 1
 

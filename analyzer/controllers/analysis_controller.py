@@ -44,36 +44,3 @@ class AnalysisController:
 		except Exception as e:
 			print("e: ", e)
 			js_file.dynamic_run_error = True
-	# New
-	# def analyze_page_js_files(self, page: Page) -> bool:
-
-	# 	if not page.crawl_success:
-	# 		return False
-
-	# 	for js_file in itertools.chain(page.internal_js_files, page.external_js_files):
-	# 		self.run_static_analysis(js_file)
-	# 		self.run_dynamic_analysis(js_file)
-
-	# 	return True
-
-		# Analyze regardless of erorr
-		# return all([self.analyze_js_file(js_file) 
-		# 	for js_file in itertools.chain(page.internal_js_files, page.external_js_files)])
-
-	# Olds
-	# def analyze_pages_js_files(self, pages: List[Page]) -> bool:
-	# 	for page in pages:
-
-	# 		if not page.crawl_success: #Ensure that its successfully scraped
-	# 			print("Skiped {} since not success".format(page.src))
-	# 			continue
-
-	# 		for js_file in itertools.chain(page.internal_js_files, page.external_js_files):
-	# 			print("Attemping to extract features for {}".format(js_file.src))
-	# 			for analyzer in self.analyzers:
-	# 				print("Extracting analysis results using {}".format(analyzer.__class__))
-	# 				analyzer.run(js_file)
-					
-	# 		page.is_analyzed = True			
-	# 	return True
-

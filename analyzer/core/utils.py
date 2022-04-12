@@ -10,7 +10,7 @@ import subprocess
 from analyzer.datatypes.js_file import JsFile
 
 
-def enumerate_packages(dirpath, module_prefix, namespace, class_, attributes={}, as_dict=False):
+def enumerate_modules(dirpath, module_prefix, namespace, class_, attributes={}, as_dict=False):
     
     if os.path.isfile(dirpath):
         dirpath = os.path.dirname(dirpath)
@@ -19,7 +19,7 @@ def enumerate_packages(dirpath, module_prefix, namespace, class_, attributes={},
         try:
             importlib.import_module(module_name)
         except ImportError as e:
-            raise Exception("Failed to import, "+str(e))
+            raise e
 
     subclasses = class_.__subclasses__()[:]
 
@@ -102,41 +102,4 @@ def us2mc(x): # underscore to mixed-case notation
     return re.sub(r'_([a-z])', lambda m: (m.group(1).upper(  )), x)
 
 
-"C:\\Users\\User\\Documents\\GitHub\\safe-js\\server\\save\\pages\\cd5799acbcd45100ffea5ff03da25ef53e72678433193b23d627d8a42ef96844\\87f23dbb35cf254215afee3a56defbbdd57f431f0e5ac3e8410b9a4881ea9028",
-"C:\\Users\\User\\Documents\\GitHub\\safe-js\\server\\save\\pages\\cd5799acbcd45100ffea5ff03da25ef53e72678433193b23d627d8a42ef96844\\c3a79c720747cd44fab04ded2a448939af68a1121883d57d9c4c7da07a09bbe2",
-
-
-
-"C:\\Users\\User\\Documents\\GitHub\\safe-js\\server\\save\\pages\\cd5799acbcd45100ffea5ff03da25ef53e72678433193b23d627d8a42ef96844\\36b21df7678e9376d8281aefab4a8baef1ff73972a1e15aa11fb9465ec152f77",
-"C:\\Users\\User\\Documents\\GitHub\\safe-js\\server\\save\\pages\\cd5799acbcd45100ffea5ff03da25ef53e72678433193b23d627d8a42ef96844\\e53673684f785145b51d8fdbcfd63b90e25557e6ea9ef99a39ae84763f3f764a"
-
-hehe=  [
-    "C:\\Users\\User\\Documents\\GitHub\\safe-js\\server\\save\\pages\\cd5799acbcd45100ffea5ff03da25ef53e72678433193b23d627d8a42ef96844\\4bf4394656514a89b35920553248e66850e96bee64843d289c7bfcb868f8f856",
-]
-
-fldr = "C:\\Users\\User\\Documents\\GitHub\\safe-js\\server\\save\\js_dynamic_results"
-
-# for x in hehe:
-#     print('\\'.join(x.split('\\')[-2:]))
-#     res =  run_command("box-js {} --no-shell-error --no-folder-exists --output-dir {}".format(x, fldr))
-
-
-
-# print(entropy("hello"))
-
-# x = "C:\\\\Users\\\\User\\\\Documents\\\GitHub\\safe-js\\sample1.txt"
-
-
-# res = run_command("box-js {} --no-shell-error --no-folder-exists --output-dir {}".format(x, fldr))
-
-# import re
-
-# PATTERN = r".+search\(.+\)"
-
-# file_data = get_file_buffer("C:\\Users\\User\\Desktop\\testfind.txt")
-
-
-# res = re.findall(PATTERN, file_data)
-# for x in res:
-#     print(x)
-# print("res: ", res)
+    

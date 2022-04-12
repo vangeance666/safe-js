@@ -11,38 +11,26 @@ class JsStaticAnalyzer:
 
 	name = "JsStaticAnalyzer"
 
-	def _write_error_file(self, js_file: JsFile, error):
-		save_path = os.path.join(ERROR_DUMP_PATH, js_file.src+".txt")
-		with open(save_path, 'w') as f:
-			f.write(js_file.text)
-
-	def _run_syntactic_extraction(self, js_file: JsFile):
+	def _run_syntactic_extraction(self, js_file: JsFile) -> None:
 
 		try:
 			js_file.syntactic_extract = esprima.parse(js_file.text)
 		except Exception as e:
-			try:
-				print("Failed first try of syntactic extraction")
-				print("Attempting second try with json.dumps")
-				js_file.syntactic_extract = esprima.parse(json.dumps(js_file.text))
-			except Exception as e2:
-				raise
+			print("_run_syntactic_extraction error: ", e)
+			return
 
 		js_file.synthetic_done = True
-		js_file.static_done = True
 
-	def run(self, js_file: JsFile):
+	def run(self, js_file: JsFile) -> None:
 		
 		if not js_file.text:
 			raise InvalidResourceError("JS file does not have text")
 
 		self._run_syntactic_extraction(js_file)	
 
-		# try:
-		# 	self._run_syntactic_extraction(js_file)
-		# except Exception as e:
-		# 	print("Static Extraction Error: ", e)
-		# 	self._write_error_file(js_file, str(e))
-		# 	js_file.static_run_error = True
-		# 	return False
-		# return True
+		if not js_file.synthetic_done:
+			print("Trying second try with json encoded text")
+			js_file.text = json.dumps(js_file.text)
+			self._run_syntactic_extraction(js_file)	
+
+		js_file.static_done = True

@@ -39,8 +39,7 @@ class ResultsController:
 			data = self._pickle_load(pikle_dump_path)
 			self.reparse_script_elements(data)	
 			return data
-		except Exception as e:
-			
+		except:			
 			return []
 
 	def save_pages(self, pages: List[Page], pickle_dump_path) -> bool:
@@ -49,7 +48,7 @@ class ResultsController:
 			self._flush_script_elements(pages)
 			self._pickle_dump(pages, pickle_dump_path)
 		except Exception as e:
-			raise
+			print("save_pages error: ", e)
 			return False
 		return True
 

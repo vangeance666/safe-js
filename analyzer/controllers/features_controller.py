@@ -39,36 +39,6 @@ class FeaturesController:
 	def extract_all_features(self, js_file):
 		self.extract_static_features(js_file)
 		self.extract_dynamic_features(js_file)
-	# old
-	# def extract_pages_features(self, pages: List[Page]) -> bool:
-
-	# 	for page in pages:
-
-	# 		if not page.crawl_success: #Ensure that its successfully scraped
-	# 			print("Skiped {} since not success".format(page.src))
-	# 			continue
-
-	# 		for js_file in itertools.chain(page.internal_js_files, page.external_js_files):
-
-	# 			print("Extracting features for {}".format(js_file.src))
-
-	# 			if not js_file.dynamic_run_error:
-	# 				print("Dynamic features for {}".format(js_file.src))
-
-	# 				self._features_extractor.extract_dynamic_features(js_file)
-	# 			else:
-	# 				print("[!] Skipped Dynamic features for {}".format(js_file.src))
-
-
-	# 			if not js_file.static_run_error:
-	# 				print("Static features for {}".format(js_file.src))
-
-	# 				self._features_extractor.extract_static_features(js_file)
-	# 			else:
-	# 				print("[!] Skipped Static features for {}".format(js_file.src))
-
-
-	# 	return True
 
 
 

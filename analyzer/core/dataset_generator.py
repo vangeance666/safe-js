@@ -105,8 +105,9 @@ class DatasetGenerator:
 
 	def append_js_file_to_csv(self, js_files: List[JsFile], csv_save_path: str):
 		with DatasetWriter(csv_save_path, 'a',  self._headers) as writer:
-			row_data = self.eval_js_file_row(js_file)
-			writer.writerow(row_data)
+			for js_file in js_files:
+				row_data = self.eval_js_file_row(js_file)
+				writer.writerow(row_data)
 			
 	def append_pages_to_csv(self, pages: List[Page], csv_save_path: str):
 		with DatasetWriter(csv_save_path, 'a',  self._headers) as writer:
@@ -114,7 +115,5 @@ class DatasetGenerator:
 				for js_file in itertools.chain(page.internal_js_files, page.external_js_files):
 					row_data = self.eval_js_file_row(js_file)
 					writer.writerow(row_data)
-					# import sys
-					# sys.exit()
 
 

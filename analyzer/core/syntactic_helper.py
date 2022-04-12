@@ -12,8 +12,12 @@ class ConditionsFactory:
 		# window.addEventListener("beforeunload", function(event) { /* ... */ });
 		# event_name will be "beforeunload"
 		def is_true(k) -> bool:
-			if k.callee.property.type == "Identifier" and k.callee.property.name == "addEventListener":
-				return any(True for x in k.arguments if x.type=="Literal" and x.value==event_name)
+			if k.callee.property.type == "Identifier" \
+				and k.callee.property.name == "addEventListener":
+				
+				return any(True for x in k.arguments 
+					if x.type=="Literal" 
+					and x.value==event_name)
 			return False
 		return is_true
 
@@ -21,7 +25,10 @@ class ConditionsFactory:
 	def on_event_assign_condition(on_event_name) -> Callable:
 		# window.onbeforeunload = function(event) { /* ... */ };
 		# on_event_name = "onbeforeunload"
-		return lambda k: bool(k.left.type == "MemberExpression" and k.left.property.type == "Identifier" and k.left.property.name == on_event_name)
+		return lambda k: bool(
+			k.left.type == "MemberExpression" 
+			and k.left.property.type == "Identifier" 
+			and k.left.property.name == on_event_name)
 
 def parse_esprima(item, found_condition: Callable):
 
@@ -45,24 +52,3 @@ def parse_esprima(item, found_condition: Callable):
 		print("hmm managed to receive not dict or obj", )
 
 	return counter
-
-
-if __name__ == '__main__':
-	
-	malware_path = "C:\\Users\\User\\Documents\\GitHub\\safe-js\\server\\analyzer\\careful.txt"
-
-
-	with open(malware_path) as f:
-		buff = f.read()
-
-		# X = """var hehebongesh = function({
-		# 	console.log("yo");
-		# })
-		# """
-
-	P = esprima.parse(buff)
-	print(P)
-	# print("P: ", type(P))
-	print(dir(P.body))
-	print(type(P.body))
-	# print(P.body)
