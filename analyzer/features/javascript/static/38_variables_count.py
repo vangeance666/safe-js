@@ -2,7 +2,6 @@ import re
 
 import esprima
 from analyzer.abstracts import Feature
-from analyzer.abstracts import Feature
 from analyzer.datatypes.js_file import JsFile
 from config import JS_RESERVED_WORDS_PATH
 

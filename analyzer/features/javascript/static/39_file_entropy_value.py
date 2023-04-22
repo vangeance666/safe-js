@@ -1,7 +1,6 @@
 import re
 
 from analyzer.abstracts import Feature
-from analyzer.abstracts import Feature
 from analyzer.core.utils import entropy as entropy_value
 from analyzer.datatypes.js_file import JsFile
 from config import JS_RESERVED_WORDS_PATH
