@@ -6,34 +6,31 @@
 [here](https://docs.docker.com/engine/install/)
 
 1. Build image
-```
+```shell
 ➜ docker build -t safe-js .
 ```
 
 2. Run container
-```bash
+```shell
 ➜ docker run -d --rm -p <desired_port>:80 --name <container-name> safe-js
 ```
 
 2. Run container (With persistent storage using volume mount)
-```bash
+```shell
 ➜ docker run -d -rm -p <desired_port>:80 -v <your-mount-point>:/safe-js/save --name <container-name> safe-js
 ```
 
 ### Docker-compose
 
 1. Build and run the container using `docker-compose`
-```bash
+```shell
 ➜ docker-compose up -d
 ```
 
 To stop and remove the container, simply run:
-
-```bash
+```shell
 ➜ docker-compose down
 ```
-
-
 
 ### Manual
 
@@ -41,7 +38,7 @@ To stop and remove the container, simply run:
 [here](https://nodejs.org/en/)
 
 1. Install Box-JS with npm
-```bash
+```shell
 ➜ npm install box-js --global
 ```
 
@@ -49,11 +46,11 @@ To stop and remove the container, simply run:
 [here](https://www.python.org/downloads/)
 
 3. Install dependencies
-```bash
+```shell
 ➜ pip install -r requirements.txt
 ```
 4. Run
-```bash
+```shell
 ➜ python run.py
 ```
 
