@@ -27,7 +27,7 @@
 ➜ docker-compose up -d
 ```
 
-To stop and remove the container, simply run:
+- To stop and remove the container, simply run:
 ```shell
 ➜ docker-compose down
 ```
